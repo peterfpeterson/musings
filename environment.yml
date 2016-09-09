@@ -1,0 +1,9 @@
+name: musings
+dependencies:
+- jupyter
+- matplotlib
+- numpy
+- pandas
+- pip
+- pip:
+  - plotly
