@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# pandas subdirectory
+pandas/
+
 # Distribution / packaging
 .Python
 env/
