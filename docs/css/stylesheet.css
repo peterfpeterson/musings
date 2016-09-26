@@ -1,6 +1,6 @@
 * {
     font-family: 'xkcd';
-    src: url('/fonts/xkcd.otf'), format('otf');
+    src: url('/musings/fonts/xkcd.otf'), format('otf');
     font-weight: normal;
     font-style: normal;
 }
