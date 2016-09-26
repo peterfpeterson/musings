@@ -9,6 +9,9 @@ __pycache__/
 # pandas subdirectory
 pandas/
 
+# fake directory for serving web pages
+musings
+
 # Distribution / packaging
 .Python
 env/

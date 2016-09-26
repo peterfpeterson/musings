@@ -21,3 +21,14 @@ Alternatively, if your python is too old
 ```shell
 ipython notebook
 ```
+
+### Testing webpages
+
+Create a link to host the page with the correct name then startup a
+web server in python. From the root directory of the repository.
+```
+$ ln -s docs musings
+$ python -m SimpleHTTPServer
+```
+
+This is so all of the pages are found.
