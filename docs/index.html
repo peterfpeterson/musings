@@ -18,10 +18,155 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+<!-- mathjax rendering of mathml -->
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+<!-- links to other pages -->
 <div id="main">
   <ul>
     <li><a href="AtlantaRagnar2017">AtlantaRagnar 2017</a></li>
   </ul>
 </div>
+
+<!-- maxwell's equations in cgs -->
+<div id="maxwell">
+
+<center><table>
+  <caption>Adjusted from <a href="https://en.wikipedia.org/wiki/Maxwell%27s_equations">wikipedia</a></caption>
+
+<!-- Gauss's law -->
+<tr><td>
+<math xmlns="http://www.w3.org/1998/Math/MathML" >
+  <semantics>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mstyle displaystyle="true" scriptlevel="0">
+        <mi mathvariant="normal">&#x2207;<!-- ∇ --></mi>
+        <mo>&#x22C5;<!-- ⋅ --></mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mi mathvariant="bold">E</mi>
+        </mrow>
+        <mo>=</mo>
+        <mn>4</mn>
+        <mi>&#x03C0;<!-- π --></mi>
+        <mi>&#x03C1;<!-- ρ --></mi>
+      </mstyle>
+    </mrow>
+    <annotation encoding="application/x-tex">{\displaystyle \nabla \cdot \mathbf {E} =4\pi \rho }</annotation>
+  </semantics>
+</math>
+</td></tr>
+
+<!-- Gauss's law for magnetism -->
+<tr><td>
+<math xmlns="http://www.w3.org/1998/Math/MathML" >
+  <semantics>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mstyle displaystyle="true" scriptlevel="0">
+        <mi mathvariant="normal">&#x2207;<!-- ∇ --></mi>
+        <mo>&#x22C5;<!-- ⋅ --></mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mi mathvariant="bold">B</mi>
+        </mrow>
+        <mo>=</mo>
+        <mn>0</mn>
+      </mstyle>
+    </mrow>
+    <annotation encoding="application/x-tex">{\displaystyle \nabla \cdot \mathbf {B} =0}</annotation>
+  </semantics>
+</math>
+</td></tr>
+
+<!-- Faraday's law of induction -->
+<tr><td>
+<math xmlns="http://www.w3.org/1998/Math/MathML" >
+  <semantics>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mstyle displaystyle="true" scriptlevel="0">
+        <mi mathvariant="normal">&#x2207;<!-- ∇ --></mi>
+        <mo>&#x00D7;<!-- × --></mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mi mathvariant="bold">E</mi>
+        </mrow>
+        <mo>=</mo>
+        <mo>&#x2212;<!-- − --></mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mfrac>
+            <mn>1</mn>
+            <mi>c</mi>
+          </mfrac>
+        </mrow>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mfrac>
+            <mrow>
+              <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+              <mrow class="MJX-TeXAtom-ORD">
+                <mi mathvariant="bold">B</mi>
+              </mrow>
+            </mrow>
+            <mrow>
+              <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+              <mi>t</mi>
+            </mrow>
+          </mfrac>
+        </mrow>
+      </mstyle>
+    </mrow>
+    <annotation encoding="application/x-tex">{\displaystyle \nabla \times \mathbf {E} =-{\frac {1}{c}}{\frac {\partial \mathbf {B} }{\partial t}}}</annotation>
+  </semantics>
+</math>
+</td></tr>
+
+<!-- Ampere's law -->
+<tr><td>
+<math xmlns="http://www.w3.org/1998/Math/MathML" >
+  <semantics>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mstyle displaystyle="true" scriptlevel="0">
+        <mi mathvariant="normal">&#x2207;<!-- ∇ --></mi>
+        <mo>&#x00D7;<!-- × --></mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mi mathvariant="bold">B</mi>
+        </mrow>
+        <mo>=</mo>
+        <mrow class="MJX-TeXAtom-ORD">
+          <mfrac>
+            <mn>1</mn>
+            <mi>c</mi>
+          </mfrac>
+        </mrow>
+        <mrow>
+          <mo>(</mo>
+          <mn>4</mn>
+          <mi>&#x03C0;<!-- π --></mi>
+          <mrow class="MJX-TeXAtom-ORD">
+            <mi mathvariant="bold">J</mi>
+          </mrow>
+          <mo>+</mo>
+          <mrow class="MJX-TeXAtom-ORD">
+            <mfrac>
+              <mrow>
+                <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+                <mrow class="MJX-TeXAtom-ORD">
+                  <mi mathvariant="bold">E</mi>
+                </mrow>
+              </mrow>
+              <mrow>
+                <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+                <mi>t</mi>
+              </mrow>
+            </mfrac>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </mstyle>
+    </mrow>
+    <annotation encoding="application/x-tex">{\displaystyle \nabla \times \mathbf {B} ={\frac {1}{c}}\left(4\pi \mathbf {J} +{\frac {\partial \mathbf {E} }{\partial t}}\right)}</annotation>
+  </semantics>
+</math>
+</td></tr>
+
+</table></center>
+</div>
+
 </body>
 </html>
