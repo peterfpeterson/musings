@@ -1,5 +1,8 @@
 # musings
 
+Some of this is a
+[webpage found here](https://peterfpeterson.github.io/musings/).
+
 ### Using conda for package management
 
 ```shell
