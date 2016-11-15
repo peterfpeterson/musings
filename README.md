@@ -33,5 +33,9 @@ web server in python. From the root directory of the repository.
 $ ln -s docs musings
 $ python -m SimpleHTTPServer
 ```
+In `python3 this has been changed to
+```
+$ python3 -m http.server
+```
 
 This is so all of the pages are found.
