@@ -39,3 +39,11 @@ $ python3 -m http.server
 ```
 
 This is so all of the pages are found.
+
+### Jekyll based webpages
+
+1. install ruby and ruby developer packages (e.g. `dnf install ruby ruby-devel`)
+2. `gem install bundle`
+3. `cd docs`
+4. `bundle update`
+5. `bundle exec jekyll serve --watch --drafts`
