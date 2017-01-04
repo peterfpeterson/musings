@@ -1,6 +1,8 @@
+---
+---
 @font-face {
     font-family: xkcd;
-    src: url('/musings/fonts/xkcd.otf');
+    src: url('{{ site.baseurl }}/fonts/xkcd.otf');
 }
 
 body {
