@@ -1,9 +1,12 @@
+---
+title: Lotka–Volterra
+---
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Lotka–Volterra</title>
-    <meta charset="utf-8">
-    <style>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+{% include meta.html %}
+
+  <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
       @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
@@ -40,11 +43,13 @@
         float: right;
         padding-top: 1em;
       }
-    </style>
-    <script src="https://use.fontawesome.com/14ae122dbd.js"></script>
-  </head>
-  <body>
-    <textarea id="source">
+  </style>
+  {% include katex/css %}
+  <script src="https://use.fontawesome.com/14ae122dbd.js"></script>
+</head>
+
+<body>
+  <textarea id="source">
 name: inverse
 layout: true
 class: center, middle, inverse
@@ -160,20 +165,12 @@ http://www.todayifoundout.com/index.php/2016/12/really-invented-calculus/
     </textarea>
 
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    {% include katex/javascript %}
     <script type="text/javascript">
       var slideshow = remark.create();
-
-      renderMathInElement(document.body);
-      // or if you want to use $...$ for math,
-      // renderMathInElement(document.body, {delimiters: [ // mind the order of delimiters(!?)
-      //     {left: "$$", right: "$$", display: true},
-      //     {left: "$", right: "$", display: false},
-      //     {left: "\\[", right: "\\]", display: true},
-      //     {left: "\\(", right: "\\)", display: false},
-      // ]});
     </script>
-  </body>
+
+{% include katex/render %}
+
+</body>
 </html>
