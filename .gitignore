@@ -9,8 +9,11 @@ __pycache__/
 # pandas subdirectory
 pandas/
 
-# fake directory for serving web pages
-musings
+# directory of generated site
+docs/_site
+
+# Gemfile created by `bundle` related to ruby
+docs/Gemfile.lock
 
 # Distribution / packaging
 .Python
