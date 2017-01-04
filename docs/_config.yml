@@ -1,0 +1,11 @@
+# The bits of this that are set were inspired by
+# https://github.com/plusjade/jekyll-bootstrap/blob/master/_config.yml
+
+# Themes are encouraged to use these universal variables
+# so be sure to set them if your theme uses them.
+#
+title : musings
+author :
+  name : Pete Peterson
+  github : peterfpeterson
+  twitter : Psqrd
