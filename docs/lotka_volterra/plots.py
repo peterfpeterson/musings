@@ -8,6 +8,7 @@ import numpy as np
 
 alpha = 10 # prey growth
 beta  = 1 # predator eat
+delta = 10. # predator growth
 gamma = 1 # predator death
 
 # second fixed point
