@@ -1,17 +1,8 @@
 ---
+layout: presentation
 title: Lotka–Volterra
 ---
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
-<head>
-{% include meta.html %}
-{% include remarkjs/css %}
-{% include katex/css %}
-<script src="https://use.fontawesome.com/14ae122dbd.js"></script>
-</head>
 
-<body>
-<textarea id="source">
 name: inverse
 layout: true
 class: center, middle, inverse
@@ -147,16 +138,3 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 .center[<img alt="integrals are just area" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Integral_as_region_under_curve.svg/744px-Integral_as_region_under_curve.svg.png" width='500'/>]
 
 Related: [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)
-</textarea>
-
-{% include remarkjs/javascript %}
-
-<script type="text/javascript">
-  var slideshow = remark.create({countIncrementalSlides: false});
-</script>
-
-{% include katex/javascript %}
-{% include katex/render %}
-
-</body>
-</html>
