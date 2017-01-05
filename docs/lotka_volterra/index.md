@@ -139,8 +139,12 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 * δ is related to predator population growth (+ &#x1F43A;)
 * γ is related to predator death/emigration rate (- &#x1F43A;)
 
----
-# TODO plot of the range and domain
+--
+## Range and Domain
+
+--
+* \\(x \in\\) [0, &#x1F430;, &#x221E;)
+* \\(y \in\\) [0, &#x1F43A;, &#x221E;)
 
 ---
 # How do you "solve" that?
@@ -172,10 +176,12 @@ $$\frac{dx}{dt} = \alpha x - \beta x y = 0$$
 
 $$\frac{dy}{dt} = \delta x y - \gamma y = 0$$
 
+--
 solve prey equation for \\(y\\)
 
 $$x y = \frac{\alpha x}{\beta} \Rightarrow y = \frac{\alpha}{\beta}$$
 
+--
 solve the preditor equation for \\(x\\)
 
 $$x y = \frac{\gamma y}{\delta} \Rightarrow x = \frac{\gamma}{\delta}$$
@@ -194,7 +200,7 @@ $$\frac{dy}{dt} = \delta \frac{\gamma}{\delta} \frac{\alpha}{\beta} - \gamma \fr
 --
 The two fixed points are \\((x,y) = (0,0)\\) and \\((x,y) = (\frac{\gamma}{\delta}, \frac{\alpha}{\beta})\\)
 ---
-# TODO plot of the range and domain with two stable points
+.center[[plot of the two stable points](quiverplot_py.html)]
 
 ---
 # One is missing
@@ -211,4 +217,4 @@ $$\frac{dx}{dt} = 0$$
 
 $$\frac{dy}{dt} = - \gamma y$$
 ---
-# TODO plot of the range and domain with two stable points and arrows on the axes
+.center[[plot of the full solution](quiverplot_py.html)]
