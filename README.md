@@ -39,3 +39,6 @@ and
 
 Only the last step needs to be done if changes to the site are being
 made.
+
+Various bits of the design were borrowed from
+[jekyll-bootstrap](https://github.com/plusjade/jekyll-bootstrap/).
