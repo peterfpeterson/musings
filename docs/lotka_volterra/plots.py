@@ -7,9 +7,8 @@ import numpy as np
 ##### parameters for everything
 
 alpha = 10 # prey growth
-beta  = 5 # predator eat
-delta = 1 # predator growth
-gamma = 10 # predator death
+beta  = 1 # predator eat
+gamma = 1 # predator death
 
 # second fixed point
 (xfixed, yfixed) = (gamma /delta, alpha / beta)
@@ -29,7 +28,12 @@ v = delta * x * y - gamma * y
 ####################
 
 title = 'alpha=%.1f beta=%.1f delta=%.1f gamma=%.1f' % (alpha, beta, delta, gamma)
-ext = ''#'_'.join([str(item) for item in [alpha, beta, delta, gamma]])
+ext = '_'.join([str(item) for item in [alpha, beta, delta, gamma]])
+filename='quiverplot_'+ext+'.html'
+
+htmlline = '</td><td>'.join([str(item) for item in [alpha, beta, delta, gamma]])
+htmlline = '<tr><td>' + htmlline + '</td><a href=\'' + filename + '\'>link</a></td></tr>'
+print(htmlline)
 
 # fixed points
 points = go.Scatter(x=[0, xfixed], y=[0, yfixed],
@@ -49,7 +53,7 @@ fig['data'].append(points)
 fig['layout']['xaxis'] = dict(range=[0., xmax])
 fig['layout']['yaxis'] = dict(range=[0., ymax])
 fig['layout']['title'] = title
-plot(fig, show_link=False, filename='lotka_volterra/quiverplot_py'+ext+'.html')
+plot(fig, show_link=False, filename='lotka_volterra/'+ filename)
 
 
 # http://tributary.io/inlet/5211034

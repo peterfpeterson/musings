@@ -217,4 +217,15 @@ $$\frac{dx}{dt} = 0$$
 
 $$\frac{dy}{dt} = - \gamma y$$
 ---
-.center[[plot of the full solution](quiverplot_py.html)]
+# Various values
+
+<center><table>
+<tr><th>alpha</th><th>beta</th><th>delta</th><th>gamma</th><th>&nbsp;</th></tr>
+<tr><td>100</td><td>5</td><td>1</td><td>10</td><td><a href='quiverplot_100_5_1_10.html'>link</a></td></tr>
+<tr><td>10</td><td>50</td><td>1</td><td>10</td><td><a href='quiverplot_10_50_1_10.html'>link</a></td></tr>
+<tr><td>10</td><td>5</td><td>1</td><td>10</td><td><a href='quiverplot_10_5_1_10.html'>link</a></td></tr>
+<tr><td>10</td><td>1</td><td>10</td><td>1</td><td><a href='quiverplot_10_1_10_1.html'>link</a></td></tr>
+<tr><td>10</td><td>5</td><td>10</td><td>1</td><td><a href='quiverplot_10_5_10_1.html'>link</a></td></tr>
+</table></center>
+
+.center[&#x1F43A; &#x1F430;]
