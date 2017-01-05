@@ -93,21 +93,6 @@ interaction of the two species.
 .center[**It's all greek to me!**]
 
 ---
-#What does that all mean?
-
-$$\frac{dx}{dt} = \alpha x - \beta x y$$
-
-$$\frac{dy}{dt} = \delta x y - \gamma y$$
-
-
-* \\(x\\) is the number of &#x1F430;prey
-* \\(y\\) is the number of &#x1F43A;predators
-* α is related to &#x1F430;prey birth rate
-* β is related to how often &#x1F43A;predators eat &#x1F430;prey
-* γ is related to &#x1F43A;predator population growth
-* δ is related to &#x1F43A;predator death rate
-
----
 #Very brief introduction to calculus
 
 .center[![The guys](http://www.todayifoundout.com/wp-content/uploads/2016/12/leibniz-and-newton-340x211.png)]
@@ -138,3 +123,92 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 .center[<img alt="integrals are just area" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Integral_as_region_under_curve.svg/744px-Integral_as_region_under_curve.svg.png" width='500'/>]
 
 Related: [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)
+
+---
+# What does that all mean?
+
+$$\frac{dx}{dt} = \alpha x - \beta x y$$
+
+$$\frac{dy}{dt} = \delta x y - \gamma y$$
+
+
+* \\(x\\) is the number of prey (&#x1F430;)
+* \\(y\\) is the number of predators (&#x1F43A;)
+* α is related to prey birth rate (+ &#x1F430;)
+* β is related to how often predators eat prey (- &#x1F430;)
+* δ is related to predator population growth (+ &#x1F43A;)
+* γ is related to predator death/emigration rate (- &#x1F43A;)
+
+---
+# TODO plot of the range and domain
+
+---
+# How do you "solve" that?
+
+--
+**Stability points:** Points where the population is stable
+
+$$\frac{dx}{dt} = 0$$
+
+$$\frac{dy}{dt} = 0$$
+---
+# There are no animals
+
+$$(x,y) = (0,0)$$
+
+.center[![tombstone](https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fi.imgur.com%2FwWfAm3S.jpg&f=1)]
+---
+# There are no animals
+
+$$\frac{dx}{dt} = \alpha \times 0 - \beta \times 0 \times 0 = 0$$
+
+$$\frac{dy}{dt} = \delta \times 0 \times 0 - \gamma \times 0 = 0$$
+
+.center[![tombstone](https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fi.imgur.com%2FwWfAm3S.jpg&f=1)]
+---
+# Is there another?
+
+$$\frac{dx}{dt} = \alpha x - \beta x y = 0$$
+
+$$\frac{dy}{dt} = \delta x y - \gamma y = 0$$
+
+solve prey equation for \\(y\\)
+
+$$x y = \frac{\alpha x}{\beta} \Rightarrow y = \frac{\alpha}{\beta}$$
+
+solve the preditor equation for \\(x\\)
+
+$$x y = \frac{\gamma y}{\delta} \Rightarrow x = \frac{\gamma}{\delta}$$
+
+---
+# Is there another? (pt 2)
+
+$$(x,y) = (\frac{\gamma}{\delta}, \frac{\alpha}{\beta})$$
+
+Check our math by substituting in for \\(x\\) and \\(y\\) yields
+
+$$\frac{dx}{dt} = \alpha \frac{\gamma}{\delta} - \beta \frac{\gamma}{\delta} \frac{\alpha}{\beta} = \frac{\alpha \gamma}{\delta} - \frac{\alpha \gamma}{\delta} = 0$$
+
+$$\frac{dy}{dt} = \delta \frac{\gamma}{\delta} \frac{\alpha}{\beta} - \gamma \frac{\alpha}{\beta} = \frac{\alpha \gamma}{\beta} - \frac{\alpha \gamma}{\beta} = 0$$
+
+--
+The two fixed points are \\((x,y) = (0,0)\\) and \\((x,y) = (\frac{\gamma}{\delta}, \frac{\alpha}{\beta})\\)
+---
+# TODO plot of the range and domain with two stable points
+
+---
+# One is missing
+
+## There are no preditors
+
+$$\frac{dx}{dt} = \alpha x$$
+
+$$\frac{dy}{dt} = 0$$
+
+## There are no prey
+
+$$\frac{dx}{dt} = 0$$
+
+$$\frac{dy}{dt} = - \gamma y$$
+---
+# TODO plot of the range and domain with two stable points and arrows on the axes
