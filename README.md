@@ -27,23 +27,15 @@ ipython notebook
 
 ### Testing webpages
 
-Create a link to host the page with the correct name then startup a
-web server in python. From the root directory of the repository.
-```
-$ ln -s docs musings
-$ python -m SimpleHTTPServer
-```
-In `python3 this has been changed to
-```
-$ python3 -m http.server
-```
-
-This is so all of the pages are found.
-
-### Jekyll based webpages
+The webpages are being generated using [Jekyll](https://jekyllrb.com)
+and
+[gh-pages](https://help.github.com/articles/about-github-pages-and-jekyll/). To get things running from scratch:
 
 1. install ruby and ruby developer packages (e.g. `dnf install ruby ruby-devel`)
 2. `gem install bundle`
 3. `cd docs`
 4. `bundle update`
 5. `bundle exec jekyll serve --watch --drafts`
+
+Only the last step needs to be done if changes to the site are being
+made.
