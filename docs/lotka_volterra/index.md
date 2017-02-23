@@ -97,6 +97,7 @@ $$e^{i\pi} + 1 = 0$$
 $$e^{i\tau} = 1 + 0$$
 
 ---
+# The model
 
 The **Lotka–Volterra** equations, also known as the predator–prey
 equations, are a pair of first-order, non-linear, differential
@@ -202,7 +203,6 @@ $$\frac{dx}{dt} = \alpha x - \beta x y$$
 
 $$\frac{dy}{dt} = \delta x y - \gamma y$$
 
-
 * \\(x\\) is the number of prey (&#x1F430;)
 * \\(y\\) is the number of predators (&#x1F43A;)
 * α is related to prey birth rate (+ &#x1F430;)
@@ -218,29 +218,15 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 * \\(y \in\\) [0, &#x1F43A;, &#x221E;)
 
 ---
-# One is missing
-
-## There are no preditors
-
-$$\frac{dx}{dt} = \alpha x$$
-
-$$\frac{dy}{dt} = 0$$
-
-## There are no prey
-
-$$\frac{dx}{dt} = 0$$
-
-$$\frac{dy}{dt} = - \gamma y$$
-
----
 # How do you "solve" that?
 
 --
 **Stability points:** Points where the population is stable
 
-$$\frac{dx}{dt} = 0$$
+$$\frac{dx}{dt} = 0 = \alpha x - \beta x y$$
 
-$$\frac{dy}{dt} = 0$$
+$$\frac{dy}{dt} = 0 = \delta x y - \gamma y$$
+
 ---
 # There are no animals
 
@@ -256,11 +242,25 @@ $$\frac{dy}{dt} = \delta \times 0 \times 0 - \gamma \times 0 = 0$$
 
 .center[![tombstone](https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fi.imgur.com%2FwWfAm3S.jpg&f=1)]
 ---
-# Is there another?
+# One is missing
 
-$$\frac{dx}{dt} = \alpha x - \beta x y = 0$$
+## There are no preditors
 
-$$\frac{dy}{dt} = \delta x y - \gamma y = 0$$
+$$\frac{dx}{dt} = \alpha x$$
+
+$$\frac{dy}{dt} = 0$$
+
+## There are no prey
+
+$$\frac{dx}{dt} = 0$$
+
+$$\frac{dy}{dt} = - \gamma y$$
+---
+# Is there another stability point?
+
+$$\frac{dx}{dt} = 0 = \alpha x - \beta x y$$
+
+$$\frac{dy}{dt} = 0 = \delta x y - \gamma y$$
 
 --
 solve prey equation for \\(y\\)
