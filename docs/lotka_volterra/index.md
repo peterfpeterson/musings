@@ -8,12 +8,13 @@ layout: true
 class: center, middle, inverse
 ---
 template: inverse
+background-image: url(whiteboard.jpg)
+background-position: center
+background-size: cover
 
 # Lotka–Volterra predator–prey equations
 
 ## &#x1F43A; vs &#x1F430;
-
-More information on [<i class="fa fa-wikipedia-w" aria-hidden="true"></i>ikipedia](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations)
 
 ???
 
@@ -26,6 +27,16 @@ https://stackoverflow.com/questions/28332217/solve-lotka-volterra-model-using-sc
 http://mathinsight.org/applet/lotka_volterra_versus_time
 http://www.math.ku.dk/~moller/e04/bio/maple/lotka_volterra.html
 http://epubs.siam.org/doi/pdf/10.1137/080723715
+
+---
+layout: false
+class:
+# Some acknowledgements
+
+* [<i class="fa fa-wikipedia-w" aria-hidden="true"></i>ikipedia](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations)
+* [remark.js](https://remarkjs.com/) for browser based presentations
+* [KaTex](https://github.com/Khan/KaTeX) is a browser based relative to [LaTex](https://www.latex-project.org/)
+* <i class="fa fa-github" aria-hidden="true"></i> [GitHub](https://github.com/)
 
 ---
 layout: false
@@ -54,21 +65,36 @@ template: inverse
 
 background-image: url(http://neutrons.ornl.gov/sites/default/files/Shull_Wollan_history-750.jpg)
 
-.right[http://neutrons.ornl.gov]
+.left[[Nobel prize in 1994](http://www.nobelprize.org/nobel_prizes/physics/laureates/1994/illpres/)]
 
-???
+.left[http://neutrons.ornl.gov]
+---
+# Structure - How atoms are arranged
 
-Brief overview of what neutron scattering is/what it is used for
+.center[<img alt="structure" src="http://www.nobelprize.org/nobel_prizes/physics/laureates/1994/illpres/3_are.gif" width="100%"/>]
+
+---
+# Dynamics - How atoms move
+
+.center[<img alt="dynamics" src="http://www.nobelprize.org/nobel_prizes/physics/laureates/1994/illpres/5_do.gif" width="100%"/>]
+
 ---
 
-# Display and Inline
+# Public Service Announcement (PSA)
 
-1. This is an inline integral: \(\int_a^bf(x)dx\)
-2. More \\(x={a \over b}\\) formulae.
+[Tau manifesto](http://tauday.com/tau-manifesto)
 
-Display formula:
+$$\tau = \frac{circumference}{radius}$$
+
+--
+Euler's identity:
 
 $$e^{i\pi} + 1 = 0$$
+
+--
+...but using \\(\tau = 2 \pi\\)
+
+$$e^{i\tau} = 1 + 0$$
 
 ---
 
@@ -91,6 +117,51 @@ interaction of the two species.
 --
 
 .center[**It's all greek to me!**]
+
+---
+# [Greek Alphabet](https://en.wikipedia.org/wiki/Greek_alphabet) Cheat Sheet!
+
+<center><table width="80%">
+<tr>
+  <td>&alpha;</td><td>alpha</td>
+  <td>&beta;</td><td>beta</td>
+  <td>&gamma;</td><td>gamma</td>
+</tr>
+<tr>
+  <td>&delta;</td><td>delta</td>
+  <td>&epsilon;</td><td>epsilon</td>
+  <td>&zeta;</td><td>zeta</td>
+</tr>
+<tr>
+  <td>&eta;</td><td>eta</td>
+  <td>&theta;</td><td>theta</td>
+  <td>&iota;</td><td>iota</td>
+</tr>
+<tr>
+  <td>&kappa;</td><td>kappa</td>
+  <td>&lambda;</td><td>lambda</td>
+  <td>&mu;</td><td>mu</td>
+</tr>
+  <td>&nu;</td><td>nu</td>
+  <td>&xi;</td><td>xi</td>
+  <td>&omicron;</td><td>omicron</td>
+</tr>
+<tr>
+  <td>&pi;</td><td>pi</td>
+  <td>&rho;</td><td>rho</td>
+  <td>&sigma;</td><td>sigma</td>
+</tr>
+<tr>
+  <td>&tau;</td><td>tau</td>
+  <td>&upsilon;</td><td>upsilon</td>
+  <td>&phi;</td><td>phi</td>
+</tr>
+<tr>
+  <td>&chi;</td><td>chi</td>
+  <td>&psi;</td><td>psi</td>
+  <td>&omega;</td><td>omega</td>
+</tr>
+</table></center>
 
 ---
 #Very brief introduction to calculus
@@ -147,6 +218,21 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 * \\(y \in\\) [0, &#x1F43A;, &#x221E;)
 
 ---
+# One is missing
+
+## There are no preditors
+
+$$\frac{dx}{dt} = \alpha x$$
+
+$$\frac{dy}{dt} = 0$$
+
+## There are no prey
+
+$$\frac{dx}{dt} = 0$$
+
+$$\frac{dy}{dt} = - \gamma y$$
+
+---
 # How do you "solve" that?
 
 --
@@ -199,33 +285,22 @@ $$\frac{dy}{dt} = \delta \frac{\gamma}{\delta} \frac{\alpha}{\beta} - \gamma \fr
 
 --
 The two fixed points are \\((x,y) = (0,0)\\) and \\((x,y) = (\frac{\gamma}{\delta}, \frac{\alpha}{\beta})\\)
----
+
 .center[[plot of the two stable points](quiverplot_py.html)]
 
 ---
-# One is missing
+# Quiver plot
 
-## There are no preditors
+.center[![quiver](http://matplotlib.org/_images/quiver_demo_00.png)]
 
-$$\frac{dx}{dt} = \alpha x$$
-
-$$\frac{dy}{dt} = 0$$
-
-## There are no prey
-
-$$\frac{dx}{dt} = 0$$
-
-$$\frac{dy}{dt} = - \gamma y$$
 ---
 # Various values
 
-<center><table>
-<tr><th>alpha</th><th>beta</th><th>delta</th><th>gamma</th><th>&nbsp;</th></tr>
-<tr><td>100</td><td>5</td><td>1</td><td>10</td><td><a href='quiverplot_100_5_1_10.html'>link</a></td></tr>
-<tr><td>10</td><td>50</td><td>1</td><td>10</td><td><a href='quiverplot_10_50_1_10.html'>link</a></td></tr>
-<tr><td>10</td><td>5</td><td>1</td><td>10</td><td><a href='quiverplot_10_5_1_10.html'>link</a></td></tr>
-<tr><td>10</td><td>1</td><td>10</td><td>1</td><td><a href='quiverplot_10_1_10_1.html'>link</a></td></tr>
-<tr><td>10</td><td>5</td><td>10</td><td>1</td><td><a href='quiverplot_10_5_10_1.html'>link</a></td></tr>
+<center><table width="100%" text-align="center">
+<tr bgcolor="#aaaaaa"><th>+ &#x1F430; (&alpha;)</th><th>- &#x1F430; (&beta;)</th><th>+ &#x1F43A; (&delta;)</th><th>- &#x1F43A; (&gamma;)</th><th>&gamma;/&delta;</th><th>&alpha;/&beta;</th><th>&nbsp;</th></tr>
+<tr><td>100</td><td>5</td><td>1</td><td>10</td><td>10</td><td>0.05</td><td><a href='quiverplot_100_5_1_10.html'>quiver</a></td></tr>
+<tr bgcolor="#dddddd"><td>10</td><td>50</td><td>1</td><td>10</td><td>10</td><td>5</td><td><a href='quiverplot_10_50_1_10.html'>quiver</a></td></tr>
+<tr><td>10</td><td>5</td><td>1</td><td>10</td><td>10</td><td>0.5</td><td><a href='quiverplot_10_5_1_10.html'>quiver</a></td></tr>
+<tr bgcolor="#dddddd"><td>10</td><td>1</td><td>10</td><td>1</td><td>0.1</td><td>0.1</td><td><a href='quiverplot_10_1_10_1.html'>quiver</a></td></tr>
+<tr><td>10</td><td>5</td><td>10</td><td>1</td><td>0.1</td><td>0.5</td><td><a href='quiverplot_10_5_10_1.html'>quiver</a></td></tr>
 </table></center>
-
-.center[&#x1F43A; &#x1F430;]
