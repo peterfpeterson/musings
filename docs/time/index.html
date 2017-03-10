@@ -33,18 +33,12 @@ function OS(n){
 
 
 <!-- utc/gmt -->
-<script charset="utf-8" src="/javascript/time.js"></script>
+<script charset="utf-8" src="/javascript/datetime.js"></script>
 <script type="text/javascript">
 function getMyTime(gmt) {
   var dt=new Date();
-  if (gmt) {
-    return iso8601(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate(),dt.getUTCHours(),dt.getUTCMinutes(),dt.getUTCSeconds())+'Z';
-  } else {
-    tzoffset = (dt.getTimezoneOffset()/60);
-    if(tzoffset > 0){tzoffset = '+'+tzoffset;}
-    tzoffset = tzoffset+':00';
-    return iso8601(dt.getFullYear(),dt.getMonth()+1,dt.getDate(),dt.getHours(),dt.getMinutes(),dt.getSeconds())+tzoffset
-  }
+  var datetime = new DateTime();
+  return datetime.iso8601(gmt);
 }
 </script>
 
