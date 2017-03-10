@@ -9,3 +9,6 @@ author :
   name : Pete Peterson
   github : peterfpeterson
   twitter : Psqrd
+
+gems:
+ - jekyll-coffeescript
