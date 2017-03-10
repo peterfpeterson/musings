@@ -36,9 +36,12 @@ function OS(n){
 <script charset="utf-8" src="/javascript/datetime.js"></script>
 <script type="text/javascript">
 function getMyTime(gmt) {
-  var dt=new Date();
-  var datetime = new DateTime();
+  var datetime=new Date();
   return datetime.iso8601(gmt);
+}
+function getMyLunyTime() {
+  var datetime=new Date();
+  return LST(0,0) +'<br>' +datetime.lunar();
 }
 </script>
 
@@ -50,7 +53,7 @@ function getMyTime(gmt) {
 function DisplayTime(){
   document.getElementById('dUTC').innerHTML=getMyTime(true);
   document.getElementById('dLocal').innerHTML=getMyTime(false);
-  document.getElementById('dLST').innerHTML=LST(0,0);
+  document.getElementById('dLST').innerHTML=getMyLunyTime();
 
   setTimeout("DisplayTime()",0x3D8);
 }
