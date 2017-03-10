@@ -1,0 +1,107 @@
+---
+title: Times of the multiverse
+---
+{% include header.html %}
+
+<!-- lunar clock -->
+<script language="JavaScript1.2">
+window.onbeforeunload = function () {
+   // Prevent caching of this page.
+}
+LST.f=0.9843529666671;
+s=new Date();
+LST.c=navigator.onLine?(Math.abs((s/0x3E8)|0-0x58c2c3ba)<30?0xd80cb1:0x599ad06b-(s/0x3E8)):0xd80cb1;
+
+function LST(o,t){
+  s=(new Date()/0x3E8+LST.c)/LST.f-t;n=(s<0?'-&nbsp;':'');s=(s<0?-s:s);m=0x3C;h=0xE10;p=0x15180;d=0x278D00;y=0x1DA9C00;Y=(s/y)|0;s-=y*(t>0?Y:Y++);D=(s/d)|0;s-=d*(t>0?D:D++);dd=DD(D);C=(s/p)|0;s-=p*(t>0?C:C++);cc=DD(C);H=(s/h)|0;s-=h*H;hh=DD(H);M=(s/m)|0;s-=m*M;mm=DD(M);ss=DD((s/1)|0);switch(o) {case 1:return(Y+"-"+dd+"-"+cc+"&nbsp;&nabla;");case 2:return(DN(D)+" "+OS(C)+", " + Y +"&nbsp;&nabla;");case 3:return("&nabla;&nbsp;"+hh+":"+mm+":"+ss);case 4:return("&nabla;&nbsp;"+hh+":"+mm);case 5:if(Y+D+C==0){return(n+"&nabla;&nbsp;"+hh+":"+mm+":"+ss);} else if(Y+D == 0){return(n+cc+"&nbsp;&nabla;&nbsp;"+hh+":"+mm+":"+ss);}else if(Y==0){return(n+dd+"-"+cc+"&nbsp;&nabla;&nbsp;"+hh+":"+mm+":"+ss);}else{return(n+Y+"-"+dd+"-"+cc+"&nbsp;&nabla;&nbsp;"+hh+":"+mm+":"+ss);}default:return(Y+"-"+dd+"-"+cc+"&nbsp;&nabla;&nbsp;"+hh+":"+mm+":"+ss);}
+}
+
+function DD(n){
+    return(n<0xA?'0'+n:n);
+}
+
+function DN(n){
+  switch(n){case 1:return('Armstrong');case 2:return('Aldrin');case 3:return('Conrad');case 4:return('Bean');case 5:return('Shepard');case 6:return('Mitchell');case 7:return('Scott');case 8:return('Irwin');case 9:return('Young');case 10:return('Duke');case 11:return('Cernan');case 12:return('Schmitt');}
+}
+
+function OS(n){
+  if (n%20 == n && n%10 != n) { return n+"<sup>th</sup>";}
+  switch(n%10) { case 1:return n+"<sup>st</sup>";case 2:return n+"<sup>nd</sup>";case 3:return n+"<sup>rd</sup>";default:return n+"<sup>th</sup>";}
+}
+</script>
+<!-- lunar clock end -->
+
+
+<!-- utc/gmt -->
+<script type="text/javascript">
+function zeroPad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+
+    return str;
+}
+
+function iso8601(year, month, day, hour, minutes, seconds) {
+  return year+'-'+zeroPad(month,2)+'-'+zeroPad(day,2)
+         +'T'+zeroPad(hour,2)+':'+zeroPad(minutes,2)+':'+zeroPad(seconds,2);
+}
+
+function getMyTime(gmt) {
+  var dt=new Date();
+  if (gmt) {
+    return iso8601(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate(),dt.getUTCHours(),dt.getUTCMinutes(),dt.getUTCSeconds())+'Z';
+  } else {
+    tzoffset = (dt.getTimezoneOffset()/60);
+    if(tzoffset > 0){tzoffset = '+'+tzoffset;}
+    tzoffset = tzoffset+':00';
+    return iso8601(dt.getFullYear(),dt.getMonth()+1,dt.getDate(),dt.getHours(),dt.getMinutes(),dt.getSeconds())+tzoffset
+  }
+}
+</script>
+
+</script>
+<!-- utc/gmt end -->
+
+<!-- attach to window -->
+<script language="JavaScript1.2">
+function DisplayTime(){
+  document.getElementById('dUTC').innerHTML=getMyTime(true);
+  document.getElementById('dLocal').innerHTML=getMyTime(false);
+  document.getElementById('dLST').innerHTML=LST(0,0);
+
+  setTimeout("DisplayTime()",0x3D8);
+}
+window.onload=DisplayTime;</script>
+
+
+<div class="jumbotron">
+    <h2>Time is worth more than money</h2>
+</div><!-- /.jumbotron -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <center>
+          Local Time<br>
+          <b id="dLocal"></b>
+      </center>
+    </div>
+
+    <div class="col-md-3">
+      <center>
+          Coordinated Universal Time (UTC/GMT)<br>
+          <b id="dUTC"></b>
+      </center>
+    </div>
+
+    <div class="col-md-3">
+      <center>
+          <a href="http://lunarclock.org">Lunar&nbsp;Standard&nbsp;Time (LST)</a><br>
+          <b id="dLST"></b>
+      </center>
+    </div>
+</div>
+
+{% include footer.html %}
