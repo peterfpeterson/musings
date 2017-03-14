@@ -31,3 +31,15 @@ Date::iso8601 = (gmt) ->
           tzoffset = '+'+tzoffset
         tzd = tzoffset+':00';
      return date+'T'+time+tzd
+
+Date::decimal = (local) ->
+    if local
+        date = formatDate(@getFullYear(), @getMonth()+1, @getDate())
+        seconds = @getSeconds() + 60 * (@getMinutes() + 60 * @getHours())
+    else
+        date = formatDate(@getUTCFullYear(), @getUTCMonth()+1, @getUTCDate())
+        seconds = @getUTCSeconds() + 60 * (@getUTCMinutes() + 60 * @getUTCHours())
+
+    seconds = ''+(seconds/100000)
+
+    return date+seconds.substr(1,5)

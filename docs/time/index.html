@@ -26,9 +26,13 @@ function DD(n){
 <!-- utc/gmt -->
 <script charset="utf-8" src="/javascript/datetime.js"></script>
 <script type="text/javascript">
-function getMyTime(gmt) {
+function getTime(gmt) {
   var datetime=new Date();
   return datetime.iso8601(gmt);
+}
+function getDecTime() {
+  var datetime=new Date();
+  return datetime.decimal();
 }
 </script>
 
@@ -38,10 +42,10 @@ function getMyTime(gmt) {
 <!-- attach to window -->
 <script language="JavaScript1.2">
 function DisplayTime(){
-  document.getElementById('dUTC').innerHTML=getMyTime(true);
-  document.getElementById('dLocal').innerHTML=getMyTime(false);
+  document.getElementById('dUTC').innerHTML=getTime(true);
+  document.getElementById('dLocal').innerHTML=getTime(false);
   document.getElementById('dLST').innerHTML=LST();
-
+  document.getElementById('decimalTime').innerHTML=getDecTime();
   setTimeout("DisplayTime()",0x3D8);
 }
 window.onload=DisplayTime;</script>
@@ -71,6 +75,13 @@ window.onload=DisplayTime;</script>
       <center>
           <a href="http://lunarclock.org">Lunar&nbsp;Standard&nbsp;Time (LST)</a><br>
           <b id="dLST"></b>
+      </center>
+    </div>
+
+    <div class="col-md-3">
+      <center>
+          <a href="https://en.wikipedia.org/wiki/Decimal_time">Decimal Time</a> (UTC/GMT)<br>
+          <b id="decimalTime"></b>
       </center>
     </div>
 </div>
