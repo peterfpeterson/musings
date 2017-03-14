@@ -1,0 +1,63 @@
+---
+title: Atlanta 2017 - table
+---
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+
+{% include meta.html %}
+
+{% include bootstrap/css %}
+{% include dynatable/css %}
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container" role="main">
+
+  <table id="my-final-table">
+  <thead>
+    <th>Leg</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+{% include bootstrap/javascript %}
+{% include dynatable/javascript %}
+
+<!-- BODY GOES HERE -->
+<script type="text/javascript">
+//  jQuery = window.jQuery
+
+// configure how the table fills in
+$.dynatableSetup({
+  features: {
+    paginate: false,
+    sort: false,
+    pushState: true,
+    search: false,
+    recordCount: false,
+    perPageSelect: false
+  }
+});
+
+// link the json data to the table
+$.getJSON('data.json', function(data) {
+    $('#my-final-table').dynatable({
+      dataset: data
+});
+    console.log(data)
+  }
+);
+</script>
+
+</div> <!-- ./container -->
+
+
+</body>
+</html>
