@@ -55,41 +55,50 @@ window.onload=DisplayTime;</script>
     <h2>Time is worth more than money</h2>
 </div><!-- /.jumbotron -->
 
-<div class="container">
+<div class="container-fluid text-center center-block">
   <div class="row">
-    <div class="col-md-3">
-      <center>
+    <div class="col-md-4 col-sm-3">
+      <p>
           Local Time (<script type="text/javascript">document.write((new Date()).zoneAbbr())</script>)<br>
           <b id="dLocal"></b>
-      </center>
+      </p>
     </div>
 
-    <div class="col-md-3">
-      <center>
-          Coordinated Universal Time (UTC/GMT)<br>
+    <div class="col-md-4 col-sm-3">
+      <p>
+          UTC/GMT<br>
           <b id="dUTC"></b>
-      </center>
+      </p>
     </div>
 
-    <div class="col-md-3">
-      <center>
+    <div class="col-md-4 col-sm-3">
+      <p>
+          Week <script type="text/javascript">document.write((new Date()).week()+' of '+(new Date()).getUTCFullYear())</script>
+      </p>
+    </div>
+
+    <div class="clearfix visible-sm-block"></div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-0 col-sm-3 col-sm-offset-2">
+      <p>
           <a href="http://lunarclock.org">Lunar&nbsp;Standard&nbsp;Time (LST)</a><br>
           <b id="dLST"></b>
-      </center>
+      </p>
     </div>
 
-    <div class="col-md-3">
-      <center>
+    <div class="col-md-6 col-sm-3">
+      <p>
           <a href="https://en.wikipedia.org/wiki/Decimal_time">Decimal Time</a> (UTC/GMT)<br>
           <b id="decimalTime"></b>
-      </center>
+      </p>
     </div>
 
-    <div class="col-md-3">
-      <center>
-          Week <script type="text/javascript">document.write((new Date()).week()+' of '+(new Date()).getUTCFullYear())</script>
-      </center>
-    </div>
+    <div class="clearfix visible-sm-block"></div>
+
+  </div>
 </div>
 
 {% include footer.html %}
