@@ -1,0 +1,2 @@
+<!-- dynatable 0.3.1 -->
+<script src="{{ site.baseurl }}/javascript/vendor/jquery.dynatable.js"></script>
