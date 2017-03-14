@@ -59,7 +59,7 @@ window.onload=DisplayTime;</script>
   <div class="row">
     <div class="col-md-3">
       <center>
-          Local Time<br>
+          Local Time (<script type="text/javascript">document.write((new Date()).zoneAbbr())</script>)<br>
           <b id="dLocal"></b>
       </center>
     </div>
@@ -82,6 +82,12 @@ window.onload=DisplayTime;</script>
       <center>
           <a href="https://en.wikipedia.org/wiki/Decimal_time">Decimal Time</a> (UTC/GMT)<br>
           <b id="decimalTime"></b>
+      </center>
+    </div>
+
+    <div class="col-md-3">
+      <center>
+          Week <script type="text/javascript">document.write((new Date()).week()+' of '+(new Date()).getUTCFullYear())</script>
       </center>
     </div>
 </div>

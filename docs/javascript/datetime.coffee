@@ -43,3 +43,13 @@ Date::decimal = (local) ->
     seconds = ''+(seconds/100000)
 
     return date+seconds.substr(1,5)
+
+Date::zoneAbbr = () ->
+    return String(@).split("(")[1].split(")")[0]
+
+Date::week = (gmt) ->
+    if gmt
+        onejan = new Date(@getUTCFullYear(), 0, 1)
+    else
+        onejan = new Date(@getFullYear(), 0, 1)
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7)
