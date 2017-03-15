@@ -86,7 +86,7 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 time_start = np.datetime64('2017-04-21T12:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
-print(race)
+#print(race)
 
 # load in the actual times
 with open('../docs/AtlantaRagnar2017/actual.json', 'r') as handle:
@@ -145,7 +145,7 @@ with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
     json.dump(json_data, handle, sort_keys=True)
 
 # generate the plotly plot
-plotly_args = {'filename': 'atlanta.html',
+plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
                #'output_type': 'div',
                #'include_plotlyjs': False
                }
@@ -158,9 +158,6 @@ def magic(race, label):
     return race[label][mask]
 
 distance = magic(race, 'distance_accum')
-print('***distance***', len(distance), distance)
-print('***distance***', len(race['distance_accum'][mask]), race['distance_accum'][mask])
-
 
 fast = go.Scatter(x=distance,
                   y=magic(race,'time_accum_fast'),
@@ -186,27 +183,40 @@ actual = go.Scatter(x=distance[:len(actual)],
                     name='actual',
                     line=dict(shape='spline', color='#000000'),
                     mode='lines',
-                    hoverinfo='skip',
+                    #hoverinfo='skip',
                     showlegend=False)
 
-#print(dir(magic(race,'time_accum')))
+# predicted line
+annotations = []
+for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
+    leg_type = leg%3
+    leg = int((leg+1)/2)+1
+    runner = leg%4
+    if runner == 0:
+        runner = 4
+    runner = runners.iloc[runner]['name']
+
+    if leg == 13: # finish line
+        text = 'finish'
+    else:
+        text = 'leg %d - %.1f miles' % (leg, leg_miles[leg_type])
+        text += '<br>%s - %s' % (runner, leg_descr[leg_type])
+    annotations.append(text)
 hover = go.Scatter(x=distance,
                    y=magic(race,'time_accum'),
-                   name='',
+                   text=annotations,
+                   name='prediction',
                    line=dict(shape='spline'),
                    mode='lines',
                    #hoverinfo='skip',
                    showlegend=False)
 
+
 layout = go.Layout(xaxis={'title': 'miles'},
-                   #xaxis={'title': xlabel})#,
-                   margin={'l':40,'r':0,'t':0,'b':40})
+                   margin={'r':0,'t':0})
 
 fig = go.Figure(data=[slow,fast,actual, hover], layout=layout)
-plot(fig, filename='atlanta.html', show_link=False)
-
-# render the plot
-#div = plot(fig, show_link=False, **plotly_args)
+plot(fig, show_link=False, **plotly_args)
 
 """
 # In[9]:
