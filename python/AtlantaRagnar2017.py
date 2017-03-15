@@ -4,10 +4,15 @@ from __future__ import (absolute_import, division, print_function)
 import json
 import numpy as np
 import pandas as pd
+from datetime import datetime
+### plotly
+from plotly import tools as toolsly
+from plotly.offline import plot
+import plotly.graph_objs as go
+### matplotlib
 #import matplotlib
 #import matplotlib.pyplot as plt
 #plt.xkcd()
-from datetime import datetime
 
 # setup list of legs
 legs = np.array([3.8, 4.8, 6.7])
@@ -81,7 +86,7 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 time_start = np.datetime64('2017-04-21T12:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
-#print(race)
+print(race)
 
 # load in the actual times
 with open('../docs/AtlantaRagnar2017/actual.json', 'r') as handle:
@@ -137,8 +142,71 @@ for index, row in race.iterrows():
 # write out the json doc
 #print(json.dumps(json_data, indent=2))
 with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
-    json.dump(json_data, handle)
+    json.dump(json_data, handle, sort_keys=True)
 
+# generate the plotly plot
+plotly_args = {'filename': 'atlanta.html',
+               #'output_type': 'div',
+               #'include_plotlyjs': False
+               }
+
+# only the legs that matter
+mask = race['leg']%2 != 0
+mask[0] = True
+
+def magic(race, label):
+    return race[label][mask]
+
+distance = magic(race, 'distance_accum')
+print('***distance***', len(distance), distance)
+print('***distance***', len(race['distance_accum'][mask]), race['distance_accum'][mask])
+
+
+fast = go.Scatter(x=distance,
+                  y=magic(race,'time_accum_fast'),
+                  name='fast',
+                  line=dict(shape='spline', color='transparent'),
+                  mode='lines',
+                  showlegend=False,
+                  hoverinfo='skip',
+                  fill='tonextx',
+                  fillcolor='#aaaaaa')
+slow = go.Scatter(x=distance,
+                  y=magic(race, 'time_accum_slow'),
+                  name='slow',
+                  line=dict(shape='spline', color='transparent'),
+                  mode='lines',
+                  hoverinfo='skip',
+                  showlegend=False)
+
+actual = [item for item in actual
+          if item is not None]
+actual = go.Scatter(x=distance[:len(actual)],
+                    y=actual,
+                    name='actual',
+                    line=dict(shape='spline', color='#000000'),
+                    mode='lines',
+                    hoverinfo='skip',
+                    showlegend=False)
+
+#print(dir(magic(race,'time_accum')))
+hover = go.Scatter(x=distance,
+                   y=magic(race,'time_accum'),
+                   name='',
+                   line=dict(shape='spline'),
+                   mode='lines',
+                   #hoverinfo='skip',
+                   showlegend=False)
+
+layout = go.Layout(xaxis={'title': 'miles'},
+                   #xaxis={'title': xlabel})#,
+                   margin={'l':40,'r':0,'t':0,'b':40})
+
+fig = go.Figure(data=[slow,fast,actual, hover], layout=layout)
+plot(fig, filename='atlanta.html', show_link=False)
+
+# render the plot
+#div = plot(fig, show_link=False, **plotly_args)
 
 """
 # In[9]:
