@@ -1,14 +1,1 @@
-[
-  {"leg":1,  "runner":"Josh", "descr": "gre/yel", "miles":8.6 , "start":"12:00", "actual":"12:00"},
-  {"leg":2,  "runner":"Ross", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
-  {"leg":3,  "runner":"Dan",  "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
-  {"leg":4,  "runner":"Pete", "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
-  {"leg":5,  "runner":"Josh", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
-  {"leg":6,  "runner":"Ross", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
-  {"leg":7,  "runner":"Dan",  "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
-  {"leg":8,  "runner":"Pete", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
-  {"leg":9,  "runner":"Josh", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
-  {"leg":10, "runner":"Ross", "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
-  {"leg":11, "runner":"Dan",  "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
-  {"leg":12, "runner":"Pete", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""}
-]
+[{"actual": "12:00", "descr": "gre/yel", "leg": 1, "miles": 8.6, "elapse": "01h08m", "start": "12:00", "runner": "Josh"}, {"actual": "", "descr": "red/gre", "leg": 2, "miles": 10.5, "elapse": "01h13m", "start": "13:08", "runner": "Ross"}, {"actual": "", "descr": "yel/red", "leg": 3, "miles": 11.5, "elapse": "01h17m", "start": "14:22", "runner": "Dan"}, {"actual": "", "descr": "gre/yel", "leg": 4, "miles": 8.6, "elapse": "01h17m", "start": "15:39", "runner": "Pete"}, {"actual": "", "descr": "red/gre", "leg": 5, "miles": 10.5, "elapse": "01h24m", "start": "16:57", "runner": "Josh"}, {"actual": "", "descr": "yel/red", "leg": 6, "miles": 11.5, "elapse": "01h20m", "start": "18:21", "runner": "Ross"}, {"actual": "", "descr": "gre/yel", "leg": 7, "miles": 8.6, "elapse": "00h58m", "start": "19:41", "runner": "Dan"}, {"actual": "", "descr": "red/gre", "leg": 8, "miles": 10.5, "elapse": "01h34m", "start": "20:39", "runner": "Pete"}, {"actual": "", "descr": "yel/red", "leg": 9, "miles": 11.5, "elapse": "01h32m", "start": "22:14", "runner": "Josh"}, {"actual": "", "descr": "gre/yel", "leg": 10, "miles": 8.6, "elapse": "01h00m", "start": "23:46", "runner": "Ross"}, {"actual": "", "descr": "red/gre", "leg": 11, "miles": 10.5, "elapse": "01h10m", "start": "00:46", "runner": "Dan"}, {"actual": "", "descr": "yel/red", "leg": 12, "miles": 11.5, "elapse": "01h43m", "start": "01:57", "runner": "Pete"}]
