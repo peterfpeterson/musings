@@ -1,14 +1,14 @@
 [
-  {"leg":1,  "runner":"Josh", "descr": "gre/yel", "miles":8.6 },
-  {"leg":2,  "runner":"Ross", "descr": "red/gre", "miles":10.5},
-  {"leg":3,  "runner":"Dan",  "descr": "yel/red", "miles":11.5},
-  {"leg":4,  "runner":"Pete", "descr": "gre/yel", "miles":8.6 },
-  {"leg":5,  "runner":"Josh", "descr": "red/gre", "miles":10.5},
-  {"leg":6,  "runner":"Ross", "descr": "yel/red", "miles":11.5},
-  {"leg":7,  "runner":"Dan",  "descr": "gre/yel", "miles":8.6 },
-  {"leg":8,  "runner":"Pete", "descr": "red/gre", "miles":10.5},
-  {"leg":9,  "runner":"Josh", "descr": "yel/red", "miles":11.5},
-  {"leg":10, "runner":"Ross", "descr": "gre/yel", "miles":8.6 },
-  {"leg":11, "runner":"Dan",  "descr": "red/gre", "miles":10.5},
-  {"leg":12, "runner":"Pete", "descr": "yel/red", "miles":11.5}
+  {"leg":1,  "runner":"Josh", "descr": "gre/yel", "miles":8.6 , "start":"12:00", "actual":"12:00"},
+  {"leg":2,  "runner":"Ross", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
+  {"leg":3,  "runner":"Dan",  "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
+  {"leg":4,  "runner":"Pete", "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
+  {"leg":5,  "runner":"Josh", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
+  {"leg":6,  "runner":"Ross", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
+  {"leg":7,  "runner":"Dan",  "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
+  {"leg":8,  "runner":"Pete", "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
+  {"leg":9,  "runner":"Josh", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""},
+  {"leg":10, "runner":"Ross", "descr": "gre/yel", "miles":8.6,  "start":"",      "actual":"" },
+  {"leg":11, "runner":"Dan",  "descr": "red/gre", "miles":10.5, "start":"",      "actual":""},
+  {"leg":12, "runner":"Pete", "descr": "yel/red", "miles":11.5, "start":"",      "actual":""}
 ]
