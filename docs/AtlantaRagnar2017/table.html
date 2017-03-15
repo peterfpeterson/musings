@@ -8,7 +8,6 @@ title: Atlanta 2017 - table
 {% include meta.html %}
 
 {% include bootstrap/css %}
-{% include dynatable/css %}
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -19,9 +18,14 @@ title: Atlanta 2017 - table
 <body>
 <div class="container" role="main">
 
-  <table id="my-final-table">
+<table id="my-final-table" class="table table-striped">
   <thead>
-    <th>Leg</th>
+    <th dynatable-sort-header="1">leg</th>
+    <th>runner</th>
+    <th data-dynatable-no-sort="1">descr</th>
+    <th>miles</th>
+    <th>start</th>
+    <th>elapse</th>
   </thead>
   <tbody>
   </tbody>
@@ -32,28 +36,28 @@ title: Atlanta 2017 - table
 
 <!-- BODY GOES HERE -->
 <script type="text/javascript">
-//  jQuery = window.jQuery
-
 // configure how the table fills in
 $.dynatableSetup({
   features: {
     paginate: false,
-    sort: false,
     pushState: true,
     search: false,
     recordCount: false,
-    perPageSelect: false
+    perPageSelect: false,
   }
+});
+
+$('#my-final-table').dynatable({
 });
 
 // link the json data to the table
 $.getJSON('data.json', function(data) {
-    $('#my-final-table').dynatable({
-      dataset: data
+  var dynatable = $('#my-final-table').data('dynatable');
+  dynatable.sorts.clear();
+  dynatable.sorts.add('leg', 1) // 1=ASCENDING, -1=DESCENDING
+  dynatable.settings.dataset.originalRecords = data;
+  dynatable.process();
 });
-    console.log(data)
-  }
-);
 </script>
 
 </div> <!-- ./container -->
