@@ -1,75 +1,59 @@
+#!/usr/bin/env python3
+from __future__ import (absolute_import, division, print_function)
 
-# coding: utf-8
-
-# In[1]:
-
+import json
 import numpy as np
 import pandas as pd
-import matplotlib
-get_ipython().magic(u'matplotlib notebook')
-import matplotlib.pyplot as plt
-plt.xkcd()
+#import matplotlib
+#import matplotlib.pyplot as plt
+#plt.xkcd()
 
-
-# In[2]:
-
+# setup list of legs
 legs = np.array([3.8, 4.8, 6.7])
-print('short', legs)
+#print('short', legs)
 legs_full  = np.tile(legs,8)
 legs_ultra = legs_full[:12]+legs_full[1:13]
 legs_full  = np.insert(legs_full, 0, 0.)
 legs_ultra = np.insert(legs_ultra, 0, 0.)
-print('full ', legs_full, legs_full.size, legs_full.sum())
-print('ultra', legs_ultra, legs_ultra.size, legs_ultra.sum())
+#print('full ', legs_full, legs_full.size, legs_full.sum())
+#print('ultra', legs_ultra, legs_ultra.size, legs_ultra.sum())
 
+# setup list of all runners
 runner = np.array([1,2,3,4])
-runner = np.repeat(runner,2)
-runner = np.tile(runner,3)
-runner = np.insert(runner, 0, 0)
-print('runner', runner, runner.size)
+runner = np.repeat(runner,2) # since it is an ultra each runner is twice in a row
+runner = np.tile(runner,3) # and three of those
+runner = np.insert(runner, 0, 0) # get a slot for the time
+#print('runner', runner, runner.size)
 
-
-# In[3]:
-
+# accumulate a list of distances
 race = pd.DataFrame({'leg':np.arange(25),
                      'distance':legs_full,
                      'runner': runner,
                   })
 race['distance_accum'] = np.add.accumulate(race['distance'])
+#print(race)
+# debug matplotlib plot
+#fig, axes  = plt.subplots()
+#axes.plot(np.arange(legs_full.size)+1, np.add.accumulate(legs_full), label='full')
+#axes.plot(np.arange(legs_ultra.size)+1, np.add.accumulate(legs_ultra), label='ultra')
+#axes.legend()
 
-race
-
-
-# In[4]:
-
-fig, axes  = plt.subplots()
-axes.plot(np.arange(legs_full.size)+1, np.add.accumulate(legs_full), label='full')
-axes.plot(np.arange(legs_ultra.size)+1, np.add.accumulate(legs_ultra), label='ultra')
-axes.legend()
-
-
-# In[5]:
-
+# setup times for runners
 runners = pd.DataFrame({'runner':np.arange(5),
-                        'name':['NA', 'Dan', 'Josh', 'Pete', 'Ross'],
+                        'name':['NA', 'Josh', 'Ross', 'Dan', 'Pete'],
                         'pace':[np.timedelta64(int(0), 's'),
-                                np.timedelta64(int(9*60+45), 's'),
-                                np.timedelta64(int(10*60), 's'),
-                                np.timedelta64(int(9*60+30), 's'),
-                                np.timedelta64(int(7*60), 's')]})
+                                np.timedelta64(int(8*60), 's'),
+                                np.timedelta64(int(7*60), 's'),
+                                np.timedelta64(int(6*60+45), 's'),
+                                np.timedelta64(int(9*60), 's')]})
 runners = runners.set_index('runner') # must be a better way
-runners
-
-
-# In[6]:
+#print(runners)
 
 # taken from https://www.timeanddate.com/sun/usa/atlanta
 sunset = np.datetime64('2017-04-21T20:13')
 sunrise = np.datetime64('2017-04-22T06:57')
 
-
-# In[7]:
-
+# calculate the leg times for the actual races
 time_error = np.timedelta64(int(30), 's')
 time_zero = np.timedelta64(int(0), 's')
 leg_time = []
@@ -88,19 +72,61 @@ race['time'] = leg_time
 race['time_fast'] = leg_time_fast
 race['time_slow'] = leg_time_slow
 race['time_accum'] = np.add.accumulate(race['time'])
-race['time_accum_fast'] = np.add.accumulate(race['time_fast']) 
-race['time_accum_slow'] = np.add.accumulate(race['time_slow']) 
-race
+race['time_accum_fast'] = np.add.accumulate(race['time_fast'])
+race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
+#print(race)
 
-
-# In[8]:
-
+# set a start time and calculate when the magic happens
 time_start = np.datetime64('2017-04-21T12:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
-race
+print(race)
+
+# put together the json document
+leg_descr = {0:'gre/yel',
+             1:'red/gre',
+             2:'yel/red'}
+leg_miles = {0:8.6,
+             1:10.5,
+             2:11.5}
+json_data = []
+for index, row in race.iterrows():
+    if index%2 != 0: # it is an ultra
+        continue
+    if index == 0:
+        continue
+
+    runner = ''
+    if row.runner != 0:
+        runner = runners.loc[row.runner]['name']
+
+    # TODO read in the actual times from somewhere
+    print(int(row.leg/2-1))
+    actual = ''
+    if len(json_data) == 0:
+        actual = race.iloc[0]['time_accum'].strftime('%H:%M')
+
+    leg_type = int(row.leg/2-1)%3
 
 
+    start = race.iloc[index-2]['time_accum'].strftime('%H:%M')
+    time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
+    time = 'h'.join(time.split(':')[:2]) + 'm'
+
+    json_data.append({'leg':int(row['leg']/2),
+                      'runner':runner,
+                      'descr':leg_descr[leg_type],
+                      'miles':leg_miles[leg_type],
+                      'start':start,
+                      'elapse':time,
+                      'actual':actual})
+# write out the json doc
+#print(json.dumps(json_data, indent=2))
+with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
+    json.dump(json_data, handle)
+
+
+"""
 # In[9]:
 
 distance_bounds = [race.distance_accum[0], race.distance_accum[race.distance_accum.size-1]]
@@ -108,7 +134,6 @@ time_bounds = [race.time_accum_slow[0], race.time_accum_slow[race.distance_accum
 
 
 # In[10]:
-
 fig, axes  = plt.subplots(figsize=(5,7))
 
 # color the legs
@@ -138,9 +163,6 @@ axes.xaxis.set_major_locator(matplotlib.ticker.FixedLocator([0.,30.,60.,90.,120.
 #axes.set_aspect(200)
 
 fig.savefig('docs/AtlantaRagnar2017/race.svg')
-
+"""
 
 # In[ ]:
-
-
-
