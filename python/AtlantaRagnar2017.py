@@ -7,6 +7,7 @@ import pandas as pd
 #import matplotlib
 #import matplotlib.pyplot as plt
 #plt.xkcd()
+from datetime import datetime
 
 # setup list of legs
 legs = np.array([3.8, 4.8, 6.7])
@@ -80,7 +81,14 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 time_start = np.datetime64('2017-04-21T12:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
-print(race)
+#print(race)
+
+# load in the actual times
+with open('../docs/AtlantaRagnar2017/actual.json', 'r') as handle:
+    actual = json.load(handle)
+    actual = [np.datetime64(item) for item in actual]
+while len(actual) < 12: # magic number related to number of legs
+    actual.append(None)
 
 # put together the json document
 leg_descr = {0:'gre/yel',
@@ -100,16 +108,22 @@ for index, row in race.iterrows():
     if row.runner != 0:
         runner = runners.loc[row.runner]['name']
 
-    # TODO read in the actual times from somewhere
-    print(int(row.leg/2-1))
-    actual = ''
-    if len(json_data) == 0:
-        actual = race.iloc[0]['time_accum'].strftime('%H:%M')
-
     leg_type = int(row.leg/2-1)%3
 
-
+    start = race.iloc[index-2]['time_accum']
+    real = actual[int(row.leg/2-1)]
+    if real is None:
+        real = ''
+    else:
+        diff = start - real
+        diff = str(diff).split(' ')[-1]
+        diff = 'h'.join(diff.split(':')[:2]) + 'm'
+        if real <= start:
+            real = '%s (-%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+        else:
+            real = '%s (+%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
     start = race.iloc[index-2]['time_accum'].strftime('%H:%M')
+
     time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
     time = 'h'.join(time.split(':')[:2]) + 'm'
 
@@ -119,7 +133,7 @@ for index, row in race.iterrows():
                       'miles':leg_miles[leg_type],
                       'start':start,
                       'elapse':time,
-                      'actual':actual})
+                      'actual':real})
 # write out the json doc
 #print(json.dumps(json_data, indent=2))
 with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
