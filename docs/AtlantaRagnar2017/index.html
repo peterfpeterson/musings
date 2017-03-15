@@ -1,10 +1,72 @@
 ---
-title: Atlanta Ragnar 2017
+title: Atlanta 2017 - table
 ---
-{% include header.html %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
 
-<center>
-  <img src='race.svg' style="position: fixed; top: 0; left: 0;max-width: 100%; height: auto;"/>
-</center>
+{% include meta.html %}
 
-{% include footer.html %}
+{% include bootstrap/css %}
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container" role="main">
+
+<table id="my-final-table" class="table table-striped">
+  <thead>
+    <th dynatable-sort-header="1">leg</th>
+    <th>runner</th>
+    <th data-dynatable-no-sort="1">descr</th>
+    <th>miles</th>
+    <th>start</th>
+    <th>elapse</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<ul>
+  <li><a href="plot.html">Plot of legs</a></li>
+  <li><a href="https://www.runragnar.com/event-detail/trail/atlanta_ga">Race page</a></li>
+</ul>
+
+{% include bootstrap/javascript %}
+{% include dynatable/javascript %}
+
+<!-- BODY GOES HERE -->
+<script type="text/javascript">
+// configure how the table fills in
+$.dynatableSetup({
+  features: {
+    paginate: false,
+    pushState: true,
+    search: false,
+    recordCount: false,
+    perPageSelect: false,
+  }
+});
+
+$('#my-final-table').dynatable({
+});
+
+// link the json data to the table
+$.getJSON('data.json', function(data) {
+  var dynatable = $('#my-final-table').data('dynatable');
+  dynatable.sorts.clear();
+  dynatable.sorts.add('leg', 1) // 1=ASCENDING, -1=DESCENDING
+  dynatable.settings.dataset.originalRecords = data;
+  dynatable.process();
+});
+</script>
+
+</div> <!-- ./container -->
+
+
+</body>
+</html>
