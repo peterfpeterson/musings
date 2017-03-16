@@ -151,14 +151,81 @@ plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
                }
 
 # only the legs that matter
-mask = race['leg']%2 != 0
+mask = race['leg']%2 == 0
 mask[0] = True
-
 def magic(race, label):
     return race[label][mask]
 
+# bounding box
+distance_bounds = [race.distance_accum[0], race.distance_accum[race.distance_accum.size-1]]
+time_bounds = [race.time_accum_slow[0], race.time_accum_slow[race.distance_accum.size-1]]
+
+# ultra race distance array
 distance = magic(race, 'distance_accum')
 
+# color bar for difficulties of doubles
+doubles_pos = time_start + np.timedelta64(15,'m') # minutes offset
+
+y = np.array([doubles_pos, doubles_pos, None])
+y = np.tile(y, 4)
+doubles_g = go.Scatter(x=distance,
+                       y=y,
+                       line=dict(shape='spline', color='#bbfb9d', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+y = np.array([None, doubles_pos, doubles_pos])
+y = np.tile(y, 4)
+doubles_y = go.Scatter(x=distance,
+                       y=y,
+                       line=dict(shape='spline', color='#fbf59b', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+y = np.array([doubles_pos, None, doubles_pos])
+y = np.tile(y, 5) # just keep the pattern going
+y[:3] = [None, None, doubles_pos]
+doubles_r = go.Scatter(x=distance,
+                       y=y,
+                       line=dict(shape='spline', color='#fbae9d', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+# color bar for difficulties of singles
+singles_pos = time_start + np.timedelta64(0,'m') # minutes offset
+
+y = np.array([singles_pos, singles_pos, None])
+y = np.tile(y, 8)
+singles_g = go.Scatter(x=race['distance_accum'],
+                       y=y,
+                       line=dict(shape='spline', color='#bbfb9d', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+y = np.array([None, singles_pos, singles_pos])
+y = np.tile(y, 8)
+singles_y = go.Scatter(x=race['distance_accum'],
+                       y=y,
+                       line=dict(shape='spline', color='#fbf59b', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+y = np.array([singles_pos, None, singles_pos])
+y = np.tile(y, 9) # just keep the pattern going
+y[:3] = [None, None, singles_pos]
+singles_r = go.Scatter(x=race['distance_accum'],
+                       y=y,
+                       line=dict(shape='spline', color='#fbae9d', width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)
+
+# prediction cone
 fast = go.Scatter(x=distance,
                   y=magic(race,'time_accum_fast'),
                   name='fast',
@@ -176,18 +243,19 @@ slow = go.Scatter(x=distance,
                   hoverinfo='skip',
                   showlegend=False)
 
+# actual times
 actual = [item for item in actual
           if item is not None]
 actual = go.Scatter(x=distance[:len(actual)],
                     y=actual,
                     name='actual',
-                    line=dict(shape='spline', color='#000000'),
+                    line=dict(shape='spline', color='#7777ff', width=2),
                     mode='lines',
                     #hoverinfo='skip',
                     showlegend=False)
 
 # predicted line
-annotations = []
+pred_text = []
 for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
     leg_type = leg%3
     leg = int((leg+1)/2)+1
@@ -201,21 +269,34 @@ for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
     else:
         text = 'leg %d - %.1f miles' % (leg, leg_miles[leg_type])
         text += '<br>%s - %s' % (runner, leg_descr[leg_type])
-    annotations.append(text)
-hover = go.Scatter(x=distance,
-                   y=magic(race,'time_accum'),
-                   text=annotations,
-                   name='prediction',
-                   line=dict(shape='spline'),
-                   mode='lines',
-                   #hoverinfo='skip',
-                   showlegend=False)
+    pred_text.append(text)
+prediction = go.Scatter(x=distance,
+                        y=magic(race,'time_accum'),
+                        text=pred_text,
+                        name='prediction',
+                        line=dict(shape='spline', color='#555555', width=2),
+                        mode='lines',
+                        showlegend=False)
 
 
+
+
+# add some annotations
+annotations = []
+if sunrise < time_bounds[-1]:
+    annotations.append(dict(x=0, y=sunrise, text='\u263C sunrise', showarrow=False, xanchor='left'))
+annotations.append(dict(x=0, y=sunset, text='\u263D sunset', showarrow=False, xanchor='left'))
+
+# put together the final plot
 layout = go.Layout(xaxis={'title': 'miles'},
-                   margin={'r':0,'t':0})
-
-fig = go.Figure(data=[slow,fast,actual, hover], layout=layout)
+                   margin={'r':0,'t':0},
+                   annotations=annotations
+)
+fig = go.Figure(data=[singles_g, singles_y, singles_r,
+                      doubles_g,doubles_y,doubles_r,
+                      slow,fast,prediction,
+                      actual],
+                layout=layout)
 plot(fig, show_link=False, **plotly_args)
 
 """
