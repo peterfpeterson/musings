@@ -14,6 +14,8 @@ import plotly.graph_objs as go
 #import matplotlib.pyplot as plt
 #plt.xkcd()
 
+######################################################################
+############################## calculate everything
 # setup list of legs
 legs = np.array([3.8, 4.8, 6.7])
 #print('short', legs)
@@ -95,7 +97,8 @@ with open('../docs/AtlantaRagnar2017/actual.json', 'r') as handle:
 while len(actual) < 12: # magic number related to number of legs
     actual.append(None)
 
-# put together the json document
+######################################################################
+############################## put together the json document
 leg_descr = {0:'gre/yel',
              1:'red/gre',
              2:'yel/red'}
@@ -144,7 +147,8 @@ for index, row in race.iterrows():
 with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
     json.dump(json_data, handle, sort_keys=True)
 
-# generate the plotly plot
+######################################################################
+############################## generate the plotly plot
 plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
                #'output_type': 'div',
                #'include_plotlyjs': False
@@ -186,35 +190,24 @@ def difficulties(distance, color, tileArray, firstArray=None):
 
     return go.Scatter(x=distance,
                       y=y,
-                       line=dict(shape='spline', color=color, width=10),
+                       line=dict(shape='spline', color=color, width=20),
                        mode='lines',
                        hoverinfo='skip',
-                       showlegend=False)#,
-#fill='tonext',
-#                       fillcolor=color)
+                       showlegend=False)
 
 # color bar for difficulties of doubles
-doubles_pos = time_start + np.timedelta64(15,'m') # minutes offset
-doubles = []
-doubles.append(difficulties(distance, color['easy'],
-                            [doubles_pos, doubles_pos, None]))
-doubles.append(difficulties(distance, color['medium'],
-                            [None, doubles_pos, doubles_pos]))
-doubles.append(difficulties(distance, color['hard'],
-                            [doubles_pos, None, doubles_pos],
-                            [None, None, doubles_pos]))
-print("doubles:", len(doubles))
+singles_pos = race.time_accum[0]
+doubles_pos = race.time_accum[race.distance_accum.size-1]
 
-# color bar for difficulties of singles
-singles_pos = time_start + np.timedelta64(0,'m') # minutes offset
-singles = []
-singles.append(difficulties(race['distance_accum'], color['easy'],
-                            [singles_pos, singles_pos, None]))
-singles.append(difficulties(race['distance_accum'], color['medium'],
-                            [None, singles_pos, singles_pos]))
-singles.append(difficulties(race['distance_accum'], color['hard'],
-                            [singles_pos, None, singles_pos],
-                            [None, None, singles_pos]))
+data = []
+for position, x in zip([singles_pos, doubles_pos], [distance, race['distance_accum']]):
+    data.append(difficulties(x, color['easy'],
+                            [position, position, None]))
+    data.append(difficulties(x, color['medium'],
+                            [None, position, position]))
+    data.append(difficulties(x, color['hard'],
+                            [position, None, position],
+                            [None, None, position]))
 
 # prediction cone
 fast = go.Scatter(x=distance,
@@ -270,9 +263,6 @@ prediction = go.Scatter(x=distance,
                         mode='lines',
                         showlegend=False)
 
-
-
-
 # add some annotations
 annotations = []
 if sunrise < time_bounds[-1]:
@@ -287,17 +277,12 @@ layout = go.Layout(xaxis={'title': 'miles',
                    margin={'r':0,'t':0},
                    annotations=annotations
 )
-data = []
-data.extend(singles)
-data.extend(doubles)
 data.extend([slow,fast,prediction,actual])
 fig = go.Figure(data=data,
                 layout=layout)
 plot(fig, show_link=False, **plotly_args)
 
 """
-# In[9]:
-
 distance_bounds = [race.distance_accum[0], race.distance_accum[race.distance_accum.size-1]]
 time_bounds = [race.time_accum_slow[0], race.time_accum_slow[race.distance_accum.size-1]]
 
@@ -333,5 +318,3 @@ axes.xaxis.set_major_locator(matplotlib.ticker.FixedLocator([0.,30.,60.,90.,120.
 
 fig.savefig('docs/AtlantaRagnar2017/race.svg')
 """
-
-# In[ ]:
