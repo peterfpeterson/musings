@@ -288,7 +288,8 @@ if sunrise < time_bounds[-1]:
 annotations.append(dict(x=0, y=sunset, text='\u263D sunset', showarrow=False, xanchor='left'))
 
 # put together the final plot
-layout = go.Layout(xaxis={'title': 'miles'},
+layout = go.Layout(xaxis={'title': 'miles',
+                          showgrid=False,showline=False},
                    margin={'r':0,'t':0},
                    annotations=annotations
 )
