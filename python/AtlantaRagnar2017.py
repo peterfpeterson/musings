@@ -171,67 +171,50 @@ time_bounds = [race.time_accum_slow[0], race.time_accum_slow[race.distance_accum
 # ultra race distance array
 distance = magic(race, 'distance_accum')
 
+def genDiffValues(distance, tileArray, firstArray):
+    y = np.array(tileArray)
+    num_tile = int(distance.size/y.size)
+    if firstArray is not None:
+        num_tile += 1
+    y = np.tile(y, num_tile)
+    if firstArray is not None:
+        y[:len(firstArray)]
+    return y
+
+def difficulties(distance, color, tileArray, firstArray=None):
+    y = genDiffValues(distance, tileArray, firstArray)
+
+    return go.Scatter(x=distance,
+                      y=y,
+                       line=dict(shape='spline', color=color, width=10),
+                       mode='lines',
+                       hoverinfo='skip',
+                       showlegend=False)#,
+#fill='tonext',
+#                       fillcolor=color)
+
 # color bar for difficulties of doubles
 doubles_pos = time_start + np.timedelta64(15,'m') # minutes offset
-
-y = np.array([doubles_pos, doubles_pos, None])
-y = np.tile(y, 4)
-doubles_g = go.Scatter(x=distance,
-                       y=y,
-                       line=dict(shape='spline', color=color['easy'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
-
-y = np.array([None, doubles_pos, doubles_pos])
-y = np.tile(y, 4)
-doubles_y = go.Scatter(x=distance,
-                       y=y,
-                       line=dict(shape='spline', color=color['medium'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
-
-y = np.array([doubles_pos, None, doubles_pos])
-y = np.tile(y, 5) # just keep the pattern going
-y[:3] = [None, None, doubles_pos]
-doubles_r = go.Scatter(x=distance,
-                       y=y,
-                       line=dict(shape='spline', color=color['hard'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
+doubles = []
+doubles.append(difficulties(distance, color['easy'],
+                            [doubles_pos, doubles_pos, None]))
+doubles.append(difficulties(distance, color['medium'],
+                            [None, doubles_pos, doubles_pos]))
+doubles.append(difficulties(distance, color['hard'],
+                            [doubles_pos, None, doubles_pos],
+                            [None, None, doubles_pos]))
+print("doubles:", len(doubles))
 
 # color bar for difficulties of singles
 singles_pos = time_start + np.timedelta64(0,'m') # minutes offset
-
-y = np.array([singles_pos, singles_pos, None])
-y = np.tile(y, 8)
-singles_g = go.Scatter(x=race['distance_accum'],
-                       y=y,
-                       line=dict(shape='spline', color=color['easy'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
-
-y = np.array([None, singles_pos, singles_pos])
-y = np.tile(y, 8)
-singles_y = go.Scatter(x=race['distance_accum'],
-                       y=y,
-                       line=dict(shape='spline', color=color['medium'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
-
-y = np.array([singles_pos, None, singles_pos])
-y = np.tile(y, 9) # just keep the pattern going
-y[:3] = [None, None, singles_pos]
-singles_r = go.Scatter(x=race['distance_accum'],
-                       y=y,
-                       line=dict(shape='spline', color=color['hard'], width=10),
-                       mode='lines',
-                       hoverinfo='skip',
-                       showlegend=False)
+singles = []
+singles.append(difficulties(race['distance_accum'], color['easy'],
+                            [singles_pos, singles_pos, None]))
+singles.append(difficulties(race['distance_accum'], color['medium'],
+                            [None, singles_pos, singles_pos]))
+singles.append(difficulties(race['distance_accum'], color['hard'],
+                            [singles_pos, None, singles_pos],
+                            [None, None, singles_pos]))
 
 # prediction cone
 fast = go.Scatter(x=distance,
@@ -243,6 +226,7 @@ fast = go.Scatter(x=distance,
                   hoverinfo='skip',
                   fill='tonextx',
                   fillcolor=color['cone'])
+
 slow = go.Scatter(x=distance,
                   y=magic(race, 'time_accum_slow'),
                   name='slow',
@@ -303,10 +287,11 @@ layout = go.Layout(xaxis={'title': 'miles',
                    margin={'r':0,'t':0},
                    annotations=annotations
 )
-fig = go.Figure(data=[singles_g, singles_y, singles_r,
-                      doubles_g,doubles_y,doubles_r,
-                      slow,fast,prediction,
-                      actual],
+data = []
+data.extend(singles)
+data.extend(doubles)
+data.extend([slow,fast,prediction,actual])
+fig = go.Figure(data=data,
                 layout=layout)
 plot(fig, show_link=False, **plotly_args)
 
