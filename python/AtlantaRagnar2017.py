@@ -150,6 +150,7 @@ with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
 ######################################################################
 ############################## generate the plotly plot
 plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
+               'auto_open':False,
                #'output_type': 'div',
                #'include_plotlyjs': False
                }
