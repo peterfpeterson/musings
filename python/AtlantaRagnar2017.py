@@ -150,6 +150,14 @@ plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
                #'include_plotlyjs': False
                }
 
+# define various useful colors
+color = dict(cone='#aaaaaa',
+             predicted='#555555',
+             actual='#7777ff',
+             easy='#bbfb9d',
+             medium='#fbf59b',
+             hard='#fbae9d')
+
 # only the legs that matter
 mask = race['leg']%2 == 0
 mask[0] = True
@@ -170,7 +178,7 @@ y = np.array([doubles_pos, doubles_pos, None])
 y = np.tile(y, 4)
 doubles_g = go.Scatter(x=distance,
                        y=y,
-                       line=dict(shape='spline', color='#bbfb9d', width=10),
+                       line=dict(shape='spline', color=color['easy'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -179,7 +187,7 @@ y = np.array([None, doubles_pos, doubles_pos])
 y = np.tile(y, 4)
 doubles_y = go.Scatter(x=distance,
                        y=y,
-                       line=dict(shape='spline', color='#fbf59b', width=10),
+                       line=dict(shape='spline', color=color['medium'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -189,7 +197,7 @@ y = np.tile(y, 5) # just keep the pattern going
 y[:3] = [None, None, doubles_pos]
 doubles_r = go.Scatter(x=distance,
                        y=y,
-                       line=dict(shape='spline', color='#fbae9d', width=10),
+                       line=dict(shape='spline', color=color['hard'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -201,7 +209,7 @@ y = np.array([singles_pos, singles_pos, None])
 y = np.tile(y, 8)
 singles_g = go.Scatter(x=race['distance_accum'],
                        y=y,
-                       line=dict(shape='spline', color='#bbfb9d', width=10),
+                       line=dict(shape='spline', color=color['easy'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -210,7 +218,7 @@ y = np.array([None, singles_pos, singles_pos])
 y = np.tile(y, 8)
 singles_y = go.Scatter(x=race['distance_accum'],
                        y=y,
-                       line=dict(shape='spline', color='#fbf59b', width=10),
+                       line=dict(shape='spline', color=color['medium'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -220,7 +228,7 @@ y = np.tile(y, 9) # just keep the pattern going
 y[:3] = [None, None, singles_pos]
 singles_r = go.Scatter(x=race['distance_accum'],
                        y=y,
-                       line=dict(shape='spline', color='#fbae9d', width=10),
+                       line=dict(shape='spline', color=color['hard'], width=10),
                        mode='lines',
                        hoverinfo='skip',
                        showlegend=False)
@@ -234,7 +242,7 @@ fast = go.Scatter(x=distance,
                   showlegend=False,
                   hoverinfo='skip',
                   fill='tonextx',
-                  fillcolor='#aaaaaa')
+                  fillcolor=color['cone'])
 slow = go.Scatter(x=distance,
                   y=magic(race, 'time_accum_slow'),
                   name='slow',
@@ -249,7 +257,7 @@ actual = [item for item in actual
 actual = go.Scatter(x=distance[:len(actual)],
                     y=actual,
                     name='actual',
-                    line=dict(shape='spline', color='#7777ff', width=2),
+                    line=dict(shape='spline', color=color['actual'], width=2),
                     mode='lines',
                     #hoverinfo='skip',
                     showlegend=False)
@@ -274,7 +282,7 @@ prediction = go.Scatter(x=distance,
                         y=magic(race,'time_accum'),
                         text=pred_text,
                         name='prediction',
-                        line=dict(shape='spline', color='#555555', width=2),
+                        line=dict(shape='spline', color=color['predicted'], width=2),
                         mode='lines',
                         showlegend=False)
 
@@ -289,7 +297,9 @@ annotations.append(dict(x=0, y=sunset, text='\u263D sunset', showarrow=False, xa
 
 # put together the final plot
 layout = go.Layout(xaxis={'title': 'miles',
-                          showgrid=False,showline=False},
+                          'showgrid':False,'showline':False},
+                   yaxis={'showgrid':False,'showline':False,
+                          'zeroline':False},
                    margin={'r':0,'t':0},
                    annotations=annotations
 )
