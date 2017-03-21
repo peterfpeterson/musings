@@ -14,6 +14,12 @@ import plotly.graph_objs as go
 #import matplotlib.pyplot as plt
 #plt.xkcd()
 
+# location of the script
+import os
+import sys
+scriptdir = os.path.split(os.path.abspath(sys.argv[0]))[0]
+docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/AtlantaRagnar2017/'))
+
 ######################################################################
 ############################## calculate everything
 # setup list of legs
@@ -91,11 +97,22 @@ for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
 #print(race)
 
 # load in the actual times
-with open('../docs/AtlantaRagnar2017/actual.json', 'r') as handle:
+with open(os.path.join(docsdir,'actual.json'), 'r') as handle:
     actual = json.load(handle)
     actual = [np.datetime64(item) for item in actual]
 while len(actual) < 12: # magic number related to number of legs
     actual.append(None)
+
+# calculate new updated estimated times
+est_updating = actual[:]
+for i, _ in enumerate(est_updating):
+    if i == 0:
+        continue
+    if est_updating[i] is not None:
+        continue
+    est_updating[i] = est_updating[i-1] + race.time[2*i-1] + race.time[2*i]
+# add the finish time
+est_updating.append(est_updating[-1] + race.time[race.time.size-2] + race.time[race.time.size-1])
 
 ######################################################################
 ############################## put together the json document
@@ -144,12 +161,12 @@ for index, row in race.iterrows():
                       'actual':real})
 # write out the json doc
 #print(json.dumps(json_data, indent=2))
-with open('../docs/AtlantaRagnar2017/data.json', 'w') as handle:
+with open(os.path.join(docsdir, 'data.json'), 'w') as handle:
     json.dump(json_data, handle, sort_keys=True)
 
 ######################################################################
 ############################## generate the plotly plot
-plotly_args = {'filename': '../docs/AtlantaRagnar2017/plot.html',
+plotly_args = {'filename': os.path.join(docsdir, 'plot.html'),
                'auto_open':False,
                #'output_type': 'div',
                #'include_plotlyjs': False
@@ -229,17 +246,6 @@ slow = go.Scatter(x=distance,
                   hoverinfo='skip',
                   showlegend=False)
 
-# actual times
-actual = [item for item in actual
-          if item is not None]
-actual = go.Scatter(x=distance[:len(actual)],
-                    y=actual,
-                    name='actual',
-                    line=dict(shape='spline', color=color['actual'], width=2),
-                    mode='lines',
-                    #hoverinfo='skip',
-                    showlegend=False)
-
 # predicted line
 pred_text = []
 for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
@@ -264,6 +270,28 @@ prediction = go.Scatter(x=distance,
                         mode='lines',
                         showlegend=False)
 
+# get rid of unstated actual times
+actual = [item for item in actual
+          if item is not None]
+
+est_updating = go.Scatter(x=distance[len(actual)-1:],
+                          y=est_updating[len(actual)-1:],
+                          name='estimated',
+                          line=dict(shape='spline', color=color['actual'], width=2, dash='dash'),
+                          mode='lines',
+                          hoverinfo='skip',
+                          showlegend=False)
+
+# actual times
+actual = go.Scatter(x=distance[:len(actual)],
+                    y=actual,
+                    name='actual',
+                    line=dict(shape='spline', color=color['actual'], width=2),
+                    mode='lines',
+                    #hoverinfo='skip',
+                    showlegend=False)
+
+
 # add some annotations
 annotations = []
 if sunrise < time_bounds[-1]:
@@ -278,7 +306,7 @@ layout = go.Layout(xaxis={'title': 'miles',
                    margin={'r':0,'t':0},
                    annotations=annotations
 )
-data.extend([slow,fast,prediction,actual])
+data.extend([slow,fast,prediction,est_updating, actual])
 fig = go.Figure(data=data,
                 layout=layout)
 plot(fig, show_link=False, **plotly_args)
