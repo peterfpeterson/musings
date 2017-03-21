@@ -248,7 +248,9 @@ slow = go.Scatter(x=distance,
 
 # predicted line
 pred_text = []
-for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
+actual_text = []
+for x, y, leg, act, est in \
+    zip(distance, magic(race,'time_accum'), magic(race,'leg'), actual, est_updating):
     leg_type = leg%3
     leg = int((leg+1)/2)+1
     runner = leg%4
@@ -256,12 +258,25 @@ for x, y, leg in zip(distance, magic(race,'time_accum'), magic(race,'leg')):
         runner = 4
     runner = runners.iloc[runner]['name']
 
-    if leg == 13: # finish line
-        text = 'finish'
+    diff = str(y-est).split(' ')[-1]
+    diff = 'h'.join(diff.split(':')[:2]) + 'm'
+    if y <= est:
+        diff = '+'+diff
     else:
-        text = 'leg %d - %.1f miles' % (leg, leg_miles[leg_type])
-        text += '<br>%s - %s' % (runner, leg_descr[leg_type])
+        diff = '-'+diff
+
+    text = ''
+    if act is not None:
+        actual_text.append(diff)
+    else:
+        text = str(est).split(' ')[-1]
+        text = ':'.join(text.split(':')[:2])
+        text += ' (%s)<br>' % diff
+    text += 'leg %d - %.1f miles' % (leg, leg_miles[leg_type])
+    text += '<br>%s - %s' % (runner, leg_descr[leg_type])
+
     pred_text.append(text)
+pred_text.append('finish')
 prediction = go.Scatter(x=distance,
                         y=magic(race,'time_accum'),
                         text=pred_text,
@@ -285,6 +300,7 @@ est_updating = go.Scatter(x=distance[len(actual)-1:],
 # actual times
 actual = go.Scatter(x=distance[:len(actual)],
                     y=actual,
+                    text=actual_text,
                     name='actual',
                     line=dict(shape='spline', color=color['actual'], width=2),
                     mode='lines',
