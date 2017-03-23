@@ -205,9 +205,13 @@ $$\int_0^a m~x + b~dx = \frac{m}{2} a^2 + b~a = \frac{a}{2}\left\( m~a + 2~b \ri
 --
 [Area of a trapezoid](http://www.mathgoodies.com/lessons/vol1/area_trapezoid.html) is
 
-$$\frac{h}{2}\left\( b1 + b2 \right\)$$
+$$A = \frac{h}{2}\left\( b1 + b2 \right\)$$
 
 with \\(h = a\\), \\(b1 = b\\), and \\(b2 = m~a+b\\)
+
+--
+
+Area of a recangle: integral of \\(y=b\\) is \\(A = a~b\\)
 
 ---
 # What does that all mean?
