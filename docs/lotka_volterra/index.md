@@ -39,20 +39,6 @@ class:
 * <i class="fa fa-github" aria-hidden="true"></i> [GitHub](https://github.com/)
 
 ---
-layout: false
-class:
-
-# What to cover - delete this
-
-1. Who am I?
-2. This doesn't *feel* like algebra
-3. Lotka-Volterra equations
-   1. Gentle introducion
-   1. What is a model
-   2. The actual equations
-   3. Our simplification
-
----
 # Who am I?
 
 * PhD in Condensed Matter Phyics
@@ -192,7 +178,7 @@ interaction of the two species.
 ---
 # Derivatives are slope
 
-$$y = m x + b$$
+$$y = m~x + b$$
 
 --
 Derivative with respect to \\(x\\)
@@ -205,6 +191,23 @@ $$y' = \frac{dy}{dx} = m$$
 .center[<img alt="integrals are just area" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Integral_as_region_under_curve.svg/744px-Integral_as_region_under_curve.svg.png" width='500'/>]
 
 Related: [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)
+
+---
+# Integrals are area under a curve
+
+$$y = m~x + b$$
+
+--
+Integrate from zero to \\(a\\)
+
+$$\int_0^a m~x + b~dx = \frac{m}{2} a^2 + b~a = \frac{a}{2}\left\( m~a + 2~b \right\)$$
+
+--
+[Area of a trapezoid](http://www.mathgoodies.com/lessons/vol1/area_trapezoid.html) is
+
+$$\frac{h}{2}\left\( b1 + b2 \right\)$$
+
+with \\(h = a\\), \\(b1 = b\\), and \\(b2 = m~a+b\\)
 
 ---
 # What does that all mean?
