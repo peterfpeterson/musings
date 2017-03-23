@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from plotly import tools as toolsly
-from plotly.offline import plot, init_notebook_mode
+from plotly.offline import plot
 import plotly.graph_objs as go
 import numpy as np
 
@@ -46,6 +46,7 @@ options = {}
 if len(ext) <= 0:
     options['visible'] = 'legendonly'
 
+
 fig = toolsly.FigureFactory.create_quiver(x, y, u, v,
                                           scale=.01, arrow_scale=.1,
                                           name='density', **options)
@@ -56,6 +57,4 @@ fig['layout']['yaxis'] = dict(range=[0., ymax])
 fig['layout']['title'] = title
 plot(fig, show_link=False, filename='lotka_volterra/'+ filename)
 
-
-# http://tributary.io/inlet/5211034
 # http://tributary.io/inlet/5211034
