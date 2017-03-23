@@ -261,7 +261,7 @@ $$\frac{dy}{dt} = \delta \times 0 \times 0 - \gamma \times 0 = 0$$
 ---
 # One is missing
 
-## There are no preditors
+## There are no predators
 
 $$\frac{dx}{dt} = \alpha x$$
 
@@ -285,7 +285,7 @@ solve prey equation for \\(y\\)
 $$x y = \frac{\alpha x}{\beta} \Rightarrow y = \frac{\alpha}{\beta}$$
 
 --
-solve the preditor equation for \\(x\\)
+solve the predator equation for \\(x\\)
 
 $$x y = \frac{\gamma y}{\delta} \Rightarrow x = \frac{\gamma}{\delta}$$
 
