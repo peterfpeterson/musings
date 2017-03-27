@@ -121,7 +121,7 @@ leg_descr = {0:'gre/yel',
              2:'yel/red'}
 leg_miles = {0:legs[0]+legs[1],
              1:legs[2]+legs[0],
-             2:legs[1]+legs[1]}
+             2:legs[1]+legs[2]}
 json_data = []
 for index, row in race.iterrows():
     if index%2 != 0: # it is an ultra
