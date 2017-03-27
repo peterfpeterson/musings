@@ -119,9 +119,9 @@ est_updating.append(est_updating[-1] + race.time[race.time.size-2] + race.time[r
 leg_descr = {0:'gre/yel',
              1:'red/gre',
              2:'yel/red'}
-leg_miles = {0:8.6,
-             1:10.5,
-             2:11.5}
+leg_miles = {0:legs[0]+legs[1],
+             1:legs[2]+legs[0],
+             2:legs[1]+legs[1]}
 json_data = []
 for index, row in race.iterrows():
     if index%2 != 0: # it is an ultra
@@ -159,6 +159,31 @@ for index, row in race.iterrows():
                       'start':start,
                       'elapse':time,
                       'actual':real})
+
+# add the finish time
+row = race.iloc[race.distance_accum.size-1]
+start = row['time_accum']
+real = actual[int(row.leg/2-1)]
+if real is None:
+    real = ''
+else:
+    diff = start - real
+    diff = str(diff).split(' ')[-1]
+    diff = 'h'.join(diff.split(':')[:2]) + 'm'
+    if real <= start:
+        real = '%s (-%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+    else:
+        real = '%s (+%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+start = row['time_accum'].strftime('%H:%M')
+
+json_data.append({'leg':1+int(row['leg']/2),
+                  'runner':'',
+                  'descr':'finish',
+                  'miles':'',
+                  'start':start, # todo
+                  'elapse':'',
+                  'actual':real}) # todo
+
 # write out the json doc
 #print(json.dumps(json_data, indent=2))
 with open(os.path.join(docsdir, 'data.json'), 'w') as handle:
