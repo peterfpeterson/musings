@@ -23,7 +23,7 @@ docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/AtlantaRagnar2017/'))
 ######################################################################
 ############################## calculate everything
 # setup list of legs
-legs = np.array([3.8, 4.8, 6.7])
+legs = np.array([4.5, 5.4, 5.5])
 #print('short', legs)
 legs_full  = np.tile(legs,8)
 legs_ultra = legs_full[:12]+legs_full[1:13]
