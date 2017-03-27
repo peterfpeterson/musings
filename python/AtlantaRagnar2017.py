@@ -91,7 +91,7 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 #print(race)
 
 # set a start time and calculate when the magic happens
-time_start = np.datetime64('2017-04-21T12:00')
+time_start = np.datetime64('2017-04-21T17:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
 #print(race)
