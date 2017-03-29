@@ -6,7 +6,7 @@ pwd
 git diff --quiet AtlantaRagnar2017/data.json
 if [ $? ]; then
     echo Atlanta2017/data.json changed
-    git commit $1/docs/AtlantaRagnar2017/* -m "Update from travis-ci"
+    git commit AtlantaRagnar2017/* -m "Update from travis-ci"
     git push
 fi
 cd -
