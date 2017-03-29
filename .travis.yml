@@ -12,7 +12,9 @@ script:
   - python python/AtlantaRagnar2017.py
 
 deploy:
+  provider: script
   api_key: $GITHUB_TOKEN # Set in travis-ci.org dashboard
   skip_cleanup: true
+  script: .travis/rebuild-ragnar.sh pwd
   on:
     branch: master
