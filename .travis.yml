@@ -11,6 +11,11 @@ install:
 script:
   - python python/AtlantaRagnar2017.py
 
+after_success:
+  - eval "$(ssh-agent -s)" #start the ssh agent
+  - chmod 600 .travis/deploy_key.pem # this key should have push access
+  - ssh-add .travis/deploy_key.pem
+
 deploy:
   provider: script
   api_key: $GITHUB_TOKEN

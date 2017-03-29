@@ -1,8 +1,4 @@
 #!/bin/sh
-eval "$(ssh-agent -s)" #start the ssh agent
-chmod 600 .travis/deploy_key.pem # this key should have push access
-ssh-add .travis/deploy_key.pem
-
 direc=$(dirname $0)
 cd $direc/../docs
 pwd
