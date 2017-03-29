@@ -5,6 +5,7 @@ python:
 
 install:
   - pip install numpy
+  - pip install pandas
 
 script:
   - python python/AtlantaRagnar2017.py
