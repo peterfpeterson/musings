@@ -1,11 +1,12 @@
 language: python
 
 python:
-  - "3.5"
+  - "3.6"
 
 install:
   - pip install numpy
   - pip install pandas
+  - pip install plotly
 
 script:
   - python python/AtlantaRagnar2017.py
