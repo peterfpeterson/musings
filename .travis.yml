@@ -10,11 +10,3 @@ install:
 
 script:
   - python python/AtlantaRagnar2017.py
-
-deploy:
-  provider: script
-  api_key: $GITHUB_TOKEN
-  skip_cleanup: true
-  script: .travis/rebuild-ragnar.sh
-  on:
-    branch: master
