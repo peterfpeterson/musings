@@ -1,8 +1,8 @@
 #!/bin/sh
 direc=$(dirname $0)
+echo "looking for changes in $direc"
 cd $direc/../docs
 pwd
-echo "looking for changes in $direc"
 git diff --quiet AtlantaRagnar2017/data.json
 if [ $? ]; then
     echo Atlanta2017/data.json changed

@@ -13,12 +13,12 @@ script:
 
 after_success:
   - eval "$(ssh-agent -s)" #start the ssh agent
+  - echo $GITHUB_TOKEN > .travis/deploy_key.pem
   - chmod 600 .travis/deploy_key.pem # this key should have push access
   - ssh-add .travis/deploy_key.pem
 
 deploy:
   provider: script
-  api_key: $GITHUB_TOKEN
   skip_cleanup: true
   script: .travis/rebuild-ragnar.sh
   on:
