@@ -12,7 +12,6 @@ script:
   - python python/AtlantaRagnar2017.py
 
 deploy:
-  provider: pages
   api_key: $GITHUB_TOKEN # Set in travis-ci.org dashboard
   skip_cleanup: true
   on:
