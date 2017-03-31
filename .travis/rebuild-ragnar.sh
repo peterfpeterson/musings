@@ -1,23 +1,21 @@
 #!/bin/sh
 direc=$(dirname $0)
-echo "looking for changes in $direc"
 cd $direc/../docs
-pwd
+direc=$(pwd)
+echo looking for changes in $direc
 git checkout master
 
-CHANGED=false
-
-git diff --quiet AtlantaRagnar2017/data.json
-if [ $? ]; then
+if git diff --quiet -- $direc/AtlantaRagnar2017/data.json
+then
     echo Atlanta2017/data.json changed
-    git add AtlantaRagnar2017/*
+    git add $direc/AtlantaRagnar2017/
     CHANGED=true
 fi
 
-if [ "$CHANGED" = true ]; then
-    git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
-    git remote add origin-master https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
-    git push --set-upstream origin-master master
-fi
+#if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
+#then
+#    git remote add origin-master https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
+#    git push --set-upstream origin-master master
+#fi
 
 cd -
