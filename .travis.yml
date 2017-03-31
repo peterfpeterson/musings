@@ -1,17 +1,17 @@
 language: python
-
 python:
-  - "3.6"
-
+- '3.6'
 install:
-  - pip install numpy
-  - pip install pandas
-  - pip install plotly
-
+- pip install numpy
+- pip install pandas
+- pip install plotly
 script:
-  - python python/AtlantaRagnar2017.py
-
+- python python/AtlantaRagnar2017.py
 after_success:
-  - git config --global user.email "travis@travis-ci.org"
-  - git config --global user.name "Travis CI"
-  - .travis/rebuild-ragnar.sh
+- git config --global user.email "travis@travis-ci.org"
+- git config --global user.name "Travis CI"
+- git config --global push.default simple
+- ".travis/rebuild-ragnar.sh"
+env:
+  global:
+    secure: p7n61ULxjIULd6hEQPGk/hLSP6fwXn/RUXDiS15lAsizscd9K6q9FxeQ/Dz9905URqn15Z4McxmizQyQNGFwfoyZmqxjPuC2Lb1ogENUqL8QV0pElf5ji90JJg2vJX/utWSfN7DYTXNJmc7EQe5uQjWhk+xhYIF9EgO0vL/DZTJS5pbb3kZg3I/yG4pgyAlIPR05gHpmp0miCA4QDe6ZyFCOZj9FJ9BpRnXmIngujLo39XDDW1G+izh9vexKXIh7tuLqCe0Bfisz9fvHPGSgCYtWjJlRX/BPfnzRVkGEjJPR6o771jNIyaYmLkf4HDd5g+u2dXwE0AwjqDjYliMazr3wCO3/NQZbiKizv3HWI02dNtoVaX/vlaDtvOvhhRLbMk3U303CHUSJ+RmVPdGijq1ZDRn3qR3pGs2O4NoaopQZJiqGookMXMDj6AaNcEi/14Fx1D/OHh5zkZrEK/PiB53IqWnDZSaO6RqOuBVxwbaI94A+l7TSEmXiZLG2JbSakWPoGANmYFTJHLEMu7elwR3Yl5iJw/jRgnS8t5Nx3ZXohhYPtgZmt4BA1UBMkOTfUakCyU5ykrBWXOd5HeYmF8C8W6ezBJPCt8ZhvJGxzPI2dvEcA4L6R+AJ+m0YQSWDdZvWtR/qwMf0XMRbmEK+uqCwDyN5OudNdahMFgjVkbQ=
