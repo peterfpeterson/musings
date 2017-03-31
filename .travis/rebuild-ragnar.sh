@@ -14,7 +14,7 @@ fi
 git diff --cached --quiet
 if [ $? ]; then
     git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
-    git remote add origin https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
+    git remote add origin https://${GH_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
     git push
 fi
 
