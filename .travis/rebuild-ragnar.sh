@@ -6,7 +6,8 @@ pwd
 git diff --quiet AtlantaRagnar2017/data.json
 if [ $? ]; then
     echo Atlanta2017/data.json changed
-    git commit AtlantaRagnar2017/* -m "Update from travis-ci"
+    git commit AtlantaRagnar2017/* -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
+    git remote add origin https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
     git push
 fi
 cd -

@@ -12,14 +12,6 @@ script:
   - python python/AtlantaRagnar2017.py
 
 after_success:
-  - eval "$(ssh-agent -s)" #start the ssh agent
-  - echo $GITHUB_TOKEN > .travis/deploy_key.pem
-  - chmod 600 .travis/deploy_key.pem # this key should have push access
-  - ssh-add .travis/deploy_key.pem
-
-deploy:
-  provider: script
-  skip_cleanup: true
-  script: .travis/rebuild-ragnar.sh
-  on:
-    branch: master
+  - git config --global user.email "travis@travis-ci.org"
+  - git config --global user.name "Travis CI"
+  - .travis/rebuild-ragnar.sh
