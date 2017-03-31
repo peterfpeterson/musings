@@ -3,12 +3,18 @@ direc=$(dirname $0)
 echo "looking for changes in $direc"
 cd $direc/../docs
 pwd
+git checkout -b master
+
 git diff --quiet AtlantaRagnar2017/data.json
 if [ $? ]; then
     echo Atlanta2017/data.json changed
-    git checkout -b master
-    git commit AtlantaRagnar2017/* -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
+    git add AtlantaRagnar2017/*
+fi
+
+if [ $(git status -s) ]; then
+    git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
     git remote add origin https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
     git push
 fi
+
 cd -
