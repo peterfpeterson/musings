@@ -9,6 +9,8 @@ git diff --quiet AtlantaRagnar2017/data.json
 if [ $? ]; then
     echo Atlanta2017/data.json changed
     git add AtlantaRagnar2017/*
+else
+    git checkout AtlantaRagnar2017/plot.html
 fi
 
 git diff --cached --quiet
