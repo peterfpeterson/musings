@@ -13,7 +13,7 @@ else
 fi
 
 # if things have been staged then commit and push them
-if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER")
+if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
 then
     git checkout master
     git remote add origin-master https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
