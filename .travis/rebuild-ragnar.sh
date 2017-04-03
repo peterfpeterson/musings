@@ -9,7 +9,6 @@ if output=$(git status --porcelain docs/AtlantaRagnar2017/data.json) && [ -z "$o
 else
     echo Atlanta2017/data.json changed
     git add docs/AtlantaRagnar2017/
-    CHANGED=true
     echo "something interesting changed"
 fi
 
