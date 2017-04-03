@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 direc=$(dirname $0)
 git checkout master
 echo looking for changes in $direc
