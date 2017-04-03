@@ -4,13 +4,17 @@ git checkout master
 echo looking for changes in $direc
 
 # check for changes in files
-if output=$(git status --porcelain docs/AtlantaRagnar2017/data.json) && [ -z "$output" ]; then
-    echo Atlanta2017/data.json did not change
-else
-    echo Atlanta2017/data.json changed
-    git add docs/AtlantaRagnar2017/
-    echo "something interesting changed"
-fi
+function add_if_changed
+{
+    if output=$(git status --porcelain docs/${1}/data.json) && [ -z "$output" ]; then
+        echo ${1}/data.json did not change
+    else
+        echo ${1}/data.json changed
+        git add docs/${1}/
+    fi
+}
+
+add_if_changed "AtlantaRagnar2017"
 
 # if things have been staged then commit and push them
 if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
