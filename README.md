@@ -42,3 +42,5 @@ made.
 
 Various bits of the design were borrowed from
 [jekyll-bootstrap](https://github.com/plusjade/jekyll-bootstrap/).
+
+The deploy technology is modified from [this gist](https://gist.github.com/willprice/e07efd73fb7f13f917ea).
