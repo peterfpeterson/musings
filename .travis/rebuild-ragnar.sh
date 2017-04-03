@@ -6,11 +6,11 @@ echo looking for changes in $direc
 # check for changes in files
 function add_if_changed
 {
-    if output=$(git status --porcelain docs/${1}/data.json) && [ -z "$output" ]; then
-        echo ${1}/data.json did not change
+    if output=$(git status --porcelain "docs/${1}/data.json") && [ -z "$output" ]; then
+        echo "${1}/data.json did not change"
     else
-        echo ${1}/data.json changed
-        git add docs/${1}/
+        echo "${1}/data.json changed"
+        git add "docs/${1}/"
     fi
 }
 
