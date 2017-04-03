@@ -18,7 +18,7 @@ import plotly.graph_objs as go
 import os
 import sys
 scriptdir = os.path.split(os.path.abspath(sys.argv[0]))[0]
-docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/AtlantaRagnar2017/'))
+docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/races/2017/AtlantaRagnar/'))
 
 ######################################################################
 ############################## calculate everything
