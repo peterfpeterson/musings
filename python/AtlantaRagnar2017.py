@@ -63,9 +63,13 @@ runners = pd.DataFrame({'runner':np.arange(5),
 runners = runners.set_index('runner') # must be a better way
 #print(runners)
 
-# taken from https://www.timeanddate.com/sun/usa/atlanta
-sunset = np.datetime64('2017-04-21T20:13')
-sunrise = np.datetime64('2017-04-22T06:57')
+# sunrise/sunset taken from https://www.timeanddate.com/sun/usa/atlanta
+with open('AtlantaRagnar2017.json', 'r') as handle:
+    config = json.load(handle)
+    for item in config['annotations']:
+        key = list(item.keys())[0]
+        item[key] = np.datetime64(item[key])
+print(config)
 
 # calculate the leg times for the actual races
 time_error = np.timedelta64(int(30), 's')
@@ -334,10 +338,14 @@ actual = go.Scatter(x=distance[:len(actual)],
 
 
 # add some annotations
+annotation_symbols = dict(sunrise='\u263C sunrise',
+                          sunset='\u263D sunset')
 annotations = []
-if sunrise < time_bounds[-1]:
-    annotations.append(dict(x=0, y=sunrise, text='\u263C sunrise', showarrow=False, xanchor='left'))
-annotations.append(dict(x=0, y=sunset, text='\u263D sunset', showarrow=False, xanchor='left'))
+for item in config['annotations']:
+    key = list(item.keys())[0]
+    label = annotation_symbols.get(key, key)
+    if item[key] > time_bounds[0] and item[key] > time_bounds[-1]:
+        annotations.append(dict(x=0, y=item[key], text=label, showarrow=False, xanchor='left'))
 
 # put together the final plot
 layout = go.Layout(xaxis={'title': 'miles',
