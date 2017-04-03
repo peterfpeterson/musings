@@ -2,6 +2,7 @@
 direc=$(dirname $0)
 echo looking for changes in $direc
 
+# check for changes in files
 if output=$(git status --porcelain docs/AtlantaRagnar2017/data.json) && [ -z "$output" ]; then
     echo Atlanta2017/data.json did not change
 else
@@ -11,13 +12,7 @@ else
     echo "something interesting changed"
 fi
 
-#if git diff --quiet -- $direc/AtlantaRagnar2017/data.json
-#then
-#    echo Atlanta2017/data.json changed
-#    git add $direc/AtlantaRagnar2017/
-#    CHANGED=true
-#fi
-
+# if things have been staged then commit and push them
 if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER")
 then
     git checkout master
