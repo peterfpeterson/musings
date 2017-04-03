@@ -11,7 +11,11 @@ after_success:
 - git config --global user.email "travis@travis-ci.org"
 - git config --global user.name "Travis CI"
 - git config --global push.default simple
-- ".travis/rebuild-ragnar.sh"
+deploy:
+  provider: script
+  script: ".travis/rebuild-ragnar.sh"
+  on:
+    branch: master
 env:
   global:
     secure: dqoHD8vJIDXscHcdS05aSXlF0JUZUHMSH7MU2DiFRe4mcj2uPKbI1l+3H2P5vAGRg/L6Q6rWq+rS/I/Q79w1akJAd+Ycw9K0bPGuo4abF5PmHDP4kJ29JvvC6VJ1YnudqBdmxbjfNBrQ/xLNups3ORu/4vKy0IgZE2gsPvHkmih3Q5wAoH0CiOb00DX1hJltILwQEKr9lFO5P3hsfx1kVea8Ftk2RvPGY4CmK7tljaXzEIZ91KWqPKPL+1LS2vH7ty10dBpeFOmsV05FRElirJFlivySL1mI7OqSashml6z1ULFDxqllz6K7YWXGOyBulPPb/bBB3Y8DSqDytrUeDI3mf/kpUjk71v1Y2hOW1BdrQGMthYM5mCDe5I7Ewnj9K9u7P0bwyxHQ8foaP7cOdQet8OIUPagb7UhfLygJ8x7oCBjDri+bAHydUO1LIOxeyU10TBqEJKNA4yBA8bVgpvc8o8A3/gB8Q4Y86Lb52uxpYrfdo4KsGMmlc4pl7k8jh8mf3Zx4qehnK2SlSn3+RmceWDzYVXWbp0jOy2PbFbyvzCCS2LnPxhzCSOz7/sZpHIImJGCkoHTPf5Ei0VC/sIsPynrAVA7zhKpdzsgB2dfSvTb/D7flcKM1dkaEfeJZKmP/SsYg982Y/Ksyiqd8G6PxdBe+zRGhrsvXwp3EFF0=
