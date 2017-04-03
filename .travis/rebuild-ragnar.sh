@@ -1,5 +1,6 @@
 #!/bin/sh
 direc=$(dirname $0)
+git checkout master
 echo looking for changes in $direc
 
 # check for changes in files
@@ -15,7 +16,6 @@ fi
 # if things have been staged then commit and push them
 if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
 then
-    git checkout master
     git remote add origin-master https://${GITHUB_TOKEN}@github.com/peterfpeterson/musings.git > /dev/null 2>&1
     git push --set-upstream origin-master master
 fi
