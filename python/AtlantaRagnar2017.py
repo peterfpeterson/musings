@@ -64,7 +64,7 @@ runners = runners.set_index('runner') # must be a better way
 #print(runners)
 
 # sunrise/sunset taken from https://www.timeanddate.com/sun/usa/atlanta
-with open('AtlantaRagnar2017.json', 'r') as handle:
+with open(os.path.join(scriptdir, 'AtlantaRagnar2017.json'), 'r') as handle:
     config = json.load(handle)
     for item in config['annotations']:
         key = list(item.keys())[0]
