@@ -69,7 +69,6 @@ with open('AtlantaRagnar2017.json', 'r') as handle:
     for item in config['annotations']:
         key = list(item.keys())[0]
         item[key] = np.datetime64(item[key])
-print(config)
 
 # calculate the leg times for the actual races
 time_error = np.timedelta64(int(30), 's')
@@ -344,7 +343,7 @@ annotations = []
 for item in config['annotations']:
     key = list(item.keys())[0]
     label = annotation_symbols.get(key, key)
-    if item[key] > time_bounds[0] and item[key] > time_bounds[-1]:
+    if item[key] > time_bounds[0] and item[key] < time_bounds[-1]:
         annotations.append(dict(x=0, y=item[key], text=label, showarrow=False, xanchor='left'))
 
 # put together the final plot
