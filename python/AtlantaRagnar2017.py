@@ -55,11 +55,11 @@ race['distance_accum'] = np.add.accumulate(race['distance'])
 # setup times for runners
 runners = pd.DataFrame({'runner':np.arange(5),
                         'name':['NA', 'Josh', 'Ross', 'Dan', 'Pete'],
-                        'pace':[np.timedelta64(int(0), 's'),
-                                np.timedelta64(int(8*60), 's'),
-                                np.timedelta64(int(7*60), 's'),
-                                np.timedelta64(int(6*60+45), 's'),
-                                np.timedelta64(int(9*60), 's')]})
+                        'pace':[np.timedelta64(int(0), 's')*1.15,
+                                np.timedelta64(int(8*60), 's')*1.15,
+                                np.timedelta64(int(7*60), 's')*1.15,
+                                np.timedelta64(int(6*60+45), 's')*1.15,
+                                np.timedelta64(int(9*60), 's')*1.15]})
 runners = runners.set_index('runner') # must be a better way
 #print(runners)
 
