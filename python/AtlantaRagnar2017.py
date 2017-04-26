@@ -20,6 +20,17 @@ import sys
 scriptdir = os.path.split(os.path.abspath(sys.argv[0]))[0]
 docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/races/2017/AtlantaRagnar/'))
 
+def deltaTimeToStr(diff):
+    symbol = '-'
+    if diff.days < 0:
+        symbol = '+'
+    diff = str(diff).split(' ')[-1]
+    diff = [int(value) for value in diff.split(':')[:2]]
+    if symbol == '+':
+        diff = abs(60*(diff[0]-24)+diff[1])-1
+        diff = [int(diff / 60), diff % 60]
+    return '%s%dh%02dm' % (symbol, diff[0], diff[1])
+
 ######################################################################
 ############################## calculate everything
 # setup list of legs
@@ -143,13 +154,8 @@ for index, row in race.iterrows():
     if real is None:
         real = ''
     else:
-        diff = start - real
-        diff = str(diff).split(' ')[-1]
-        diff = 'h'.join(diff.split(':')[:2]) + 'm'
-        if real <= start:
-            real = '%s (-%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
-        else:
-            real = '%s (+%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+        diff = deltaTimeToStr(start - real)
+        real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
     start = race.iloc[index-2]['time_accum'].strftime('%H:%M')
 
     time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
@@ -166,17 +172,12 @@ for index, row in race.iterrows():
 # add the finish time
 row = race.iloc[race.distance_accum.size-1]
 start = row['time_accum']
-real = actual[int(row.leg/2-1)]
+real = actual[-1]
 if real is None:
     real = ''
 else:
-    diff = start - real
-    diff = str(diff).split(' ')[-1]
-    diff = 'h'.join(diff.split(':')[:2]) + 'm'
-    if real <= start:
-        real = '%s (-%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
-    else:
-        real = '%s (+%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+    diff = deltaTimeToStr(start - real)
+    real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
 start = row['time_accum'].strftime('%H:%M')
 
 json_data.append({'leg':1+int(row['leg']/2),
@@ -241,6 +242,8 @@ def difficulties(distance, color, tileArray, firstArray=None):
                        hoverinfo='skip',
                        showlegend=False)
 
+
+
 # color bar for difficulties of doubles
 singles_pos = race.time_accum[0]
 doubles_pos = race.time_accum[race.distance_accum.size-1]
@@ -286,12 +289,7 @@ for x, y, leg, act, est in \
         runner = 4
     runner = runners.iloc[runner]['name']
 
-    diff = str(y-est).split(' ')[-1]
-    diff = 'h'.join(diff.split(':')[:2]) + 'm'
-    if y <= est:
-        diff = '+'+diff
-    else:
-        diff = '-'+diff
+    diff = deltaTimeToStr(y-est)
 
     text = ''
     if act is not None:
