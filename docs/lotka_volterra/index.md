@@ -94,7 +94,11 @@ $$e^{i\pi} + 1 = 0$$
 $$e^{i\tau} = 1 + 0$$
 
 ---
-# What is a model? - TODO
+# What is a Mathematical Model?
+
+*n.* An abstract mathematical representation of a process, device or concept; it uses a number of variables to represent inputs, outputs and internal states, and sets of equations and inequalities to describe their interaction.
+
+.right[via [wordnik](https://www.wordnik.com/words/mathematical%20model)]
 
 ---
 # The model
