@@ -47,13 +47,24 @@ class:
 .center[![Who are you?](https://swanshadow.files.wordpress.com/2013/10/alwaysbeyourself.jpg)]
 
 ---
+background-image: url(https://neutrons.ornl.gov/sites/default/files/styles/splash_image_800x360/public/splash/SNS-aerial_0.jpg)
+background-position: center
+background-size: cover
+
+# high res version would be nice - TODO
+
+---
 template: inverse
 
 background-image: url(http://neutrons.ornl.gov/sites/default/files/Shull_Wollan_history-750.jpg)
+background-position: center
 
 .left[[Nobel prize in 1994](http://www.nobelprize.org/nobel_prizes/physics/laureates/1994/illpres/)]
 
 .left[http://neutrons.ornl.gov]
+
+???
+Work was done in the 1950s
 ---
 # Structure - How atoms are arranged
 
@@ -81,6 +92,9 @@ $$e^{i\pi} + 1 = 0$$
 ...but using \\(\tau = 2 \pi\\)
 
 $$e^{i\tau} = 1 + 0$$
+
+---
+# What is a model? - TODO
 
 ---
 # The model
@@ -150,13 +164,18 @@ interaction of the two species.
 </tr>
 </table></center>
 
+--
+
+
+.center[One more letter that the [latin alphabet](https://en.wikipedia.org/wiki/Latin_alphabet)]
+
 ---
 #Very brief introduction to calculus
 
 .center[![The guys](http://www.todayifoundout.com/wp-content/uploads/2016/12/leibniz-and-newton-340x211.png)]
 
 
-.center[[Who invented calculas](http://www.todayifoundout.com/index.php/2016/12/really-invented-calculus/)?]
+.center[[Who invented calculus](http://www.todayifoundout.com/index.php/2016/12/really-invented-calculus/)?]
 
 --
 * Newton in 1665-1666
@@ -205,9 +224,9 @@ $$\int_0^a m~x + b~dx = \frac{m}{2} a^2 + b~a = \frac{a}{2}\left\( m~a + 2~b \ri
 --
 [Area of a trapezoid](http://www.mathgoodies.com/lessons/vol1/area_trapezoid.html) is
 
-$$A = \frac{h}{2}\left\( b1 + b2 \right\)$$
+$$A = \frac{h}{2}\left\( b_1 + b_2 \right\)$$
 
-with \\(h = a\\), \\(b1 = b\\), and \\(b2 = m~a+b\\)
+with \\(h = a\\), \\(b_1 = b\\), and \\(b_2 = m~a+b\\)
 
 --
 
@@ -261,12 +280,14 @@ $$\frac{dy}{dt} = \delta \times 0 \times 0 - \gamma \times 0 = 0$$
 ---
 # One is missing
 
+--
 ## There are no predators
 
 $$\frac{dx}{dt} = \alpha x$$
 
 $$\frac{dy}{dt} = 0$$
 
+--
 ## There are no prey
 
 $$\frac{dx}{dt} = 0$$
@@ -315,9 +336,12 @@ The two fixed points are \\((x,y) = (0,0)\\) and \\((x,y) = (\frac{\gamma}{\delt
 
 <center><table width="100%" text-align="center">
 <tr bgcolor="#aaaaaa"><th>+ &#x1F430; (&alpha;)</th><th>- &#x1F430; (&beta;)</th><th>+ &#x1F43A; (&delta;)</th><th>- &#x1F43A; (&gamma;)</th><th>&gamma;/&delta;</th><th>&alpha;/&beta;</th><th>&nbsp;</th></tr>
-<tr><td>100</td><td>5</td><td>1</td><td>10</td><td>10</td><td>0.05</td><td><a href='quiverplot_100_5_1_10.html'>quiver</a></td></tr>
-<tr bgcolor="#dddddd"><td>10</td><td>50</td><td>1</td><td>10</td><td>10</td><td>5</td><td><a href='quiverplot_10_50_1_10.html'>quiver</a></td></tr>
-<tr><td>10</td><td>5</td><td>1</td><td>10</td><td>10</td><td>0.5</td><td><a href='quiverplot_10_5_1_10.html'>quiver</a></td></tr>
-<tr bgcolor="#dddddd"><td>10</td><td>1</td><td>10</td><td>1</td><td>0.1</td><td>0.1</td><td><a href='quiverplot_10_1_10_1.html'>quiver</a></td></tr>
-<tr><td>10</td><td>5</td><td>10</td><td>1</td><td>0.1</td><td>0.5</td><td><a href='quiverplot_10_5_10_1.html'>quiver</a></td></tr>
+<tr><td>100</td><td>5</td><td>1</td><td>10</td><td>10</td><td>20</td><td><a href='quiverplot_100_5_1_10.html'>quiver</a></td></tr>
+<tr bgcolor="#dddddd"><td>10</td><td>50</td><td>1</td><td>10</td><td>10</td><td>0.2</td><td><a href='quiverplot_10_50_1_10.html'>quiver</a></td></tr>
+<tr><td>10</td><td>5</td><td>1</td><td>10</td><td>10</td><td>2</td><td><a href='quiverplot_10_5_1_10.html'>quiver</a></td></tr>
+<tr bgcolor="#dddddd"><td>10</td><td>1</td><td>10</td><td>1</td><td>0.1</td><td>10</td><td><a href='quiverplot_10_1_10_1.html'>quiver</a></td></tr>
+<tr><td>10</td><td>5</td><td>10</td><td>1</td><td>0.1</td><td>2</td><td><a href='quiverplot_10_5_10_1.html'>quiver</a></td></tr>
 </table></center>
+
+
+.center[Generated with a [python script](https://github.com/peterfpeterson/musings/blob/master/docs/lotka_volterra/quiver.py)]
