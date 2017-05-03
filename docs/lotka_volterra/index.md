@@ -51,7 +51,14 @@ background-image: url(https://neutrons.ornl.gov/sites/default/files/styles/splas
 background-position: center
 background-size: cover
 
-# high res version would be nice - TODO
+# Spallation Neutron Source
+
+---
+# http://www.mantidproject.org <img alt="logo" src="https://docs.mantidproject.org/nightly/_images/Mantid_Logo_Transparent.png" width="15%"/>
+
+.center[<img alt="pretty picture" src="https://docs.mantidproject.org/nightly/_images/release39.png" width="90%"/>]
+
+.center[\\([h,k,0]\\) plane in slice viewer]
 
 ---
 template: inverse
@@ -79,6 +86,7 @@ Work was done in the 1950s
 
 # Public Service Announcement (PSA)
 
+--
 [Tau manifesto](http://tauday.com/tau-manifesto)
 
 $$\tau = \frac{circumference}{radius}$$
@@ -254,8 +262,8 @@ $$\frac{dy}{dt} = \delta x y - \gamma y$$
 ## Range and Domain
 
 --
-* \\(x \in\\) [0, &#x1F430;, &#x221E;)
-* \\(y \in\\) [0, &#x1F43A;, &#x221E;)
+* &#x1F430; \\(x \in\\) [0, &#x221E;)
+* &#x1F43A; \\(y \in\\) [0, &#x221E;)
 
 ---
 # How do you "solve" that?
@@ -339,7 +347,7 @@ The two fixed points are \\((x,y) = (0,0)\\) and \\((x,y) = (\frac{\gamma}{\delt
 # Various values
 
 <center><table width="100%" text-align="center">
-<tr bgcolor="#aaaaaa"><th>+ &#x1F430; (&alpha;)</th><th>- &#x1F430; (&beta;)</th><th>+ &#x1F43A; (&delta;)</th><th>- &#x1F43A; (&gamma;)</th><th>&gamma;/&delta;</th><th>&alpha;/&beta;</th><th>&nbsp;</th></tr>
+<tr bgcolor="#aaaaaa"><th>&alpha; (+ &#x1F430;)</th><th>&beta; (- &#x1F430;)</th><th>&delta; (+ &#x1F43A;)</th><th>&gamma; (- &#x1F43A;)</th><th>&gamma;/&delta;</th><th>&alpha;/&beta;</th><th>&nbsp;</th></tr>
 <tr><td>100</td><td>5</td><td>1</td><td>10</td><td>10</td><td>20</td><td><a href='quiverplot_100_5_1_10.html'>quiver</a></td></tr>
 <tr bgcolor="#dddddd"><td>10</td><td>50</td><td>1</td><td>10</td><td>10</td><td>0.2</td><td><a href='quiverplot_10_50_1_10.html'>quiver</a></td></tr>
 <tr><td>10</td><td>5</td><td>1</td><td>10</td><td>10</td><td>2</td><td><a href='quiverplot_10_5_1_10.html'>quiver</a></td></tr>
