@@ -19,6 +19,8 @@ import os
 import sys
 scriptdir = os.path.split(os.path.abspath(sys.argv[0]))[0]
 docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/races/2017/BlueRidgeRelay/'))
+print('Script located', scriptdir)
+print('Data and output to', docsdir)
 
 def deltaTimeToStr(diff):
     symbol = '-'
@@ -33,6 +35,12 @@ def deltaTimeToStr(diff):
 
 ######################################################################
 ############################## calculate everything
+# TODO read in legs.json
+# ratings: 1:easy, 2:moderate, 3:hard, 4:very hard, 5:mountain goat
+with open(os.path.join(docsdir, 'legs.json'), 'r') as handle:
+    legs = json.load(handle)
+print(json.dumps(legs))
+
 # setup list of legs
 legs = np.array([4.5, 5.4, 5.5])
 #print('short', legs)
