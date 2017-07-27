@@ -1,4 +1,5 @@
-[{"number":1,  "miles":3.9,  "rating":1, "gain":21,   "loss":1031},
+[{"number":0,  "miles":0.0,  "rating":1, "gain":0,    "loss":0},
+ {"number":1,  "miles":3.9,  "rating":1, "gain":21,   "loss":1031},
  {"number":2,  "miles":7.5,  "rating":3, "gain":406,  "loss":1539},
  {"number":3,  "miles":5.2,  "rating":2, "gain":400,  "loss":479},
  {"number":4,  "miles":6.9,  "rating":3, "gain":755,  "loss":379},
