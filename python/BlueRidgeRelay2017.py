@@ -37,10 +37,10 @@ def deltaTimeToStr(diff):
 ############################## calculate everything
 # TODO read in legs.json
 # ratings: 1:easy, 2:moderate, 3:hard, 4:very hard, 5:mountain goat
-with open(os.path.join(docsdir, 'legs.json'), 'r') as handle:
-    legs = json.load(handle)
-print(json.dumps(legs))
-
+legs = pd.read_json(os.path.join(docsdir, 'legs.json'))
+#print(legs)
+print('the race is', legs['miles'].size, 'for', legs['miles'].sum(), 'miles')
+'''
 # setup list of legs
 legs = np.array([4.5, 5.4, 5.5])
 #print('short', legs)
@@ -50,17 +50,18 @@ legs_full  = np.insert(legs_full, 0, 0.)
 legs_ultra = np.insert(legs_ultra, 0, 0.)
 #print('full ', legs_full, legs_full.size, legs_full.sum())
 #print('ultra', legs_ultra, legs_ultra.size, legs_ultra.sum())
+'''
 
 # setup list of all runners
-runner = np.array([1,2,3,4])
-runner = np.repeat(runner,2) # since it is an ultra each runner is twice in a row
-runner = np.tile(runner,3) # and three of those
+runner = np.arange(9)+1 # team of nine this time
+#runner = np.repeat(runner,2) # uncomment for double legs
+runner = np.tile(runner,(legs['miles'].size-1)/runner.size) # everybody runs the same number
 runner = np.insert(runner, 0, 0) # get a slot for the time
 #print('runner', runner, runner.size)
 
 # accumulate a list of distances
-race = pd.DataFrame({'leg':np.arange(25),
-                     'distance':legs_full,
+race = pd.DataFrame({'leg':legs['number'],
+                     'distance':legs['miles'],
                      'runner': runner,
                   })
 race['distance_accum'] = np.add.accumulate(race['distance'])
@@ -70,6 +71,8 @@ race['distance_accum'] = np.add.accumulate(race['distance'])
 #axes.plot(np.arange(legs_full.size)+1, np.add.accumulate(legs_full), label='full')
 #axes.plot(np.arange(legs_ultra.size)+1, np.add.accumulate(legs_ultra), label='ultra')
 #axes.legend()
+
+############################## GOOD UP TO THIS POINT
 
 # setup times for runners
 runners = pd.DataFrame({'runner':np.arange(5),
@@ -201,6 +204,7 @@ json_data.append({'leg':1+int(row['leg']/2),
 with open(os.path.join(docsdir, 'data.json'), 'w') as handle:
     json.dump(json_data, handle, sort_keys=True)
 
+raise RuntimeError('Intentionally stopping here')
 ######################################################################
 ############################## generate the plotly plot
 plotly_args = {'filename': os.path.join(docsdir, 'plot.html'),
