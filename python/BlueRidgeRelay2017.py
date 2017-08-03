@@ -21,6 +21,12 @@ scriptdir = os.path.split(os.path.abspath(sys.argv[0]))[0]
 docsdir = os.path.abspath(os.path.join(scriptdir, '../docs/races/2017/BlueRidgeRelay/'))
 print('Script located', scriptdir)
 print('Data and output to', docsdir)
+RATINGS = {0:'UNKNOWN',
+           1:'easy',
+           2:'moderate',
+           3:'hard',
+           4:'very hard',
+           5:'mountain goat'}
 
 def deltaTimeToStr(diff):
     symbol = '-'
@@ -39,6 +45,7 @@ def deltaTimeToStr(diff):
 # ratings: 1:easy, 2:moderate, 3:hard, 4:very hard, 5:mountain goat
 legs = pd.read_json(os.path.join(docsdir, 'legs.json'))
 #print(legs)
+legs['number'] = legs['number'].astype(int)
 print('the race is', legs['miles'].size, 'for', legs['miles'].sum(), 'miles')
 '''
 # setup list of legs
@@ -55,9 +62,18 @@ legs_ultra = np.insert(legs_ultra, 0, 0.)
 # setup list of all runners
 runner = np.arange(9)+1 # team of nine this time
 #runner = np.repeat(runner,2) # uncomment for double legs
-runner = np.tile(runner,(legs['miles'].size-1)/runner.size) # everybody runs the same number
+runner = np.tile(runner,(legs['miles'].size)/runner.size) # everybody runs the same number
+
 runner = np.insert(runner, 0, 0) # get a slot for the time
 #print('runner', runner, runner.size)
+
+# add the zeroth leg to give start time
+legs = legs.append({"number":0,  "miles":0.0,  "rating":0, "gain":0,    "loss":0},
+            ignore_index=True)
+legs['number'] = legs['number'].astype(int)
+legs = legs.sort_values(by='number')
+# legs = legs.set_index('number') # must be a better way
+#print(legs)
 
 # accumulate a list of distances
 race = pd.DataFrame({'leg':legs['number'],
@@ -65,6 +81,7 @@ race = pd.DataFrame({'leg':legs['number'],
                      'runner': runner,
                   })
 race['distance_accum'] = np.add.accumulate(race['distance'])
+race = race.set_index('leg') # must be a better way
 #print(race)
 # debug matplotlib plot
 #fig, axes  = plt.subplots()
@@ -75,13 +92,19 @@ race['distance_accum'] = np.add.accumulate(race['distance'])
 ############################## GOOD UP TO THIS POINT
 
 # setup times for runners
-runners = pd.DataFrame({'runner':np.arange(5),
-                        'name':['NA', 'Josh', 'Ross', 'Dan', 'Pete'],
-                        'pace':[np.timedelta64(int(0), 's')*1.20,
-                                np.timedelta64(int(8*60), 's')*1.20,
-                                np.timedelta64(int(7*60), 's')*1.20,
-                                np.timedelta64(int(6*60+45), 's')*1.20,
-                                np.timedelta64(int(9*60), 's')*1.20]})
+runners = pd.DataFrame({'runner':np.arange(10),
+                        'name':['NA', 'Mike', 'Ryan', 'Peter', 'Dan', 'Pete',
+                                'NC1', 'NC2', 'NC3', 'NC4'],
+                        'pace':[np.timedelta64(int(0), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's'),
+                                np.timedelta64(int(9*60), 's')]})
 runners = runners.set_index('runner') # must be a better way
 #print(runners)
 
@@ -116,7 +139,7 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 #print(race)
 
 # set a start time and calculate when the magic happens
-time_start = np.datetime64('2017-04-21T17:00')
+time_start = np.datetime64('2017-09-08T11:00')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
 #print(race)
@@ -125,8 +148,10 @@ for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
 with open(os.path.join(docsdir,'actual.json'), 'r') as handle:
     actual = json.load(handle)
     actual = [np.datetime64(item) for item in actual]
-while len(actual) < 12: # magic number related to number of legs
+while len(actual) < legs['miles'].size: # pad out with None for the rest
     actual.append(None)
+legs = legs.set_index('number') # must be a better way
+#print(legs)
 
 # calculate new updated estimated times
 est_updating = actual[:]
@@ -135,22 +160,24 @@ for i, _ in enumerate(est_updating):
         continue
     if est_updating[i] is not None:
         continue
-    est_updating[i] = est_updating[i-1] + race.time[2*i-1] + race.time[2*i]
+    est_updating[i] = est_updating[i-1] + race.time[i-1] + race.time[i]
 # add the finish time
 est_updating.append(est_updating[-1] + race.time[race.time.size-2] + race.time[race.time.size-1])
+#print(race)
 
 ######################################################################
 ############################## put together the json document
-leg_descr = {0:'gre/yel',
-             1:'red/gre',
-             2:'yel/red'}
-leg_miles = {0:legs[0]+legs[1],
-             1:legs[2]+legs[0],
-             2:legs[1]+legs[2]}
+#leg_descr = {0:'gre/yel',
+#             1:'red/gre',
+#             2:'yel/red'}
+#leg_miles = {0:legs[0]+legs[1],
+#             1:legs[2]+legs[0],
+#             2:legs[1]+legs[2]}
 json_data = []
 for index, row in race.iterrows():
-    if index%2 != 0: # it is an ultra
-        continue
+    #print(index, row)
+    #if index%2 != 0: # it is an ultra
+    #    continue
     if index == 0:
         continue
 
@@ -158,24 +185,24 @@ for index, row in race.iterrows():
     if row.runner != 0:
         runner = runners.loc[row.runner]['name']
 
-    leg_type = int(row.leg/2-1)%3
+    #leg_type = int(row.leg/2-1)%3
 
-    start = race.iloc[index-2]['time_accum']
-    real = actual[int(row.leg/2-1)]
+    start = race.iloc[index-1]['time_accum']
+    real = actual[index-1]
     if real is None:
         real = ''
     else:
         diff = deltaTimeToStr(start - real)
         real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
-    start = race.iloc[index-2]['time_accum'].strftime('%H:%M')
+    start = race.iloc[index-1]['time_accum'].strftime('%H:%M')
 
     time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
     time = 'h'.join(time.split(':')[:2]) + 'm'
 
-    json_data.append({'leg':int(row['leg']/2),
+    json_data.append({'leg':int(index), # int(row['leg']),
                       'runner':runner,
-                      'descr':leg_descr[leg_type],
-                      'miles':leg_miles[leg_type],
+                      'descr':RATINGS[legs.iloc[index]['rating']],
+                      'miles':legs.iloc[index]['miles'],#leg_miles[leg_type],
                       'start':start,
                       'elapse':time,
                       'actual':real})
@@ -191,7 +218,7 @@ else:
     real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
 start = row['time_accum'].strftime('%H:%M')
 
-json_data.append({'leg':1+int(row['leg']/2),
+json_data.append({'leg':int(race.distance_accum.size-1),
                   'runner':'',
                   'descr':'finish',
                   'miles':'',
