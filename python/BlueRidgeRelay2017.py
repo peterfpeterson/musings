@@ -139,7 +139,7 @@ race['time_accum_slow'] = np.add.accumulate(race['time_slow'])
 #print(race)
 
 # set a start time and calculate when the magic happens
-time_start = np.datetime64('2017-09-08T11:00')
+time_start = np.datetime64('2017-09-08T08:30')
 for label in ['time_accum', 'time_accum_fast', 'time_accum_slow']:
     race[label] = [ time_start+time_accum for time_accum in race[label]]
 #print(race)
@@ -204,7 +204,7 @@ for index, row in race.iterrows():
                       'descr':RATINGS[legs.iloc[index]['rating']],
                       'miles':legs.iloc[index]['miles'],#leg_miles[leg_type],
                       'start':start,
-                      'elapse':time,
+                      'elapse':time, # TODO something wrong here!!!!!!
                       'actual':real})
 
 # add the finish time
