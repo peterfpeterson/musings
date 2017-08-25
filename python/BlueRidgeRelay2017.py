@@ -218,7 +218,7 @@ else:
     real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
 start = row['time_accum'].strftime('%H:%M')
 
-json_data.append({'leg':int(race.distance_accum.size-1),
+json_data.append({'leg':int(race.distance_accum.size),
                   'runner':'',
                   'descr':'finish',
                   'miles':'',
