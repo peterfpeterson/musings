@@ -160,9 +160,9 @@ for i, _ in enumerate(est_updating):
         continue
     if est_updating[i] is not None:
         continue
-    est_updating[i] = est_updating[i-1] + race.time[i-1] + race.time[i]
+    est_updating[i] = est_updating[i-1] + race.time[i]
 # add the finish time
-est_updating.append(est_updating[-1] + race.time[race.time.size-2] + race.time[race.time.size-1])
+est_updating.append(est_updating[-1] + race.time[race.time.size-1])
 #print(race)
 
 ######################################################################
