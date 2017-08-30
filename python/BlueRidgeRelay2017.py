@@ -231,7 +231,6 @@ json_data.append({'leg':int(race.distance_accum.size),
 with open(os.path.join(docsdir, 'data.json'), 'w') as handle:
     json.dump(json_data, handle, sort_keys=True)
 
-raise RuntimeError('Intentionally stopping here')
 ######################################################################
 ############################## generate the plotly plot
 plotly_args = {'filename': os.path.join(docsdir, 'plot.html'),
@@ -248,18 +247,12 @@ color = dict(cone='#aaaaaa',
              medium='#fbf59b',
              hard='#fbae9d')
 
-# only the legs that matter
-mask = race['leg']%2 == 0
-mask[0] = True
-def magic(race, label):
-    return race[label][mask]
-
 # bounding box
 distance_bounds = [race.distance_accum[0], race.distance_accum[race.distance_accum.size-1]]
 time_bounds = [race.time_accum_slow[0], race.time_accum_slow[race.distance_accum.size-1]]
 
-# ultra race distance array
-distance = magic(race, 'distance_accum')
+# race distance array
+distance = race['distance_accum']
 
 def genDiffValues(distance, tileArray, firstArray):
     y = np.array(tileArray)
@@ -299,7 +292,7 @@ for position, x in zip([singles_pos, doubles_pos], [distance, race['distance_acc
 
 # prediction cone
 fast = go.Scatter(x=distance,
-                  y=magic(race,'time_accum_fast'),
+                  y=race['time_accum_fast'],
                   name='fast',
                   line=dict(shape='spline', color='transparent'),
                   mode='lines',
@@ -309,7 +302,7 @@ fast = go.Scatter(x=distance,
                   fillcolor=color['cone'])
 
 slow = go.Scatter(x=distance,
-                  y=magic(race, 'time_accum_slow'),
+                  y=race['time_accum_slow'],
                   name='slow',
                   line=dict(shape='spline', color='transparent'),
                   mode='lines',
@@ -319,8 +312,9 @@ slow = go.Scatter(x=distance,
 # predicted line
 pred_text = []
 actual_text = []
+# leg is the index
 for x, y, leg, act, est in \
-    zip(distance, magic(race,'time_accum'), magic(race,'leg'), actual, est_updating):
+    zip(distance, race['time_accum'], race.index.tolist(), actual, est_updating):
     leg_type = leg%3
     leg = int((leg+1)/2)+1
     runner = leg%4
@@ -337,13 +331,13 @@ for x, y, leg, act, est in \
         text = str(est).split(' ')[-1]
         text = ':'.join(text.split(':')[:2])
         text += ' (%s)<br>' % diff
-    text += 'leg %d - %.1f miles' % (leg, leg_miles[leg_type])
-    text += '<br>%s - %s' % (runner, leg_descr[leg_type])
+    #text += 'leg %d - %.1f miles' % (leg, leg_miles[leg_type]) # TODO
+    #text += '<br>%s - %s' % (runner, leg_descr[leg_type]) # TODO
 
     pred_text.append(text)
 pred_text.append('finish')
 prediction = go.Scatter(x=distance,
-                        y=magic(race,'time_accum'),
+                        y=race['time_accum'],
                         text=pred_text,
                         name='prediction',
                         line=dict(shape='spline', color=color['predicted'], width=2),
