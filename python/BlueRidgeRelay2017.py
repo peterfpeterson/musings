@@ -313,13 +313,10 @@ slow = go.Scatter(x=distance,
 pred_text = []
 actual_text = []
 # leg is the index
-for x, y, leg, act, est in \
-    zip(distance, race['time_accum'], race.index.tolist(), actual, est_updating):
-    leg_type = leg%3
-    leg = int((leg+1)/2)+1
-    runner = leg%4
-    if runner == 0:
-        runner = 4
+for x, y, leg, runner, act, est in \
+    zip(distance, race['time_accum'], race.index.tolist(), race['runner'], actual, est_updating):
+    #leg_type = leg%3
+    #leg = int((leg+1)/2)+1
     runner = runners.iloc[runner]['name']
 
     diff = deltaTimeToStr(y-est)
@@ -331,8 +328,8 @@ for x, y, leg, act, est in \
         text = str(est).split(' ')[-1]
         text = ':'.join(text.split(':')[:2])
         text += ' (%s)<br>' % diff
-    #text += 'leg %d - %.1f miles' % (leg, leg_miles[leg_type]) # TODO
-    #text += '<br>%s - %s' % (runner, leg_descr[leg_type]) # TODO
+    text += 'leg %d - %.1f miles' % (leg, legs.iloc[leg]['miles'])
+    text += '<br>%s - %s' % (runner, RATINGS[legs.iloc[leg]['rating']])
 
     pred_text.append(text)
 pred_text.append('finish')
