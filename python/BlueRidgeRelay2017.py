@@ -196,10 +196,10 @@ for index, row in race.iterrows():
         real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
     start = race.iloc[index-1]['time_accum'].strftime('%H:%M')
 
-    time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
+    time = str(row['time']).split(' ')[-1]
     time = 'h'.join(time.split(':')[:2]) + 'm'
 
-    json_data.append({'leg':int(index), # int(row['leg']),
+    json_data.append({'leg':int(index), 
                       'runner':runner,
                       'descr':RATINGS[legs.iloc[index]['rating']],
                       'miles':legs.iloc[index]['miles'],#leg_miles[leg_type],
