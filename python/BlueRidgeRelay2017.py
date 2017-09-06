@@ -62,7 +62,7 @@ legs_ultra = np.insert(legs_ultra, 0, 0.)
 # setup list of all runners
 runner = np.arange(9)+1 # team of nine this time
 #runner = np.repeat(runner,2) # uncomment for double legs
-runner = np.tile(runner,(legs['miles'].size)/runner.size) # everybody runs the same number
+runner = np.tile(runner,int(legs['miles'].size)//runner.size) # everybody runs the same number
 
 runner = np.insert(runner, 0, 0) # get a slot for the time
 #print('runner', runner, runner.size)
