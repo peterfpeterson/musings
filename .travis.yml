@@ -6,7 +6,7 @@ install:
 - pip install pandas
 - pip install plotly
 script:
-- python python/AtlantaRagnar2017.py
+- python python/BlueRidgeRelay2017.py
 after_success:
 - git config --global user.email "travis@travis-ci.org"
 - git config --global user.name "Travis CI"
