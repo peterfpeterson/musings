@@ -1,13 +1,16 @@
 { "annotations":
   [{"solar noon":           "2017-04-21T13:36"},
    {"beer and dinner start":"2017-04-21T17:00"},
-   {"sunset":               "2017-04-21T20:13"},
+   {"vest start":           "2017-09-08T19:30"},
+   {"sunset":               "2017-09-08T19:45"},
    {"twilight":             "2017-04-21T20:39"},
    {"beer and dinner stop": "2017-04-21T22:00"},
    {"movie":                "2017-04-21T22:00"},
    {"twilight":             "2017-04-22T06:32"},
-   {"sunrise":              "2017-04-22T06:57"},
+   {"sunrise":              "2017-09-09T07:09"},
+   {"vest stop":            "2017-09-09T07:30"},
    {"coffee start":         "2017-04-22T07:00"},
    {"coffee stop":          "2017-04-22T11:00"},
-   {"solar noon":           "2017-04-22T13:35"}]
+   {"solar noon":           "2017-04-22T13:35"},
+   {"sunset":               "2017-09-08T19:47"}]
 }

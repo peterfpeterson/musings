@@ -275,12 +275,13 @@ def difficulties(distance, color, tileArray, firstArray=None):
                        showlegend=False)
 
 
+data = []
 
 # color bar for difficulties of doubles
+'''
 singles_pos = race.time_accum[0]
 doubles_pos = race.time_accum[race.distance_accum.size-1]
 
-data = []
 for position, x in zip([singles_pos, doubles_pos], [distance, race['distance_accum']]):
     data.append(difficulties(x, color['easy'],
                             [position, position, None]))
@@ -289,6 +290,7 @@ for position, x in zip([singles_pos, doubles_pos], [distance, race['distance_acc
     data.append(difficulties(x, color['hard'],
                             [position, None, position],
                             [None, None, position]))
+'''
 
 # prediction cone
 fast = go.Scatter(x=distance,
