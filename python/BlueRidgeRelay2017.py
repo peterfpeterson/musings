@@ -94,7 +94,7 @@ race = race.set_index('leg') # must be a better way
 # setup times for runners
 runners = pd.DataFrame({'runner':np.arange(10),
                         'name':['NA', 'Mike', 'Ryan', 'Peter', 'Dan', 'Pete',
-                                'NC1', 'NC2', 'NC3', 'NC4'],
+                                'Gerland', 'Kevin', 'Carlo', 'David'],
                         'pace':[np.timedelta64(int(0), 's'),
                                 np.timedelta64(int(9*60), 's'),
                                 np.timedelta64(int(9*60), 's'),
