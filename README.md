@@ -43,4 +43,7 @@ made.
 Various bits of the design were borrowed from
 [jekyll-bootstrap](https://github.com/plusjade/jekyll-bootstrap/).
 
-The deploy technology is modified from [this gist](https://gist.github.com/willprice/e07efd73fb7f13f917ea).
+The deploy technology is modified from [this
+gist](https://gist.github.com/willprice/e07efd73fb7f13f917ea) where
+the token is shared via [github pages documentation on
+travis-ci](https://docs.travis-ci.com/user/deployment/pages/).
