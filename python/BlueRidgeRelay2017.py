@@ -96,15 +96,15 @@ runners = pd.DataFrame({'runner':np.arange(10),
                         'name':['NA', 'Mike', 'Ryan', 'Peter', 'Dan', 'Pete',
                                 'Gerland', 'Kevin', 'Carlo', 'David'],
                         'pace':[np.timedelta64(int(0), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's'),
-                                np.timedelta64(int(9*60), 's')]})
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's'),
+                                np.timedelta64(int(8.5*60), 's')]})
 runners = runners.set_index('runner') # must be a better way
 #print(runners)
 
