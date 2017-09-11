@@ -192,8 +192,12 @@ for index, row in race.iterrows():
     if real is None:
         real = ''
     else:
-        diff = deltaTimeToStr(start - real)
-        real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
+        real = real.astype(datetime)
+        if real is None:
+            real = ''
+        else:
+            diff = deltaTimeToStr(start - real)
+            real = '%s (%s)' % (real.strftime('%H:%M'), diff)
     start = race.iloc[index-1]['time_accum'].strftime('%H:%M')
 
     time = str(row['time']).split(' ')[-1]
