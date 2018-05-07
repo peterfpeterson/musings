@@ -1,0 +1,85 @@
+---
+title: Kentuckiana 2018 - table
+---
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+
+{% include meta.html %}
+
+{% include bootstrap/css %}
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container" role="main">
+
+<table id="my-final-table" class="table table-striped">
+  <thead>
+    <th dynatable-sort-header="1">leg</th>
+    <th>runner</th>
+    <th data-dynatable-no-sort="1">descr</th>
+    <th>miles</th>
+    <th data-dynatable-no-sort="1">start</th>
+    <th>elapse</th>
+    <th data-dynatable-no-sort="1">actual</th>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<ul>
+  <li><a href="plot.html">Plot of legs</a></li>
+<!--
+  <li><a href="https://www.runragnar.com/event-detail/trail/atlanta_ga">Race page</a>,
+    the <a href="https://quip.com/Vs7MAMarBzMG">runner's packet</a>,
+    <a href="https://quip.com/1ebCAnb1miTs">schedule</a>,
+    <a href="https://quip.com/3I3vAewC62R3">suggested packing list</a>,
+    and <a href="http://www.racetecresults.com/Results.aspx?CId=16432&RId=2140&EId=2">race results</a></li>
+-->
+</ul>
+
+<!--
+<iframe id="forecast_embed" type="text/html" frameborder="0" height="245"
+width="100%"
+src="https://forecast.io/embed/#lat=33.7491&lon=-84.3902&name=Atlanta">
+</iframe>
+-->
+
+{% include bootstrap/javascript %}
+{% include dynatable/javascript %}
+
+<script type="text/javascript">
+// configure how the table fills in
+$.dynatableSetup({
+  features: {
+    paginate: false,
+    pushState: true,
+    search: false,
+    recordCount: false,
+    perPageSelect: false,
+  }
+});
+
+$('#my-final-table').dynatable({
+});
+
+// link the json data to the table
+$.getJSON('data.json', function(data) {
+  var dynatable = $('#my-final-table').data('dynatable');
+  dynatable.sorts.clear();
+  dynatable.sorts.add('leg', 1) // 1=ASCENDING, -1=DESCENDING
+  dynatable.settings.dataset.originalRecords = data;
+  dynatable.process();
+});
+</script>
+
+</div> <!-- ./container -->
+
+
+</body>
+</html>

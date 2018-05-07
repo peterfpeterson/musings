@@ -1,0 +1,13 @@
+{ "annotations":
+  [{"solar noon":           "2018-05-11T13:36"},
+   {"beer and dinner start":"2018-05-11T17:00"},
+   {"sunset":               "2018-05-11T20:13"},
+   {"twilight":             "2018-05-11T20:39"},
+   {"beer and dinner stop": "2018-05-11T22:00"},
+   {"movie":                "2018-05-11T22:00"},
+   {"twilight":             "2018-05-12T06:32"},
+   {"sunrise":              "2018-05-12T06:57"},
+   {"coffee start":         "2018-05-12T07:00"},
+   {"coffee stop":          "2018-05-12T11:00"},
+   {"solar noon":           "2018-05-12T13:35"}]
+}
