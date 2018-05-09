@@ -160,7 +160,9 @@ for index, row in race.iterrows():
     else:
         diff = deltaTimeToStr(start - real)
         real = real.to_datetime64()
-        real = '%s (%s)' % (str(real).split('T')[-1], diff)
+        real = str(real).split('T')[-1] # just the time
+        real = ':'.join(real.split(':')[:2]) # get rid of seconds
+        real = '%s (%s)' % (real, diff)
     start = race.iloc[index-2]['time_accum'].strftime('%H:%M')
 
     time = str(race.iloc[index-1]['time'] + race.iloc[index]['time']).split(' ')[-1]
@@ -169,7 +171,7 @@ for index, row in race.iterrows():
     json_data.append({'leg':int(row['leg']/2),
                       'runner':runner,
                       'descr':leg_descr[leg_type],
-                      'miles':leg_miles[leg_type],
+                      'miles':'%.1f' % leg_miles[leg_type],
                       'start':start,
                       'elapse':time,
                       'actual':real})
