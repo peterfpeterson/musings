@@ -14,7 +14,7 @@ function add_if_changed
     fi
 }
 
-add_if_changed "2017/BlueRidgeRelay"
+add_if_changed "2018/KentuckianaRagnar"
 
 # if things have been staged then commit and push them
 if git commit -m "Update from travis-ci build $TRAVIS_BUILD_NUMBER"
