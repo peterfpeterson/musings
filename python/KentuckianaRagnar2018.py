@@ -184,8 +184,10 @@ if real is None:
     real = ''
 else:
     diff = deltaTimeToStr(start - real)
-    real = '%s (%s)' % (real.astype(datetime).strftime('%H:%M'), diff)
-start = row['time_accum'].strftime('%H:%M')
+    real = real.to_datetime64()
+    real = str(real).split('T')[-1] # just the time
+    real = ':'.join(real.split(':')[:2]) # get rid of seconds
+    real = '%s (%s)' % (real, diff)start = row['time_accum'].strftime('%H:%M')
 
 json_data.append({'leg':1+int(row['leg']/2),
                   'runner':'',
