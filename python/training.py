@@ -2,6 +2,12 @@
 from __future__ import (absolute_import, division, print_function)
 from collections import namedtuple
 from datetime import date, datetime, timedelta
+try:
+    from icalendar import Calendar, Event
+    WITH_ICAL=True
+except ImportError:
+    print('Running without icalendar support')
+    WITH_ICAL=False
 
 Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
 DELTA_WEEK = timedelta(days=7)
@@ -56,6 +62,16 @@ def parseHal(raw):
         program.append(week)
     return program
 
+def toICalendar(training):
+    calendar = Calendar()
+
+    event = {'summary':'magic summary test',
+             'description':'not so magical description',
+             'dtstart':date(2018,11,9)}
+    event = Event(**event)
+
+    calendar.add_component(event)
+    return calendar
 
 races = {'marathon': #https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
@@ -143,3 +159,13 @@ if __name__ == '__main__':
         weekdate = raceweek - (weeknum - 1) * DELTA_WEEK
         week = frmt_week.format(*week)
         print("{:%Y-%m-%d} Week {:2}: {}".format(weekdate, weeknum, week.strip()))
+
+    if WITH_ICAL:
+        ical = toICalendar(training)
+        print('------------------------------')
+        print(ical)
+        # write to disk
+        filename = 'training.ics'
+        with open(filename, 'wb') as handle:
+            handle.write(ical.to_ical())
+        print('Wrote training calendar to "{}"'.format(filename))
