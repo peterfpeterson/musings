@@ -4,14 +4,16 @@ from collections import namedtuple
 from datetime import date, datetime, timedelta
 try:
     from icalendar import Calendar, Event
-    WITH_ICAL=True
+    WITH_ICAL = True
 except ImportError:
     print('Running without icalendar support')
-    WITH_ICAL=False
+    WITH_ICAL = False
 
 Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
+DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
 REST = ' - '
+
 
 def standardize(stuff):
     stuff = stuff.strip()
@@ -23,29 +25,34 @@ def standardize(stuff):
     stuff = stuff.replace('Half Marathon', 'Half marathon')
     return stuff
 
+
 def findLengths(training):
-    lengths = [3,3,3,3,3,3,3]
+    lengths = [3, 3, 3, 3, 3, 3, 3]
     for week in training:
         for i, day in enumerate(week):
             lengths[i] = max(lengths[i], len(day))
     return lengths
+
 
 def createFormatStr(training):
     lengths = findLengths(training)
     lengths = ['{:' + str(length) + '}' for length in lengths]
     return ' '.join(lengths)
 
+
 def toFiveDays(training):
     adjusted = []
     for week in training:
         # TODO need to be smarter about this
-        week = Week(week.tue, week.wed, week.thu, REST, week.sat, week.sun, REST)
+        week = Week(week.tue, week.wed, week.thu, REST, week.sat,
+                    week.sun, REST)
         adjusted.append(week)
     # remove the race from the last week
     week = list(adjusted[-1])
     week[-2] = 'RACE DAY'
     adjusted[-1] = Week(*week)
     return adjusted
+
 
 def getRaceWeek(racedate):
     DELTA_DAY = timedelta(days=1)
@@ -54,6 +61,7 @@ def getRaceWeek(racedate):
     while monday.weekday() != 0:
         monday -= DELTA_DAY
     return monday
+
 
 def parseHal(raw):
     program = []
@@ -66,36 +74,27 @@ def parseHal(raw):
         program.append(week)
     return program
 
-def toICalendar(training):
-    calendar = Calendar()
-
-    event = {'summary':'magic summary test',
-             'description':'not so magical description',
-             'dtstart':date(2018,11,9)}
-    event = Event(**event)
-
-    calendar.add_component(event)
-    return calendar
 
 def weekToICalGen(week, weeknum, weekdate):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
         if day.strip() != REST.strip():
-            event = {'summary':day,
-                     'description':day,
-                     'dtstart':startdate + timedelta(days=dayofweek)}
+            event = {'summary': day,
+                     'description': day,
+                     'dtstart': startdate + timedelta(days=dayofweek)}
             if dayofweek == 0:
                 event['summary'] = 'Week {} - {}'.format(weeknum, day)
             yield Event(**event)
         else:
             yield None
 
+
 def weekToTableGen(week, lengths):
     lengths = ['{:' + str(length) + '}' for length in lengths]
     for day, length in zip(week, lengths):
         yield length.format(day)
 
-races = {'marathon': #https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
+races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
 1	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi pace	10 miles
 2	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi run	11 miles
@@ -116,7 +115,7 @@ races = {'marathon': #https://www.halhigdon.com/training-programs/marathon-train
 17	Cross	4 mi run	6 mi run	4 mi run	Rest	4 mi run	8
 18	Cross	3 mi run	4 mi run	Rest	Rest	2 mi run	Marathon
 ''',
-'half': #https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
+'half':  # https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
 '''
 1	30 min cross	3 mi run	4 mi run	3 mi run	Rest	3 mi run	4 mi run
 2	30 min cross	3 mi run	4 mi pace	3 mi run	Rest	3 mi pace	5 mi run
@@ -170,14 +169,15 @@ if __name__ == '__main__':
     if weeks_util_training > 0:
         print('{:4.1f} weeks until training starts'.format(weeks_util_training))
     else:
-        print('training has already started, trimming to the last {} weeks'.format(int(weeks_util_race)+1))
+        print('training has already started, '
+              'trimming to the last {} weeks'.format(int(weeks_util_race)+1))
         training = training[-1*int(weeks_util_race)-1:]
 
     ical = None if not WITH_ICAL else Calendar()
 
     # print the results
     lengths = findLengths(training)
-    print('{:19}'.format(''), ' '.join(weekToTableGen(('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'), lengths)))
+    print('{:19}'.format(''), ' '.join(weekToTableGen(DAY_NAMES, lengths)))
     for num, week in enumerate(training):
         weeknum = len(training) - num
         weekdate = raceweek - (weeknum - 1) * DELTA_WEEK
@@ -195,7 +195,7 @@ if __name__ == '__main__':
     # write the calendar to disk
     if ical is not None:
         # write to disk
-        filename = 'training.ics'
-        with open(filename, 'wb') as handle:
+        FILENAME = 'training.ics'
+        with open(FILENAME, 'wb') as handle:
             handle.write(ical.to_ical())
-        print('Wrote training calendar to "{}"'.format(filename))
+        print('Wrote training calendar to "{}"'.format(FILENAME))
