@@ -79,11 +79,13 @@ def weekToICalGen(week, weeknum, weekdate):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
         if day.strip() != REST.strip():
-            event = {'summary': day,
-                     'description': day,
-                     'dtstart': startdate + timedelta(days=dayofweek)}
+            event = Event()
             if dayofweek == 0:
-                event['summary'] = 'Week {} - {}'.format(weeknum, day)
+                event.add('summary', 'Week {} - {}'.format(weeknum, day))
+            else:
+                event.add('summary', day)
+            event.add('description', day)
+            event.add('dtstart', startdate + timedelta(days=dayofweek))
             yield Event(**event)
         else:
             yield None
