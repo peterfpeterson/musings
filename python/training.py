@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
 from collections import namedtuple
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 try:
-    from icalendar import Calendar, Event
+    from icalendar import Alarm, Calendar, Event
     WITH_ICAL = True
 except ImportError:
     print('Running without icalendar support')
@@ -74,19 +74,63 @@ def parseHal(raw):
         program.append(week)
     return program
 
+def toTimeDelta(description):
+    try:
+        distance = float(description.split()[0])
+    except ValueError:
+        if description.lower().startswith('half'):
+            distance = 13.1
+        elif description == 'RACE DAY':
+            return None  # should just be an all day event
+        else:
+            raise
+
+    if distance <= 6.:
+        return timedelta(hours=1)
+    elif distance <= 9.:
+        return timedelta(hours=1, minutes=30)
+    elif distance <= 13.1:
+        return timedelta(hours=2)
+    elif distance <= 18.:
+        return timedelta(hours=3)
+    else:
+        return timedelta(hours=4)
 
 def weekToICalGen(week, weeknum, weekdate):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
         if day.strip() != REST.strip():
             event = Event()
+
+            # add in summary and description
             if dayofweek == 0:
                 event.add('summary', 'Week {} - {}'.format(weeknum, day))
             else:
                 event.add('summary', day)
             event.add('description', day)
-            event.add('dtstart', startdate + timedelta(days=dayofweek))
-            yield Event(**event)
+
+            # add in the start
+            start = startdate + timedelta(days=dayofweek)
+            if dayofweek < 5:  # weekday
+                start = datetime.combine(start, time(11, 30))
+            else:  # weekend
+                start = datetime.combine(start, time(8, 0))
+            event.add('dtstart', start)
+
+            # add the end
+            delta = toTimeDelta(day)
+            if delta is not None:
+                event.add('dtend', start + delta)
+
+            # add the alarm
+            if delta is not None and dayofweek < 5:  # weekday
+                alarm = Alarm()
+                alarm.add('ACTION', 'DISPLAY')
+                alarm.add('DESCRIPTION', 'REMINDER')
+                alarm.add('TRIGGER', timedelta(minutes=-15))
+                event.add_component(alarm)
+
+            yield event
         else:
             yield None
 
@@ -114,7 +158,7 @@ races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-tra
 14	Cross	5 mi run	6 mi run	5 mi run	Rest	6 mi run	12 miles
 15	Cross	5 mi run	10 mi run	5 mi run	Rest	10 mi pace	20 miles
 16	Cross	5 mi run	8 mi run	5 mi run	Rest	4 mi pace	12 miles
-17	Cross	4 mi run	6 mi run	4 mi run	Rest	4 mi run	8
+17	Cross	4 mi run	6 mi run	4 mi run	Rest	4 mi run	8 miles
 18	Cross	3 mi run	4 mi run	Rest	Rest	2 mi run	Marathon
 ''',
 'half':  # https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
