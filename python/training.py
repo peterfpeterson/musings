@@ -13,9 +13,10 @@ Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
 REST = ' - '
+RACE = 'RACE DAY'
 
 
-def standardize(stuff):
+def standardizeRun(stuff):
     stuff = stuff.strip()
     if stuff.lower() == 'rest':
         return REST
@@ -23,6 +24,10 @@ def standardize(stuff):
     stuff = stuff.replace('mi pace', 'miles pace')
     stuff = stuff.replace('-K Race', ' km race')
     stuff = stuff.replace('Half Marathon', 'Half marathon')
+    if 'marathon' in stuff.lower() or 'race' in stuff:
+        pass  # TODO should reverse the check
+    else:
+        stuff = 'Run ' + stuff
     return stuff
 
 
@@ -49,7 +54,7 @@ def toFiveDays(training):
         adjusted.append(week)
     # remove the race from the last week
     week = list(adjusted[-1])
-    week[-2] = 'RACE DAY'
+    week[-2] = RACE
     adjusted[-1] = Week(*week)
     return adjusted
 
@@ -69,37 +74,54 @@ def parseHal(raw):
         line = line.strip()
         if not line:
             continue
-        line = [standardize(item) for item in line.split('\t')]
+        line = [standardizeRun(item) for item in line.split('\t')]
         week = Week(*line[1:])
         program.append(week)
     return program
 
+
 def toTimeDelta(description):
+    # generate speed in minutes per mile
+    if 'run' in description.lower() or 'marathon' in description.lower():
+        speed = 10.
+    elif 'swim' in description.lower():
+        speed = 60.
+    else:
+        msg = 'Do not have speed for activity {}'.format(description)
+        raise RuntimeError(msg)
+
     try:
-        distance = float(description.split()[0])
+        distance = float(description.split()[1])
     except ValueError:
         if description.lower().startswith('half'):
             distance = 13.1
-        elif description == 'RACE DAY':
-            return None  # should just be an all day event
+        elif description.lower() == 'marathon':
+            distance = 26.2
         else:
             raise
 
-    if distance <= 6.:
-        return timedelta(hours=1)
-    elif distance <= 9.:
-        return timedelta(hours=1, minutes=30)
-    elif distance <= 13.1:
-        return timedelta(hours=2)
-    elif distance <= 18.:
-        return timedelta(hours=3)
-    else:
-        return timedelta(hours=4)
+    minutes = distance*speed
+    # print('{} x {} = 0h{}m'.format(distance, int(speed), int(minutes)))
+    hours = max(int(minutes)//int(60), 1)
+    minutes = max(0., minutes-hours*60.)
+
+    # print('         = {}h{}m'.format(hours, int(minutes)))
+    if minutes != 0. and minutes != 30.:
+        # round up to the nearest half hour
+        if minutes > 30.:
+            hours += 1
+            minutes = 0.
+        elif minutes > 0.:
+            minutes = 30.
+        # print('         = {}h{}m'.format(hours, int(minutes)))
+
+    return timedelta(hours=hours, minutes=minutes)
+
 
 def weekToICalGen(week, weeknum, weekdate):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
-        if day.strip() != REST.strip():
+        if day.strip() != REST.strip() and day.strip() != RACE:
             event = Event()
 
             # add in summary and description
@@ -188,7 +210,8 @@ if __name__ == '__main__':
     # set up optparse
     import argparse     # for command line options
     parser = argparse.ArgumentParser(description='Create training schedule')
-    parser.add_argument('--type', dest='racetype', choices=['marathon', 'full', 'half'], default='marathon',
+    parser.add_argument('--type', dest='racetype', choices=['marathon', 'full', 'half'],
+                        default='marathon',
                         help='type of race default=%(default)s')
     parser.add_argument('--date', type=valid_date, help='date of the race')
 
