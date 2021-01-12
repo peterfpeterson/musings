@@ -146,7 +146,7 @@ def toTimeDelta(description):
     return timedelta(hours=hours, minutes=minutes)
 
 
-def weekToICalGen(week, weeknum, weekdate):
+def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
         if day.strip() != REST.strip() and day.strip() != RACE:
@@ -162,9 +162,9 @@ def weekToICalGen(week, weeknum, weekdate):
             # add in the start
             start = startdate + timedelta(days=dayofweek)
             if dayofweek < 5:  # weekday
-                start = datetime.combine(start, time(11, 30))
+                start = datetime.combine(start, time(*startweekday))
             else:  # weekend
-                start = datetime.combine(start, time(8, 0))
+                start = datetime.combine(start, time(*startweekend))
             event.add('dtstart', start)
 
             # add the end
@@ -259,6 +259,7 @@ if __name__ == '__main__':
                         default='marathon',
                         help='type of race default=%(default)s')
     parser.add_argument('--date', type=valid_date, help='date of the race')
+    # TODO add option to set start time on weekdays
 
     # parse the command line
     options = parser.parse_args()
@@ -298,7 +299,7 @@ if __name__ == '__main__':
 
         # this creates the calendar
         if ical is not None:
-            for day in weekToICalGen(week, weeknum, weekdate):
+            for day in weekToICalGen(week, weeknum, weekdate, startweekday=(7, 30)):
                 if day is not None:
                     ical.add_component(day)
 
