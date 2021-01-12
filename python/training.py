@@ -16,7 +16,8 @@ REST = ' - '
 RACE = 'RACE DAY'
 
 
-def standardizeRun(stuff):
+def standardizeRun(stuff: str) -> str:
+    '''Convert some of the random text to standard text'''
     stuff = stuff.strip()
     if stuff.lower() == 'rest':
         return REST
@@ -48,8 +49,14 @@ def createFormatStr(training):
 def toFiveDays(training):
     adjusted = []
     for week in training:
+        # hard code resting on Thursday if there are too many working days
+        restThursday = bool(len([item for item in week
+                                 if item != REST]) > 5)
+        thursday = week.fri
         # TODO need to be smarter about this
-        week = Week(week.tue, week.wed, week.thu, REST, week.sat,
+        if restThursday:
+            thursday = REST
+        week = Week(week.tue, week.wed, week.thu, thursday, week.sat,
                     week.sun, REST)
         adjusted.append(week)
     # remove the race from the last week
@@ -197,7 +204,23 @@ races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-tra
 10	Rest	5 mi run	8 mi pace	5 mi run	Rest	5 mi pace	11 mi run
 11	60 min cross	5 mi run	6 mi run	4 mi run	Rest	3 mi pace	12 mi run
 12	Rest	4 mi run	4 mi pace	2 mi run	Rest	Rest	Half Marathon
-'''}
+''',
+'half-n2':  # https://www.halhigdon.com/training-programs/half-marathon-training/novice-2-half-marathon/
+'''
+1 	60 min cross	Rest 	3 mi run 	3 mi run 	3 mi run 	Rest 	4 mi run
+2 	60 min cross	Rest 	3 mi run 	3 mi pace 	3 mi run 	Rest 	5 mi run
+3 	60 min cross	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	6 mi run
+4 	60 min cross	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	7 mi run
+5 	60 min cross	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	8 mi run
+6 	60 min cross	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	5-K Race
+7 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	9 mi run
+8 	60 min cross	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	10 mi run
+9 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	10-K Race
+10 	60 min cross	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	11 mi run
+11 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	12 mi run
+12 	Rest	Rest 	3 mi run 	2 mi pace 	2 mi run 	Rest  	Half Marathon
+'''
+}
 
 if __name__ == '__main__':
     def valid_date(s):
@@ -210,7 +233,7 @@ if __name__ == '__main__':
     # set up optparse
     import argparse     # for command line options
     parser = argparse.ArgumentParser(description='Create training schedule')
-    parser.add_argument('--type', dest='racetype', choices=['marathon', 'full', 'half'],
+    parser.add_argument('--type', dest='racetype', choices=['marathon', 'full', 'half', 'half-n2'],
                         default='marathon',
                         help='type of race default=%(default)s')
     parser.add_argument('--date', type=valid_date, help='date of the race')
