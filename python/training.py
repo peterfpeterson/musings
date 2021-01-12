@@ -87,25 +87,46 @@ def parseHal(raw):
     return program
 
 
-def toTimeDelta(description):
-    # generate speed in minutes per mile
-    if 'run' in description.lower() or 'marathon' in description.lower():
-        speed = 10.
-    elif 'swim' in description.lower():
-        speed = 60.
+def toDistanceInMiles(description: str) -> float:
+    '''Convert description to distance in miles'''
+    def toFloat(text: str) -> float:
+        text = text.lower().replace('run', '').replace('swim', '')
+        for item in text.split():
+            return float(item)
+        raise ValueError('failed to convert "{}" to float'.format(text))
+
+    if description.lower().startswith('half'):
+        distance = 13.1
+    elif description.lower() == 'marathon':
+        distance = 26.2
+    elif 'km' in description:
+        # this only appears to be a running event
+        distance = 1.602 * toFloat(description)
     else:
-        msg = 'Do not have speed for activity {}'.format(description)
+        distance = toFloat(description)
+
+    return distance
+
+
+def toSpeedInMinutes(description: str) -> float:
+    '''generate speed in minutes per mile'''
+    description = description.lower()
+
+    if 'run' in description or 'marathon' in description or 'km race' in description:
+        speed = 10.  # 10 minute mile
+    elif 'swim' in description.lower():
+        speed = 60.  # 1 mph
+    else:
+        msg = 'Do not have speed for activity "{}"'.format(description)
         raise RuntimeError(msg)
 
-    try:
-        distance = float(description.split()[1])
-    except ValueError:
-        if description.lower().startswith('half'):
-            distance = 13.1
-        elif description.lower() == 'marathon':
-            distance = 26.2
-        else:
-            raise
+    return speed
+
+
+def toTimeDelta(description):
+    # convert the input into something useful
+    speed = toSpeedInMinutes(description)
+    distance = toDistanceInMiles(description)
 
     minutes = distance*speed
     # print('{} x {} = 0h{}m'.format(distance, int(speed), int(minutes)))
@@ -169,6 +190,7 @@ def weekToTableGen(week, lengths):
     for day, length in zip(week, lengths):
         yield length.format(day)
 
+
 races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
 1	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi pace	10 miles
@@ -189,7 +211,7 @@ races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-tra
 16	Cross	5 mi run	8 mi run	5 mi run	Rest	4 mi pace	12 miles
 17	Cross	4 mi run	6 mi run	4 mi run	Rest	4 mi run	8 miles
 18	Cross	3 mi run	4 mi run	Rest	Rest	2 mi run	Marathon
-''',
+''',  # noqa: E128
 'half':  # https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
 '''
 1	30 min cross	3 mi run	4 mi run	3 mi run	Rest	3 mi run	4 mi run
