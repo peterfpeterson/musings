@@ -2,6 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 from collections import namedtuple
 from datetime import date, datetime, time, timedelta
+from trainingobjs import TrainingItem, toRunItem
 try:
     from icalendar import Alarm, Calendar, Event
     WITH_ICAL = True
@@ -12,24 +13,8 @@ except ImportError:
 Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
-REST = ' - '
+REST = TrainingItem(' - ')
 RACE = 'RACE DAY'
-
-
-def standardizeRun(stuff: str) -> str:
-    '''Convert some of the random text to standard text'''
-    stuff = stuff.strip()
-    if stuff.lower() == 'rest':
-        return REST
-    stuff = stuff.replace('mi run', 'miles')
-    stuff = stuff.replace('mi pace', 'miles pace')
-    stuff = stuff.replace('-K Race', ' km race')
-    stuff = stuff.replace('Half Marathon', 'Half marathon')
-    if 'marathon' in stuff.lower() or 'race' in stuff:
-        pass  # TODO should reverse the check
-    else:
-        stuff = 'Run ' + stuff
-    return stuff
 
 
 def findLengths(training):
@@ -81,83 +66,25 @@ def parseHal(raw):
         line = line.strip()
         if not line:
             continue
-        line = [standardizeRun(item) for item in line.split('\t')]
-        week = Week(*line[1:])
+        line = [toRunItem(item) for item in line.split('\t')[1:]]
+        week = Week(*line)
         program.append(week)
     return program
-
-
-def toDistanceInMiles(description: str) -> float:
-    '''Convert description to distance in miles'''
-    def toFloat(text: str) -> float:
-        text = text.lower().replace('run', '').replace('swim', '')
-        for item in text.split():
-            return float(item)
-        raise ValueError('failed to convert "{}" to float'.format(text))
-
-    if description.lower().startswith('half'):
-        distance = 13.1
-    elif description.lower() == 'marathon':
-        distance = 26.2
-    elif 'km' in description:
-        # this only appears to be a running event
-        distance = 1.602 * toFloat(description)
-    else:
-        distance = toFloat(description)
-
-    return distance
-
-
-def toSpeedInMinutes(description: str) -> float:
-    '''generate speed in minutes per mile'''
-    description = description.lower()
-
-    if 'run' in description or 'marathon' in description or 'km race' in description:
-        speed = 10.  # 10 minute mile
-    elif 'swim' in description.lower():
-        speed = 60.  # 1 mph
-    else:
-        msg = 'Do not have speed for activity "{}"'.format(description)
-        raise RuntimeError(msg)
-
-    return speed
-
-
-def toTimeDelta(description):
-    # convert the input into something useful
-    speed = toSpeedInMinutes(description)
-    distance = toDistanceInMiles(description)
-
-    minutes = distance*speed
-    # print('{} x {} = 0h{}m'.format(distance, int(speed), int(minutes)))
-    hours = max(int(minutes)//int(60), 1)
-    minutes = max(0., minutes-hours*60.)
-
-    # print('         = {}h{}m'.format(hours, int(minutes)))
-    if minutes != 0. and minutes != 30.:
-        # round up to the nearest half hour
-        if minutes > 30.:
-            hours += 1
-            minutes = 0.
-        elif minutes > 0.:
-            minutes = 30.
-        # print('         = {}h{}m'.format(hours, int(minutes)))
-
-    return timedelta(hours=hours, minutes=minutes)
 
 
 def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
-        if day.strip() != REST.strip() and day.strip() != RACE:
+        descr = str(day).strip()  # be smarter than this
+        if descr != REST and descr != RACE:
             event = Event()
 
             # add in summary and description
             if dayofweek == 0:
-                event.add('summary', 'Week {} - {}'.format(weeknum, day))
+                event.add('summary', 'Week {} - {}'.format(weeknum, day.summary))
             else:
-                event.add('summary', day)
-            event.add('description', day)
+                event.add('summary', day.summary)
+            event.add('description', day.summary)
 
             # add in the start
             start = startdate + timedelta(days=dayofweek)
@@ -168,7 +95,7 @@ def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(
             event.add('dtstart', start)
 
             # add the end
-            delta = toTimeDelta(day)
+            delta = day.toTimeDelta()
             if delta is not None:
                 event.add('dtend', start + delta)
 
@@ -188,9 +115,16 @@ def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(
 def weekToTableGen(week, lengths):
     lengths = ['{:' + str(length) + '}' for length in lengths]
     for day, length in zip(week, lengths):
-        yield length.format(day)
+        yield length.format(str(day))
 
 
+# half ironman training
+# https://www.triathlete.com/training/super-simple-ironman-70-3-triathlon-training-plan/
+
+# metric century training program
+# https://www.google.com/url?q=https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/&sa=D&source=calendar&usd=2&usg=AOvVaw2zj2_muQk42G97J1LTxsJH
+
+# all the following are tab delimited
 races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
 1	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi pace	10 miles
@@ -240,9 +174,20 @@ races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-tra
 9 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	10-K Race
 10 	60 min cross	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	11 mi run
 11 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	12 mi run
-12 	Rest	Rest 	3 mi run 	2 mi pace 	2 mi run 	Rest  	Half Marathon
-'''
-}
+12  	Rest	Rest 	3 mi run 	2 mi pace 	2 mi run 	Rest  	Half Marathon
+'''}
+
+bike = {'century':  # https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/
+[Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 20 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 24 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 30 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 34 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 41 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 46 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 54 miles'), REST),
+ Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem(RACE),
+      REST)]}  # Bike metric century
+
 
 if __name__ == '__main__':
     def valid_date(s):
@@ -255,9 +200,11 @@ if __name__ == '__main__':
     # set up optparse
     import argparse     # for command line options
     parser = argparse.ArgumentParser(description='Create training schedule')
-    parser.add_argument('--type', dest='racetype', choices=['marathon', 'full', 'half', 'half-n2'],
+    race_names = list(races.keys())
+    race_names.extend(list(bike.keys()))
+    parser.add_argument('--type', dest='racetype', choices=race_names,
                         default='marathon',
-                        help='type of race default=%(default)s')
+                        help='type of race default=%(default)s [%(choices)s]')
     parser.add_argument('--date', type=valid_date, help='date of the race')
     # TODO add option to set start time on weekdays
 
@@ -271,10 +218,12 @@ if __name__ == '__main__':
     raceweek = getRaceWeek(options.date)
 
     # create the training program
-    training = parseHal(races[options.racetype])
-
-    # trim it down to five days per week
-    training = toFiveDays(training)
+    if options.racetype in races:
+        training = parseHal(races[options.racetype])
+        # trim it down to five days per week
+        training = toFiveDays(training)
+    elif options.racetype in bike:
+        training = bike[options.racetype]
 
     # trim down the training weeks as appropriate
     today = datetime.today()
