@@ -18,8 +18,12 @@ RACE = 'RACE DAY'
 
 
 class TrainingItem:
-    def __init__(self, summary: str):
+    def __init__(self, summary: str, description: str = ''):
         self.summary = summary
+        if description:
+            self.description = description
+        else:
+            self.description = str(summary)  # copy the summary
 
     def __str__(self):
         return self.summary
@@ -31,10 +35,23 @@ class TrainingItem:
         return len(self.summary)
 
     def __eq__(self, other):
+        # check the summaries
         try:
-            return self.summary.strip() == other.summary.strip()
+            if self.summary.strip() != other.summary.strip():
+                return False
         except AttributeError:
-            return self.summary.strip() == str(other).strip()
+            if self.summary.strip() != str(other).strip():
+                return False
+        # check the descriptions
+        try:
+            if self.description.strip() != other.description.strip():
+                return False
+        except AttributeError:
+            if self.description.strip() != str(other).strip():
+                return False
+
+        # they must be the same if it got here
+        return True
 
     def __speedInMinutes(self) -> float:
         '''generate speed in minutes per mile'''
@@ -320,6 +337,19 @@ def test_bike(summary, expminutes):
     assert obj  # sucessfully created an object
     minutes = obj.toTimeDelta().total_seconds() / 60.
     assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
+
+
+def test_descr():
+    summ, descr = ('summary', 'description')
+
+    obj1 = TrainingItem(summ)
+    assert obj1.summary == obj1.description == summ
+
+    obj2 = TrainingItem(summ, descr)
+    assert obj2.summary == summ
+    assert obj2.description == descr
+
+    assert obj1 != obj2
 
 
 def test_equal():

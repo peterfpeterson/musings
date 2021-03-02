@@ -84,7 +84,7 @@ def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(
                 event.add('summary', 'Week {} - {}'.format(weeknum, day.summary))
             else:
                 event.add('summary', day.summary)
-            event.add('description', day.summary)
+            event.add('description', day.description)
 
             # add in the start
             start = startdate + timedelta(days=dayofweek)
@@ -120,9 +120,6 @@ def weekToTableGen(week, lengths):
 
 # half ironman training
 # https://www.triathlete.com/training/super-simple-ironman-70-3-triathlon-training-plan/
-
-# metric century training program
-# https://www.google.com/url?q=https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/&sa=D&source=calendar&usd=2&usg=AOvVaw2zj2_muQk42G97J1LTxsJH
 
 # all the following are tab delimited
 races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
@@ -177,16 +174,34 @@ races = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-tra
 12  	Rest	Rest 	3 mi run 	2 mi pace 	2 mi run 	Rest  	Half Marathon
 '''}
 
-bike = {'century':  # https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/
-[Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 20 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 24 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 30 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 34 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 41 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 46 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 54 miles'), REST),
- Week(REST, TrainingItem('Bike 60 min'), REST, TrainingItem('Bike 60 min'), REST, TrainingItem(RACE),
-      REST)]}  # Bike metric century
+# metric century training program
+# https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/
+bike = {'century':
+        [Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes at your own pace'),  # week 1
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
+              REST, TrainingItem('Bike 20 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes'),  # week 2
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
+              REST, TrainingItem('Bike 24 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 3
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'), REST,
+              TrainingItem('Bike 30 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 4
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
+              REST, TrainingItem('Bike 34 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 20 minutes'),  # week 5
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
+              REST, TrainingItem('Bike 41 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 20 minutes'),  # week 6
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+              REST, TrainingItem('Bike 46 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 30 minutes'),  # week 7
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+              REST, TrainingItem('Bike 54 miles'), REST),
+         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 30 minutes'),  # wkk 8
+              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+              REST, TrainingItem(RACE),
+              REST)]}  # Bike metric century
 
 
 if __name__ == '__main__':
