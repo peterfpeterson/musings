@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 from collections import namedtuple
 from datetime import date, datetime, time, timedelta
-from trainingobjs import TrainingItem, toRunItem
+from trainingobjs import TrainingItem, toRunItem, Week
 try:
     from icalendar import Alarm, Calendar, Event
     WITH_ICAL = True
@@ -10,7 +10,6 @@ except ImportError:
     print('Running without icalendar support')
     WITH_ICAL = False
 
-Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
 REST = TrainingItem(' - ')
