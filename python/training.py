@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from trainingobjs import TrainingItem, toRunItem, Week
 try:
-    from icalendar import Alarm, Calendar, Event
+    from icalendar import Calendar
     WITH_ICAL = True
 except ImportError:
     print('Running without icalendar support')
@@ -75,37 +75,7 @@ def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(
     for dayofweek, day in enumerate(week):
         descr = str(day).strip()  # be smarter than this
         if descr != REST and descr != RACE:
-            event = Event()
-
-            # add in summary and description
-            if dayofweek == 0:
-                event.add('summary', 'Week {} - {}'.format(weeknum, day.summary))
-            else:
-                event.add('summary', day.summary)
-            event.add('description', day.description)
-
-            # add in the start
-            start = startdate + timedelta(days=dayofweek)
-            if dayofweek < 5:  # weekday
-                start = datetime.combine(start, time(*startweekday))
-            else:  # weekend
-                start = datetime.combine(start, time(*startweekend))
-            event.add('dtstart', start)
-
-            # add the end
-            delta = day.toTimeDelta()
-            if delta is not None:
-                event.add('dtend', start + delta)
-
-            # add the alarm
-            if delta is not None and dayofweek < 5:  # weekday
-                alarm = Alarm()
-                alarm.add('ACTION', 'DISPLAY')
-                alarm.add('DESCRIPTION', 'REMINDER')
-                alarm.add('TRIGGER', timedelta(minutes=-15))
-                event.add_component(alarm)
-
-            yield event
+            yield day.toICalEvent(weeknum=weeknum, startdate=startdate, dayofweek=dayofweek)
         else:
             yield None
 

@@ -4,7 +4,7 @@ from collections import namedtuple
 from datetime import date, datetime, time, timedelta
 import pytest
 try:
-    from icalendar import Alarm, Calendar, Event
+    from icalendar import Alarm, Event
     WITH_ICAL = True
 except ImportError:
     print('Testing without icalendar support')
@@ -133,6 +133,44 @@ class TrainingItem:
         # print('         = {}h{}m'.format(hours, int(minutes)))
 
         return timedelta(hours=hours, minutes=minutes)
+
+    def toICalEvent(self, startdate, dayofweek: int, weeknum: int = 0):
+        if not WITH_ICAL:
+            raise RuntimeError('Not configured with icalnedar support')
+
+        startweekday = (7, 30)
+        startweekend = (8, 0)
+
+        event = Event()
+        # add in summary and description
+        if dayofweek == 0:
+            event.add('summary', 'Week {} - {}'.format(weeknum, self.summary))
+        else:
+            event.add('summary', self.summary)
+        event.add('description', self.description)
+
+        # add in the start
+        start = startdate + timedelta(days=dayofweek)
+        if dayofweek < 5:  # weekday
+            start = datetime.combine(start, time(*startweekday))
+        else:  # weekend
+            start = datetime.combine(start, time(*startweekend))
+        event.add('dtstart', start)
+
+        # add the end
+        delta = self.toTimeDelta()
+        if delta is not None:
+            event.add('dtend', start + delta)
+
+        # add the alarm
+        if delta is not None and dayofweek < 5:  # weekday
+            alarm = Alarm()
+            alarm.add('ACTION', 'DISPLAY')
+            alarm.add('DESCRIPTION', 'REMINDER')
+            alarm.add('TRIGGER', timedelta(minutes=-15))
+            event.add_component(alarm)
+
+        return event
 
 
 def toRunItem(stuff: str):
@@ -330,6 +368,8 @@ def test_generic(summary, expminutes, expwidth):
     minutes = obj.toTimeDelta().total_seconds() / 60.
     assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
     assert obj.width() == expwidth
+    if WITH_ICAL:
+        assert obj.toICalEvent(startdate=date(2020, 3, 17), dayofweek=2)  # always a Tuesday
 
 
 @pytest.mark.parametrize('summary, expminutes',
