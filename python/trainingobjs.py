@@ -53,6 +53,10 @@ class TrainingItem:
         # they must be the same if it got here
         return True
 
+    def width(self, minimum: int = 3) -> int:
+        '''The width of the summary in characters. This is intended for use in printing to the console'''
+        return max(len(self.summary.strip()), minimum)
+
     def __speedInMinutes(self) -> float:
         '''generate speed in minutes per mile'''
         description = self.summary.lower()
@@ -96,7 +100,7 @@ class TrainingItem:
 
     def toTimeDelta(self):
         # first try simple static values
-        if 'Rest' == self.summary:
+        if 'Rest' == self.summary or '-' == self.summary.strip():
             return timedelta(hours=0, minutes=0)
         elif 'min' in self.summary:
             descr = self.summary[:self.summary.index('min')].strip()
@@ -313,17 +317,19 @@ def test_running(summary, expminutes):
     assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
 
 
-@pytest.mark.parametrize('summary, expminutes',
-                         [('Cross', 30),
-                          ('Rest', 0),
-                          ('60 min cross', 60),
-                          ('1 hour cross', 60),
+@pytest.mark.parametrize('summary, expminutes, expwidth',
+                         [('Cross', 30, 5),
+                          ('Rest', 0, 4),
+                          ('-', 0, 3),
+                          ('60 min cross', 60, 12),
+                          ('1 hour cross', 60, 12),
                           ])
-def test_generic(summary, expminutes):
+def test_generic(summary, expminutes, expwidth):
     obj = TrainingItem(summary)
     assert obj  # sucessfully created an object
     minutes = obj.toTimeDelta().total_seconds() / 60.
     assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
+    assert obj.width() == expwidth
 
 
 @pytest.mark.parametrize('summary, expminutes',

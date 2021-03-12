@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
-from collections import namedtuple
 from datetime import date, datetime, time, timedelta
 from trainingobjs import TrainingItem, toRunItem, Week
 try:
@@ -17,10 +16,10 @@ RACE = 'RACE DAY'
 
 
 def findLengths(training):
-    lengths = [3, 3, 3, 3, 3, 3, 3]
+    lengths = [0] * len(DAY_NAMES)
     for week in training:
         for i, day in enumerate(week):
-            lengths[i] = max(lengths[i], len(day))
+            lengths[i] = max(lengths[i], day.width())
     return lengths
 
 
