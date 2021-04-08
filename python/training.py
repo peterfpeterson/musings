@@ -65,10 +65,10 @@ if __name__ == '__main__':
     # set up optparse
     import argparse     # for command line options
     parser = argparse.ArgumentParser(description='Create training schedule')
-    parser.add_argument('--type', dest='racetype', choices=list(trainingplans.keys()),
+    parser.add_argument('-t', '--type', dest='racetype', choices=list(trainingplans.keys()),
                         default='marathon',
                         help='type of race default=%(default)s [%(choices)s]')
-    parser.add_argument('--date', type=valid_date, help='date of the race')
+    parser.add_argument('-d', '--date', type=valid_date, help='date of the race')
     # TODO add option to set start time on weekdays
 
     # parse the command line
