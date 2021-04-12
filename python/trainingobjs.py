@@ -2,9 +2,9 @@
 from __future__ import (absolute_import, division, print_function)
 from collections import namedtuple
 from datetime import date, datetime, time, timedelta
-import pytest
+import pytest  # type: ignore
 try:
-    from icalendar import Alarm, Event
+    from icalendar import Alarm, Event  # type: ignore
     WITH_ICAL = True
 except ImportError:
     print('Testing without icalendar support')
@@ -32,7 +32,7 @@ class TrainingItem:
         return str(self)
 
     def __len__(self):
-        return len(self.summary)
+        return 1
 
     def __eq__(self, other):
         # check the summaries
@@ -52,6 +52,9 @@ class TrainingItem:
 
         # they must be the same if it got here
         return True
+
+    def __iter__(self):
+        return iter([self])
 
     def width(self, minimum: int = 3) -> int:
         '''The width of the summary in characters. This is intended for use in printing to the console'''
@@ -134,7 +137,11 @@ class TrainingItem:
 
         return timedelta(hours=hours, minutes=minutes)
 
-    def toICalEvent(self, startdate, dayofweek: int, weeknum: int = 0):
+    def shouldConvertToICal(self):
+        descr = str(self).strip()  # be smarter than this
+        return descr != REST and descr != RACE
+
+    def toICalEvents(self, startdate, dayofweek: int, weeknum: int = 0):
         if not WITH_ICAL:
             raise RuntimeError('Not configured with icalnedar support')
 
@@ -171,6 +178,50 @@ class TrainingItem:
             event.add_component(alarm)
 
         return event
+
+
+class TrainingDay:
+    def __init__(self, *args):
+        self.__items = []
+        for item in args:
+            self.__items.extend(item)
+
+    def __str__(self):
+        return ' '.join([str(item) for item in self.__items])
+
+    def __repr__(self):
+        return str(self)
+
+    def __len__(self):
+        print('hi', self.__items)
+        return len(self.__items)
+
+    def __eq__(self, other):
+        if len(self) != len(other):
+            return False
+        else:
+            pass  # TODO compare items
+        return True  # TODO this is wrong
+
+    def __iter__(self):
+        return iter(self.__items)
+
+    def shouldConvertToICal(self):
+        for item in self.__items:
+            if item.shouldConvertToICal():
+                return True
+        return False  # none of these should be ical
+
+    def toICalEvents(self, startdate, dayofweek: int, weeknum: int = 0):
+        if not WITH_ICAL:
+            raise RuntimeError('Not configured with icalnedar support')
+        raise NotImplementedError('like it says')  # TODO
+
+    def width(self, minimum: int = 3) -> int:
+        width: int = minimum
+        for item in self.__items:
+            width = max(width, item.width())
+        return width
 
 
 def toRunItem(stuff: str):
@@ -292,39 +343,9 @@ def toTimeDelta(description):
 def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
     startdate = date(weekdate.year, weekdate.month, weekdate.day)
     for dayofweek, day in enumerate(week):
-        day = str(day)  # be smarter than this
-        if day.strip() != REST.strip() and day.strip() != RACE:
-            event = Event()
-
-            # add in summary and description
-            if dayofweek == 0:
-                event.add('summary', 'Week {} - {}'.format(weeknum, day))
-            else:
-                event.add('summary', day)
-            event.add('description', day)
-
-            # add in the start
-            start = startdate + timedelta(days=dayofweek)
-            if dayofweek < 5:  # weekday
-                start = datetime.combine(start, time(*startweekday))
-            else:  # weekend
-                start = datetime.combine(start, time(*startweekend))
-            event.add('dtstart', start)
-
-            # add the end
-            delta = toTimeDelta(day)
-            if delta is not None:
-                event.add('dtend', start + delta)
-
-            # add the alarm
-            if delta is not None and dayofweek < 5:  # weekday
-                alarm = Alarm()
-                alarm.add('ACTION', 'DISPLAY')
-                alarm.add('DESCRIPTION', 'REMINDER')
-                alarm.add('TRIGGER', timedelta(minutes=-15))
-                event.add_component(alarm)
-
-            yield event
+        if day != REST and day.shouldConvertToICal():
+            for item in day:  # loop through each item in the object
+                yield item.toICalEvents(weeknum=weeknum, startdate=startdate, dayofweek=dayofweek)
         else:
             yield None
 
@@ -369,7 +390,7 @@ def test_generic(summary, expminutes, expwidth):
     assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
     assert obj.width() == expwidth
     if WITH_ICAL:
-        assert obj.toICalEvent(startdate=date(2020, 3, 17), dayofweek=2)  # always a Tuesday
+        assert obj.toICalEvents(startdate=date(2020, 3, 17), dayofweek=2)  # always a Tuesday
 
 
 @pytest.mark.parametrize('summary, expminutes',
@@ -402,6 +423,29 @@ def test_equal():
     assert TrainingItem('blah') == TrainingItem('blah')
     assert TrainingItem(' - ') == TrainingItem('-')
     assert TrainingItem('foo') != TrainingItem('bar')
+
+
+def test_training_day():
+    # setup training items
+    item1 = TrainingItem('summary', 'description')
+    item2 = TrainingItem('summary2', 'description')
+    assert item1
+    assert item2
+
+    # create TrainingDay with only 1 item
+    day = TrainingDay([item1])
+
+    assert day
+    assert len(day) == 1
+    for item in day:
+        assert item == item1  # there is only one item \in the day
+
+    # create TrainingDay with 2 items
+    day = TrainingDay([item1, item2])
+    assert day
+    assert len(day) == 2
+    for obs, exp in zip(day, [item1, item2]):
+        assert obs == exp  # there is only one item \in the day
 
 
 if __name__ == '__main__':

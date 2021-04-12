@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
-from datetime import date, datetime, timedelta
-from trainingplans import trainingplans, REST, RACE
+from datetime import datetime, timedelta
+from trainingobjs import weekToICalGen, weekToTableGen
+from trainingplans import trainingplans, REST
 try:
-    from icalendar import Calendar
+    from icalendar import Calendar  # type: ignore
     WITH_ICAL = True
 except ImportError:
     print('Running without icalendar support')
@@ -36,22 +37,6 @@ def getRaceWeek(racedate):
     while monday.weekday() != 0:
         monday -= DELTA_DAY
     return monday
-
-
-def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
-    startdate = date(weekdate.year, weekdate.month, weekdate.day)
-    for dayofweek, day in enumerate(week):
-        descr = str(day).strip()  # be smarter than this
-        if descr != REST and descr != RACE:
-            yield day.toICalEvent(weeknum=weeknum, startdate=startdate, dayofweek=dayofweek)
-        else:
-            yield None
-
-
-def weekToTableGen(week, lengths):
-    lengths = ['{:' + str(length) + '}' for length in lengths]
-    for day, length in zip(week, lengths):
-        yield length.format(str(day))
 
 
 if __name__ == '__main__':
