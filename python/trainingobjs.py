@@ -412,10 +412,13 @@ def test_training_day():
         assert obs == exp  # there is only one item \in the day
 
 
-if __name__ == '__main__':
-    pytest.main([__file__])
-
+def test_have_plans():
+    # test object existance
     for item in ['Cross', '3 mi run', '5 mi run', 'Rest', '5 mi pace', '10 miles',
                  '4 mi run', '9 mi run', 'Half Marathon', 'Marathon', '2 mi run'
                  '60 min cross', '10-K Race', '5-K Race', 'Bike 60 min', 'Bike 30 miles']:
-        obj = TrainingItem('item')
+        assert TrainingItem('item')
+
+
+if __name__ == '__main__':
+    pytest.main([__file__])
