@@ -10,7 +10,6 @@ except ImportError:
     print('Testing without icalendar support')
     WITH_ICAL = False
 
-Week = namedtuple('Week', 'mon tue wed thu fri sat sun')
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
 REST = ' - '
@@ -248,12 +247,6 @@ def findLengths(training):
     return lengths
 
 
-def createFormatStr(training):
-    lengths = findLengths(training)
-    lengths = ['{:' + str(length) + '}' for length in lengths]
-    return ' '.join(lengths)
-
-
 def toFiveDays(training):
     adjusted = []
     for week in training:
@@ -274,20 +267,57 @@ def toFiveDays(training):
     return adjusted
 
 
-def weekToICalGen(week, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
-    startdate = date(weekdate.year, weekdate.month, weekdate.day)
-    for dayofweek, day in enumerate(week):
-        if day != REST and day.shouldConvertToICal():
-            for item in day:  # loop through each item in the object
-                yield item.toICalEvents(weeknum=weeknum, startdate=startdate, dayofweek=dayofweek)
-        else:
-            yield None
+class Week:
+    def __init__(self, mon, tue, wed, thu, fri, sat, sun):
+        self.mon = mon
+        self.tue = tue
+        self.wed = wed
+        self.thu = thu
+        self.fri = fri
+        self.sat = sat
+        self.sun = sun
+        self._lengths = None
 
+    def __iter__(self):
+        return iter([self.mon, self.tue, self.wed, self.thu, self.fri, self.sat, self.sun])
 
-def weekToTableGen(week, lengths):
+    def setTableLengths(self, lengths):
+        if len(lengths) != len(DAY_NAMES):
+            raise RuntimeError('Wrong number of lengths {} != {}'.format(len(lengths),
+                                                                           len(DAY_NAMES)))
+        self._lengths = lengths
+
+    def toICalGen(self, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
+        startdate = date(weekdate.year, weekdate.month, weekdate.day)
+        for dayofweek, day in enumerate(self):
+            if day != REST and day.shouldConvertToICal():
+                for item in day:  # loop through each item in the object
+                    yield item.toICalEvents(weeknum=weeknum, startdate=startdate, dayofweek=dayofweek)
+            else:
+                yield None
+
+    def tableHeader(self):
+        return '{:20}'.format('') + ' '.join(_tableGen(DAY_NAMES, self._lengths))
+
+    def tableRows(self, weekdate, weeknum):
+        # this prints the table version
+        label = '{:%Y-%m-%d} Week {:2}: '.format(weekdate, weeknum)
+        return label + ' '.join(_tableGen(self, self._lengths))
+
+def _tableGen(week, lengths):
     lengths = ['{:' + str(length) + '}' for length in lengths]
     for day, length in zip(week, lengths):
         yield length.format(str(day))
+
+
+def findLengths(training):
+    lengths = [3] * len(DAY_NAMES)
+    for week in training:
+        for i, day in enumerate(week):
+            if day == REST:
+                continue
+            lengths[i] = max(lengths[i], day.width())
+    return lengths
 
 
 @pytest.mark.parametrize('summary, expminutes',

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from trainingobjs import TrainingItem, toRunItem, Week
+from trainingobjs import findLengths, TrainingItem, toRunItem, Week
 
 REST = TrainingItem(' - ')
 RACE = TrainingItem('RACE DAY')
@@ -132,3 +132,9 @@ bike = {'century':
 
 # put together a single list of training
 trainingplans = {**running, **bike}  # type: ignore
+
+# update the length of fields for printing the table
+for name in trainingplans.keys():
+    lengths = findLengths(trainingplans[name])
+    for i in range(len(trainingplans[name])):
+        trainingplans[name][i].setTableLengths(lengths)

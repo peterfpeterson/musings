@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
 from datetime import datetime, timedelta
-from trainingobjs import weekToICalGen, weekToTableGen
 from trainingplans import trainingplans, REST
 try:
     from icalendar import Calendar  # type: ignore
@@ -10,24 +9,7 @@ except ImportError:
     print('Running without icalendar support')
     WITH_ICAL = False
 
-DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
-
-
-def findLengths(training):
-    lengths = [3] * len(DAY_NAMES)
-    for week in training:
-        for i, day in enumerate(week):
-            if day == REST:
-                continue
-            lengths[i] = max(lengths[i], day.width())
-    return lengths
-
-
-def createFormatStr(training):
-    lengths = findLengths(training)
-    lengths = ['{:' + str(length) + '}' for length in lengths]
-    return ' '.join(lengths)
 
 
 def getRaceWeek(racedate):
@@ -82,21 +64,19 @@ if __name__ == '__main__':
     ical = None if not WITH_ICAL else Calendar()
 
     # print the results
-    lengths = findLengths(training)
-    print('{:19}'.format(''), ' '.join(weekToTableGen(DAY_NAMES, lengths)))
+    print(training[0].tableHeader())
     for num, week in enumerate(training):
         weeknum = len(training) - num
         weekdate = raceweek - (weeknum - 1) * DELTA_WEEK
 
         # this creates the calendar
         if ical is not None:
-            for day in weekToICalGen(week, weeknum, weekdate, startweekday=(7, 30)):
+            for day in week.toICalGen(weeknum, weekdate, startweekday=(7, 30)):
                 if day is not None:
                     ical.add_component(day)
 
         # this prints the table version
-        label = '{:%Y-%m-%d} Week {:2}:'.format(weekdate, weeknum)
-        print(label, ' '.join(weekToTableGen(week, lengths)))
+        print(week.tableRows(weekdate, weeknum))
 
     # write the calendar to disk
     if ical is not None:
