@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
 from datetime import date, datetime, time, timedelta
+import numpy as np
 import pytest  # type: ignore
 try:
     from icalendar import Alarm, Event  # type: ignore
@@ -103,9 +104,9 @@ class TrainingItem:
 
         return distance
 
-    def toTimeDelta(self):
+    def toTimeDelta(self) -> timedelta:
         # first try simple static values
-        if 'Rest' == self.summary or '-' == self.summary.strip():
+        if 'Rest' == self.summary or '-' == self.summary.strip() or 'RACE DAY' == self.summary:
             return timedelta(hours=0, minutes=0)
         elif 'min' in self.summary:
             descr = self.summary[:self.summary.index('min')].strip()
@@ -139,7 +140,10 @@ class TrainingItem:
 
         return timedelta(hours=hours, minutes=minutes)
 
-    def shouldConvertToICal(self):
+    def volume(self) -> timedelta:
+        return self.toTimeDelta()
+
+    def shouldConvertToICal(self) -> bool:
         descr = str(self).strip()  # be smarter than this
         return descr != REST and descr != RACE
 
@@ -210,6 +214,13 @@ class TrainingDay:
 
     def __iter__(self):
         return iter(self.__items)
+
+    def volume(self) -> timedelta:
+        total = timedelta(hours=0, minutes=0)
+        for item in self.__items:
+            total += item.volume()
+
+        return total
 
     def shouldConvertToICal(self):
         for item in self.__items:
@@ -291,6 +302,12 @@ class Week:
                                                                          len(DAY_NAMES)))
         self._lengths = lengths
 
+    def volume(self) -> timedelta:
+        total = timedelta(hours=0, minutes=0)
+        for item in self:
+            total += item.volume()
+        return total
+
     def toICalGen(self, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
         startdate = date(weekdate.year, weekdate.month, weekdate.day)
         for dayofweek, day in enumerate(self):
@@ -313,10 +330,17 @@ class Week:
 
         # this prints the table version
         label = '{:%Y-%m-%d} Week {:2}: '.format(weekdate, weeknum)
-        result = label + ' '.join(_tableGen(self.__itemsInRow(0), self._lengths))
+        result = label + ' '.join(_tableGen(self.__itemsInRow(0), self._lengths)) + \
+            ' vol=' + timeDeltaToStr(self.volume())
         for i in range(1, numRow):
             result += '\n' + ' '*len(label) + ' '.join(_tableGen(self.__itemsInRow(i), self._lengths))
         return result
+
+
+def timeDeltaToStr(value: timedelta) -> str:
+    # TODO improve this
+    result = str(value).split(':')[0:2]
+    return f'{result[0]}h{result[1]}m'
 
 
 def _tableGen(week, lengths):
@@ -385,7 +409,9 @@ def test_bike(summary, expminutes):
     obj = TrainingItem(summary)
     assert obj  # sucessfully created an object
     minutes = obj.toTimeDelta().total_seconds() / 60.
-    assert minutes == expminutes, '{} == {}'.format(minutes, expminutes)
+    assert minutes == expminutes, 'toTimeDelta {} == {}'.format(minutes, expminutes)
+    minutes = obj.volume().total_seconds() / 60.
+    assert minutes == expminutes, 'volume {} == {}'.format(minutes, expminutes)
 
 
 def test_descr():
@@ -431,6 +457,7 @@ def test_training_day():
 
 
 def test_triathlon():
+    MINUTES = (10, 30, 15)
     swim = TrainingItem('Easy 10 minute swim')
     bike = TrainingItem('Easy 30 minute bike')
     run = TrainingItem('Easy 15 minute run')
@@ -438,13 +465,15 @@ def test_triathlon():
 
     assert day
     assert len(day) == 3
-    for obs, exp in zip(day, (10, 30, 15)):
+    for obs, exp in zip(day, MINUTES):
         assert obs.toTimeDelta() == timedelta(hours=0, minutes=exp)
 
     assert day.itemInRow(0) == swim
     assert day.itemInRow(1) == bike
     assert day.itemInRow(2) == run
     assert day.itemInRow(3) == ''
+    minutes = day.volume().total_seconds() / 60.
+    assert minutes == np.sum(MINUTES), 'volume {} == {}'.format(minutes, np.sum(MINUTES))
 
 
 def test_have_plans():
@@ -456,4 +485,5 @@ def test_have_plans():
 
 
 if __name__ == '__main__':
-    pytest.main([__file__])
+    import sys
+    sys.exit(pytest.main([__file__]))
