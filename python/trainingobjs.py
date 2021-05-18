@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
-from collections import namedtuple
 from datetime import date, datetime, time, timedelta
 import pytest  # type: ignore
 try:
@@ -229,7 +228,6 @@ class TrainingDay:
         else:
             return self.__items[rowNum]
 
-
     def width(self, minimum: int = 3) -> int:
         width: int = minimum
         for item in self.__items:
@@ -251,14 +249,6 @@ def toRunItem(stuff: str):
     else:
         stuff = 'Run ' + stuff
     return TrainingItem(stuff)
-
-
-def findLengths(training):
-    lengths = [3, 3, 3, 3, 3, 3, 3]
-    for week in training:
-        for i, day in enumerate(week):
-            lengths[i] = max(lengths[i], len(day))
-    return lengths
 
 
 def toFiveDays(training):
@@ -298,7 +288,7 @@ class Week:
     def setTableLengths(self, lengths):
         if len(lengths) != len(DAY_NAMES):
             raise RuntimeError('Wrong number of lengths {} != {}'.format(len(lengths),
-                                                                           len(DAY_NAMES)))
+                                                                         len(DAY_NAMES)))
         self._lengths = lengths
 
     def toICalGen(self, weeknum, weekdate, startweekday=(11, 30), startweekend=(8, 0)):
@@ -327,6 +317,7 @@ class Week:
         for i in range(1, numRow):
             result += '\n' + ' '*len(label) + ' '.join(_tableGen(self.__itemsInRow(i), self._lengths))
         return result
+
 
 def _tableGen(week, lengths):
     lengths = ['{:' + str(length) + '}' for length in lengths]
@@ -443,17 +434,18 @@ def test_triathlon():
     swim = TrainingItem('Easy 10 minute swim')
     bike = TrainingItem('Easy 30 minute bike')
     run = TrainingItem('Easy 15 minute run')
-    day = TrainingDay([swim, bike, run]) #  (not back to back)'),
+    day = TrainingDay([swim, bike, run])  # not back to back
 
     assert day
     assert len(day) == 3
-    for obs, exp in zip(day, (10,30,15)):
+    for obs, exp in zip(day, (10, 30, 15)):
         assert obs.toTimeDelta() == timedelta(hours=0, minutes=exp)
 
     assert day.itemInRow(0) == swim
     assert day.itemInRow(1) == bike
     assert day.itemInRow(2) == run
     assert day.itemInRow(3) == ''
+
 
 def test_have_plans():
     # test object existance

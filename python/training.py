@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
 from datetime import datetime, timedelta
-from trainingplans import trainingplans, REST
+from trainingplans import trainingplans
 try:
     from icalendar import Calendar  # type: ignore
     WITH_ICAL = True
