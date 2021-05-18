@@ -12,8 +12,6 @@ except ImportError:
 
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
-REST = ' - '
-RACE = 'RACE DAY'
 
 
 class TrainingItem:
@@ -55,6 +53,12 @@ class TrainingItem:
     def __iter__(self):
         return iter([self])
 
+    def itemInRow(self, rowNum: int):
+        if rowNum >= 1:
+            return ''
+        else:
+            return self
+
     def width(self, minimum: int = 3) -> int:
         '''The width of the summary in characters. This is intended for use in printing to the console'''
         return max(len(self.summary.strip()), minimum)
@@ -78,8 +82,8 @@ class TrainingItem:
     def __toDistanceInMiles(self) -> float:
         '''Convert description to distance in miles'''
         def toFloat(text: str) -> float:
-            text = text.lower().replace('run', '').replace('swim', '').replace('bike', '')
-            for item in text.split():
+            replaced_text = text.lower().replace('run', '').replace('swim', '').replace('bike', '')
+            for item in replaced_text.split():
                 return float(item)
             raise ValueError('failed to convert "{}" to float'.format(text))
 
@@ -179,6 +183,10 @@ class TrainingItem:
         return event
 
 
+REST = TrainingItem(' - ')
+RACE = TrainingItem('RACE DAY')
+
+
 class TrainingDay:
     def __init__(self, *args):
         self.__items = []
@@ -192,7 +200,6 @@ class TrainingDay:
         return str(self)
 
     def __len__(self):
-        print('hi', self.__items)
         return len(self.__items)
 
     def __eq__(self, other):
@@ -216,6 +223,13 @@ class TrainingDay:
             raise RuntimeError('Not configured with icalnedar support')
         raise NotImplementedError('like it says')  # TODO
 
+    def itemInRow(self, rowNum: int):
+        if rowNum >= len(self):
+            return ''
+        else:
+            return self.__items[rowNum]
+
+
     def width(self, minimum: int = 3) -> int:
         width: int = minimum
         for item in self.__items:
@@ -226,7 +240,7 @@ class TrainingDay:
 def toRunItem(stuff: str):
     '''Convert some of the random text to standard text'''
     stuff = stuff.strip()
-    if stuff.lower() == 'rest':
+    if stuff.lower() == 'rest' or stuff == '-':
         return REST
     stuff = stuff.replace('mi run', 'miles')
     stuff = stuff.replace('mi pace', 'miles pace')
@@ -299,10 +313,20 @@ class Week:
     def tableHeader(self):
         return '{:20}'.format('') + ' '.join(_tableGen(DAY_NAMES, self._lengths))
 
+    def __itemsInRow(self, rowNum):
+        return [item.itemInRow(rowNum) for item in self]
+
     def tableRows(self, weekdate, weeknum):
+        numRow = 1
+        for item in self:
+            numRow = max(numRow, len(item))
+
         # this prints the table version
         label = '{:%Y-%m-%d} Week {:2}: '.format(weekdate, weeknum)
-        return label + ' '.join(_tableGen(self, self._lengths))
+        result = label + ' '.join(_tableGen(self.__itemsInRow(0), self._lengths))
+        for i in range(1, numRow):
+            result += '\n' + ' '*len(label) + ' '.join(_tableGen(self.__itemsInRow(i), self._lengths))
+        return result
 
 def _tableGen(week, lengths):
     lengths = ['{:' + str(length) + '}' for length in lengths]
@@ -316,7 +340,10 @@ def findLengths(training):
         for i, day in enumerate(week):
             if day == REST:
                 continue
-            lengths[i] = max(lengths[i], day.width())
+            try:
+                lengths[i] = max(lengths[i], day.width())
+            except AttributeError as e:
+                raise TypeError(str(day) + ' is of wrong type') from e
     return lengths
 
 
@@ -411,6 +438,22 @@ def test_training_day():
     for obs, exp in zip(day, [item1, item2]):
         assert obs == exp  # there is only one item \in the day
 
+
+def test_triathlon():
+    swim = TrainingItem('Easy 10 minute swim')
+    bike = TrainingItem('Easy 30 minute bike')
+    run = TrainingItem('Easy 15 minute run')
+    day = TrainingDay([swim, bike, run]) #  (not back to back)'),
+
+    assert day
+    assert len(day) == 3
+    for obs, exp in zip(day, (10,30,15)):
+        assert obs.toTimeDelta() == timedelta(hours=0, minutes=exp)
+
+    assert day.itemInRow(0) == swim
+    assert day.itemInRow(1) == bike
+    assert day.itemInRow(2) == run
+    assert day.itemInRow(3) == ''
 
 def test_have_plans():
     # test object existance
