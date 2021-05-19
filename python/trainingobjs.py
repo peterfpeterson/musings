@@ -12,6 +12,9 @@ except ImportError:
 
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
+SPEED_RUN = 10.  # 10 minute mile
+SPEED_SWIM = 60.  # 1 mph
+SPEED_BIKE = 4.  # 15 mph
 
 
 class TrainingItem:
@@ -68,11 +71,11 @@ class TrainingItem:
         description = self.summary.lower()
 
         if 'run' in description or 'marathon' in description or 'km race' in description:
-            speed = 10.  # 10 minute mile
+            speed = SPEED_RUN
         elif 'swim' in description:
-            speed = 60.  # 1 mph
+            speed = SPEED_SWIM  # 1 mph
         elif 'bike' in description:
-            speed = 4.  # 15 mph
+            speed = SPEED_BIKE  # 15 mph
         else:
             msg = 'Do not have speed for activity "{}"'.format(description)
             raise RuntimeError(msg)
@@ -95,6 +98,11 @@ class TrainingItem:
         elif 'km' in description:
             # this only appears to be a running event
             distance = toFloat(description) / 1.602
+        elif 'swim' in description:
+            if ' m' in description:
+                distance = toFloat(description) / 1602.
+            else:
+                raise ValueError(f'Do not know how to convert "{description}" to miles')
         elif 'metric century' in description:
             distance = 62.
         elif 'century' in description:
@@ -104,7 +112,7 @@ class TrainingItem:
 
         return distance
 
-    def toTimeDelta(self) -> timedelta:
+    def toTimeDelta(self, roundUp: bool = True) -> timedelta:
         # first try simple static values
         if 'Rest' == self.summary or '-' == self.summary.strip() or 'RACE DAY' == self.summary:
             return timedelta(hours=0, minutes=0)
@@ -123,25 +131,27 @@ class TrainingItem:
         speed = self.__speedInMinutes()
         distance = self.__toDistanceInMiles()
 
+        hours = 0
         minutes = distance*speed
         # print('{} x {} = 0h{}m'.format(distance, int(speed), int(minutes)))
-        hours = max(int(minutes)//int(60), 1)
-        minutes = max(0., minutes-hours*60.)
 
-        # print('         = {}h{}m'.format(hours, int(minutes)))
-        if minutes != 0. and minutes != 30.:
-            # round up to the nearest half hour
-            if minutes > 30.:
-                hours += 1
-                minutes = 0.
-            elif minutes > 0.:
-                minutes = 30.
-        # print('         = {}h{}m'.format(hours, int(minutes)))
+        if roundUp:
+            hours = max(int(minutes)//int(60), 1)
+            minutes = max(0., minutes-hours*60.)
+            if minutes != 0. and minutes != 30.:
+                # print('         = {}h{}m'.format(hours, int(minutes)))
+                # round up to the nearest half hour
+                if minutes > 30.:
+                    hours += 1
+                    minutes = 0.
+                elif minutes > 0.:
+                    minutes = 30.
+            # print('         = {}h{}m'.format(hours, int(minutes)))
 
-        return timedelta(hours=hours, minutes=minutes)
+        return timedelta(hours=hours, minutes=int(minutes))
 
     def volume(self) -> timedelta:
-        return self.toTimeDelta()
+        return self.toTimeDelta(roundUp=False)
 
     def shouldConvertToICal(self) -> bool:
         descr = str(self).strip()  # be smarter than this
@@ -399,17 +409,23 @@ def test_generic(summary, expminutes, expwidth):
         assert obj.toICalEvents(startdate=date(2020, 3, 17), dayofweek=2)  # always a Tuesday
 
 
-@pytest.mark.parametrize('summary, expminutes',
-                         [('Bike 60 min', 60),
-                          ('Bike 24 miles', 120),
-                          ('Bike 54 miles', 240),
-                          ('Bike metric century', 270),
+@pytest.mark.parametrize('summary, expminutes, expminutesround',
+                         [('Bike 60 min', 60, 60),
+                          ('Bike 24 miles', 24*SPEED_BIKE, 120),
+                          ('Bike 54 miles', 54*SPEED_BIKE, 240),
+                          ('Bike metric century', SPEED_BIKE*62, 270),
+                          ('Swim 60 min', 60, 60),
+                          ('Swim 500 m', int(500*SPEED_SWIM/1602), 60),
+                          ('Swim 1602 m', 60, 60),
+                          ('Swim 3204 m', 120, 120),
                           ])
-def test_bike(summary, expminutes):
+def test_timing(summary, expminutes, expminutesround):
     obj = TrainingItem(summary)
     assert obj  # sucessfully created an object
     minutes = obj.toTimeDelta().total_seconds() / 60.
-    assert minutes == expminutes, 'toTimeDelta {} == {}'.format(minutes, expminutes)
+    assert minutes == expminutesround, 'toTimeDelta(round) {} == {}'.format(minutes, expminutes)
+    minutes = obj.toTimeDelta(roundUp=False).total_seconds() / 60.
+    assert minutes == expminutes, 'toTimeDelta(raw) {} == {}'.format(minutes, expminutes)
     minutes = obj.volume().total_seconds() / 60.
     assert minutes == expminutes, 'volume {} == {}'.format(minutes, expminutes)
 
