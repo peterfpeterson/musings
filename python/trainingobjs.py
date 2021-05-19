@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import (absolute_import, division, print_function)
+from copy import deepcopy
 from datetime import date, datetime, time, timedelta
 import numpy as np
 import pytest  # type: ignore
@@ -55,6 +56,25 @@ class TrainingItem:
 
     def __iter__(self):
         return iter([self])
+
+    def __add__(self, other):
+        day = []
+        if self != REST:
+            day.append(self)
+        if other != REST:
+            if isinstance(other, TrainingItem):
+                day.append(other)
+            elif isinstance(other, TrainingDay):
+                day.extend(other)
+            else:
+                raise ValueError(f'Cannot add "{other}"')
+        if len(day) == 0:
+            day.append(REST)
+
+        if len(day) == 1:
+            return day[0]
+        else:
+            return TrainingDay(day)
 
     def itemInRow(self, rowNum: int):
         if rowNum >= 1:
@@ -225,6 +245,18 @@ class TrainingDay:
     def __iter__(self):
         return iter(self.__items)
 
+    def __add__(self, other) -> 'TrainingDay':
+        day = deepcopy(self.__items)
+        if other != REST:
+            if isinstance(other, TrainingItem):
+                day.append(other)
+            elif isinstance(other, TrainingDay):
+                day.extend(other)
+            else:
+                raise ValueError(f'Cannot add "{other}"')
+
+        return TrainingDay(day)
+
     def volume(self) -> timedelta:
         total = timedelta(hours=0, minutes=0)
         for item in self.__items:
@@ -332,6 +364,14 @@ class Week:
 
     def __itemsInRow(self, rowNum):
         return [item.itemInRow(rowNum) for item in self]
+
+    def __add__(self, other: 'Week') -> 'Week':
+        week = []
+
+        for us, them in zip(self, other):
+            week.append(us + them)
+
+        return Week(*week)
 
     def tableRows(self, weekdate, weeknum):
         numRow = 1
@@ -498,6 +538,58 @@ def test_have_plans():
                  '4 mi run', '9 mi run', 'Half Marathon', 'Marathon', '2 mi run'
                  '60 min cross', '10-K Race', '5-K Race', 'Bike 60 min', 'Bike 30 miles']:
         assert TrainingItem('item')
+
+
+def test_add_day():
+    RUN_DAY = TrainingItem('Run 5 km')
+
+    result = REST + REST
+    assert result == REST
+
+    result = REST + RUN_DAY
+    assert result == RUN_DAY
+
+    day = TrainingDay(RUN_DAY, RUN_DAY)
+
+    result = REST + day
+    assert result == day
+
+    result = day + REST
+    assert result == day
+
+    result = day + day
+    assert len(result) == 4
+
+
+def test_add_week():
+    rest_week = Week(REST, REST, REST, REST, REST, REST, REST)
+    run_day = TrainingItem('Run 5 km')
+    run_week = Week(run_day, run_day, run_day, run_day, run_day, run_day, run_day)
+
+    # lots of rest
+    result = rest_week + rest_week
+    assert result
+    for day in result:
+        assert day == REST
+
+    # add rest to running
+    result = run_week + rest_week
+    assert result
+    for day in result:
+        assert day == run_day
+
+    # add running to rest
+    result = rest_week + run_week
+    assert result
+    for day in result:
+        assert day == run_day
+
+    # lots of running
+    tons_of_run = TrainingDay(run_day, run_day)
+    result = run_week + run_week
+    assert result
+    for day in result:
+        assert day == tons_of_run
 
 
 if __name__ == '__main__':
