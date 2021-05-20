@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from copy import deepcopy
 from trainingobjs import (findLengths, TrainingDay, TrainingItem, toRunItem, Week,
                           REST, RACE)
 
@@ -384,9 +385,52 @@ bike = {'century':
               REST, RACE,
               REST)]}  # Bike metric century
 
+# #### custom plan for 2021 - raw version
+rawWacky = deepcopy(triathlon['olympic'])
+# pad with rest
+for i in range(8):
+    rawWacky.append(Week(REST, REST, REST, REST, REST, REST, REST))
+# merge with a marathon starting 2 weeks later
+for i in range(len(running['marathon'])):
+    rawWacky[i+2] = running['marathon'][i] + rawWacky[i+2]
+
+
+# function to aid making wacky
+def makeWacky(left, right, sunday):
+    newweek = [REST]
+    newweek.append(left.mon)
+    newweek.append(right.wed)
+    newweek.append(left.wed)
+    newweek.append(right.fri)
+    newweek.append(right.sat)
+    if isinstance(sunday, str):
+        newweek.append(TrainingItem(sunday))
+    else:
+        newweek.append(sunday)
+    return Week(*newweek)
+
+
+# #### custom plan for 2021 - reduced version
+wacky = triathlon['olympic'][:2]  # copy first weeks from triathlon
+assert wacky[0].tue == triathlon['olympic'][0].tue
+
+# overlap weeks
+for i, descr in enumerate(('Run 7 miles', 'Run 7 miles', 'Run 5.5 miles', 'Run 9 miles', 'Run 9.5 miles',
+                           'Run 6.5 miles', 'Run 10 miles', 'Run 11 miles', 'Run 8.5 miles')):
+    wacky.append(makeWacky(running['marathon'][i], triathlon['olympic'][i + 2], descr))
+# race week
+wacky.append(triathlon['olympic'][-1])
+# copy over the remainder of the marathon weeks
+wacky.extend(running['marathon'][-8:-1])
+# final week is special
+finalweek = running['marathon'][-1]
+wacky.append(Week(REST, finalweek.mon, finalweek.tue, REST, finalweek.fri, REST, RACE))
+
 
 # put together a single list of training
 trainingplans = {**running, **bike, **triathlon}  # type: ignore
+trainingplans['rawwacky'] = rawWacky
+trainingplans['wacky'] = wacky
 
 # update the length of fields for printing the table
 for name in trainingplans.keys():
