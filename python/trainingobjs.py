@@ -297,11 +297,15 @@ def toRunItem(stuff: str):
     stuff = stuff.replace('mi pace', 'miles pace')
     stuff = stuff.replace('-K Race', ' km race')
     stuff = stuff.replace('Half Marathon', 'Half marathon')
+    details = ''
     if 'marathon' in stuff.lower() or 'race' in stuff or 'bike' in stuff.lower():
         pass  # TODO should reverse the check
     else:
+        if 'pace' in stuff:
+            details = stuff
+            stuff = stuff.replace('pace', '').strip()
         stuff = 'Run ' + stuff
-    return TrainingItem(stuff)
+    return TrainingItem(stuff, details)
 
 
 def toFiveDays(training):
