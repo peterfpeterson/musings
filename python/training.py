@@ -21,6 +21,12 @@ def getRaceWeek(racedate):
     return monday
 
 
+# ####################################################################
+# tips on swimming technique
+# https://www.californiatriathlon.org/swim-workouts/
+# https://www.snackinginsneakers.com/12-week-olympic-triathlon-training-plan/
+# ####################################################################
+
 if __name__ == '__main__':
     def valid_date(s):
         try:
