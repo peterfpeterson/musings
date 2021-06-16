@@ -392,7 +392,11 @@ for i in range(8):
     rawWacky.append(Week(REST, REST, REST, REST, REST, REST, REST))
 # merge with a marathon starting 2 weeks later
 for i in range(len(running['marathon'])):
-    rawWacky[i+2] = running['marathon'][i] + rawWacky[i+2]
+    newweek = list(running['marathon'][i])
+    newweek.insert(0, REST)
+    del newweek[-1]
+    newweek[4], newweek[5] = newweek[5], newweek[4]
+    rawWacky[i+2] = Week(*newweek) + rawWacky[i+2]
 
 
 # function to aid making wacky
