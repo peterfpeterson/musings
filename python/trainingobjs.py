@@ -13,9 +13,41 @@ except ImportError:
 
 DAY_NAMES = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 DELTA_WEEK = timedelta(days=7)
-SPEED_RUN = 10.  # 10 minute mile
-SPEED_SWIM = 60.  # 1 mph
-SPEED_BIKE = 4.  # 15 mph
+KM_PER_MILE = 1.609344
+YARD_PER_MILE = 1760
+
+
+class Pace:
+    def __init__(self, minutes_per_mile):
+        self.speed = float(minutes_per_mile)
+
+    def __float__(self) -> float:
+        return self.speed
+
+    def __mul__(self, other) -> float:
+        return float(self) * other
+
+    def __rmul__(self, other) -> float:
+        return self * other
+
+
+class BikePace(Pace):
+    def __init__(self, miles_per_hour: float):
+        super().__init__(60 / miles_per_hour)
+
+
+class RunPace(Pace):
+    pass  # this does nothing
+
+
+class SwimPace(Pace):
+    def __init__(self, minutes_per_100m: float):
+        super().__init__(minutes_per_100m * YARD_PER_MILE/100)
+
+
+SPEED_RUN = RunPace(10.)   # 10 minute mile
+SPEED_SWIM = SwimPace(3.)  # 1 minutes per 100 yard
+SPEED_BIKE = BikePace(15.)  # 15 mph
 
 
 class TrainingItem:
@@ -90,17 +122,18 @@ class TrainingItem:
         '''generate speed in minutes per mile'''
         description = self.summary.lower()
 
+        speed: Pace  # speed will end up being a pace object
         if 'run' in description or 'marathon' in description or 'km race' in description:
             speed = SPEED_RUN
         elif 'swim' in description:
-            speed = SPEED_SWIM  # 1 mph
+            speed = SPEED_SWIM  # 3 minutes per 100 yards
         elif 'bike' in description:
             speed = SPEED_BIKE  # 15 mph
         else:
             msg = 'Do not have speed for activity "{}"'.format(description)
             raise RuntimeError(msg)
 
-        return speed
+        return float(speed)
 
     def __toDistanceInMiles(self) -> float:
         '''Convert description to distance in miles'''
@@ -117,10 +150,10 @@ class TrainingItem:
             distance = 26.2
         elif 'km' in description:
             # this only appears to be a running event
-            distance = toFloat(description) / 1.602
+            distance = toFloat(description) / KM_PER_MILE
         elif 'swim' in description:
             if ' m' in description:
-                distance = toFloat(description) / 1602.
+                distance = toFloat(description) * 0.001 / KM_PER_MILE
             else:
                 raise ValueError(f'Do not know how to convert "{description}" to miles')
         elif 'metric century' in description:
@@ -453,15 +486,22 @@ def test_generic(summary, expminutes, expwidth):
         assert obj.toICalEvents(startdate=date(2020, 3, 17), dayofweek=2)  # always a Tuesday
 
 
+def test_pace():
+    assert float(Pace(10.)) == 10.  # 10 minutes per mile
+    assert float(RunPace(10.)) == 10.  # 10 minutes per mile
+    assert float(BikePace(15.)) == 4.  # 15 mph = 4 minutes per mile
+    pytest.approx(float(SwimPace(3.)), 48.28)  # 3 minutes per 100m = 48 minutes per mile
+
+
 @pytest.mark.parametrize('summary, expminutes, expminutesround',
                          [('Bike 60 min', 60, 60),
                           ('Bike 24 miles', 24*SPEED_BIKE, 120),
                           ('Bike 54 miles', 54*SPEED_BIKE, 240),
                           ('Bike metric century', SPEED_BIKE*62, 270),
                           ('Swim 60 min', 60, 60),
-                          ('Swim 500 m', int(500*SPEED_SWIM/1602), 60),
-                          ('Swim 1602 m', 60, 60),
-                          ('Swim 3204 m', 120, 120),
+                          ('Swim 500 m', int(0.5*SPEED_SWIM/KM_PER_MILE), 60),
+                          ('Swim 1602 m', 52, 60),
+                          ('Swim 3204 m', 105, 120),
                           ])
 def test_timing(summary, expminutes, expminutesround):
     obj = TrainingItem(summary)
