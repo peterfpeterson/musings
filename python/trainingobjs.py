@@ -37,7 +37,14 @@ class BikePace(Pace):
 
 
 class RunPace(Pace):
-    pass  # this does nothing
+    def __init__(self, minutes_per_mile):
+        try:
+            pace = float(minutes_per_mile)
+        except ValueError:
+            values = minutes_per_mile.split(':')
+            pace = timedelta(minutes=float(values[0]), seconds=float(values[1])) \
+                / timedelta(minutes=1)
+        super().__init__(pace)
 
 
 class SwimPace(Pace):
@@ -424,10 +431,22 @@ class Week:
         return result
 
 
-def timeDeltaToStr(value: timedelta) -> str:
+def timeDeltaToStr(value: timedelta, withHours=True,
+                   withSeconds: bool = False) -> str:
     # TODO improve this
-    result = str(value).split(':')[0:2]
-    return f'{result[0]}h{result[1]}m'
+    returnable = ''
+    if withSeconds:
+        result = str(value).split(':')[0:3]
+        result[2] = '{:.1f}'.format(float(result[2]))
+        returnable = f'{result[0]}h{result[1]}m{result[2]}s'
+    else:
+        result = str(value).split(':')[0:2]
+        returnable = f'{result[0]}h{result[1]}m'
+
+    if not withHours:
+        returnable = returnable.split('h')[-1]
+
+    return returnable
 
 
 def _tableGen(week, lengths):
@@ -491,6 +510,7 @@ def test_pace():
     assert float(RunPace(10.)) == 10.  # 10 minutes per mile
     assert float(BikePace(15.)) == 4.  # 15 mph = 4 minutes per mile
     pytest.approx(float(SwimPace(3.)), 48.28)  # 3 minutes per 100m = 48 minutes per mile
+    assert float(RunPace('9:30')) == 9.5  # 9m30s
 
 
 @pytest.mark.parametrize('summary, expminutes, expminutesround',
