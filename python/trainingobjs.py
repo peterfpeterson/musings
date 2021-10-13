@@ -386,7 +386,7 @@ class Week:
         if len(lengths) != len(DAY_NAMES):
             raise RuntimeError('Wrong number of lengths {} != {}'.format(len(lengths),
                                                                          len(DAY_NAMES)))
-        self._lengths = lengths
+        self._lengths = deepcopy(lengths)
 
     def volume(self) -> timedelta:
         total = timedelta(hours=0, minutes=0)

@@ -423,11 +423,11 @@ for i, descr in enumerate(('Run 7 miles', 'Run 7 miles', 'Run 5.5 miles', 'Run 9
                            'Run 6.5 miles', 'Run 10 miles', 'Run 11 miles', 'Run 8.5 miles')):
     wacky.append(makeWacky(running['marathon'][i], triathlon['olympic'][i + 2], descr))
 # race week
-wacky.append(triathlon['olympic'][-1])
+wacky.append(deepcopy(triathlon['olympic'][-1]))
 # copy over the remainder of the marathon weeks
-wacky.extend(running['marathon'][-8:-1])
+wacky.extend(deepcopy(running['marathon'][-8:-1]))
 # final week is special
-finalweek = running['marathon'][-1]
+finalweek = deepcopy(running['marathon'][-1])
 wacky.append(Week(REST, finalweek.mon, finalweek.tue, REST, finalweek.fri, REST, RACE))
 
 
