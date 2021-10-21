@@ -41,8 +41,11 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--type', dest='racetype',
                         choices=list(trainingplans.keys()) + ['full'],
                         default='marathon',
-                        help='type of race default=%(default)s [%(choices)s]')
+                        help='type of race (default=%(default)s) [%(choices)s]')
     parser.add_argument('-d', '--date', type=valid_date, help='date of the race')
+    parser.add_argument('--start-date', type=valid_date,
+                        help='start training after a certain date (default=today)',
+                        default=datetime.today())
     # TODO add option to set start time on weekdays
 
     # parse the command line
@@ -57,9 +60,9 @@ if __name__ == '__main__':
     training = trainingplans[options.racetype]
 
     # trim down the training weeks as appropriate
-    today = datetime.today()
-    weeks_util_race = float((options.date - today).days) / 7.
-    weeks_util_training = float((options.date - today - DELTA_WEEK*len(training)).days) / 7.
+    start_date = options.start_date
+    weeks_util_race = float((options.date - start_date).days) / 7.
+    weeks_util_training = float((options.date - start_date - DELTA_WEEK*len(training)).days) / 7.
     print('{:4.1f} weeks until the race'.format(weeks_util_race))
     if weeks_util_training > 0:
         print('{:4.1f} weeks until training starts'.format(weeks_util_training))
