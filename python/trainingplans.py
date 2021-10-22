@@ -2,12 +2,17 @@
 from copy import deepcopy
 from trainingobjs import (findLengths, TrainingDay, TrainingItem, toRunItem, Week,
                           REST, RACE)
-
+from typing import Dict, List
 
 # caloric estimates
 # swim ~390 kcal  / 1 mile
 # bike ~650 kcal / 12.5 mile
 # run  ~450 kcal / 3.1 mile
+
+
+# friendly names for typing
+TrainingPlan = List[Week]
+TrainingCollection = Dict[str, TrainingPlan]
 
 
 def toFiveDays(training):
@@ -43,245 +48,273 @@ def toFiveDays(training):
 # RUN 10 km = 6.2 mile
 
 # http://www.chicotriathlonclub.com/Documents/Olympic_Distance_Program.pdf
-triathlon = {'olympic':
-             # week 1
-             [Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 20 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 60 min', 'Long RPE 6'),
-                   TrainingItem('Run 30 min', 'Long RPE 6')),
-              # week 2
-              Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 20 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 70 min', 'Long RPE 6'),
-                   TrainingItem('Run 40 min', 'Long RPE 6')),
-              # week 3
-              Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 75 min', 'Long RPE 6'),
-                   TrainingItem('Run 40 min', 'Long RPE 6')),
-              # week 4
-              Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 25 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 20 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 40 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 60 min', 'Long RPE 6'),
-                   TrainingItem('Run 30 min', 'Long RPE 6')),
-              # week 5
-              Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 20 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 70 min', 'Long RPE 6'),
-                   TrainingItem('Run 35 min', 'Long RPE 6')),
-              # week 6
-              Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 80 min', 'Long RPE 6'),
-                   TrainingItem('Run 45 min', 'Long RPE 6')),
-              # week 7
-              Week(REST, TrainingItem('Run 40 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 40 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 55 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 90 min', 'Long RPE 6'),
-                   TrainingItem('Run 50 min', 'Long RPE 6')),
-              # week 8
-              Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 25 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 20 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 40 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 60 min', 'Long RPE 6'),
-                   TrainingItem('Run 35 min', 'Long RPE 6')),
-              # week 9
-              Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 85 min', 'Long RPE 6'),
-                   TrainingItem('Run 45 min', 'Long RPE 6')),
-              # week 10
-              Week(REST, TrainingItem('Run 40 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 60 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 100 min', 'Long RPE 6'),
-                   TrainingItem('Run 50 min', 'Long RPE 6')),
-              # week 11
-              Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
-                                TrainingItem('Bike 40 min', 'Tempo RPE 7')]),
-                   TrainingItem('Run 25 min', 'Tempo RPE 7'),
-                   TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
-                                TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
-                   TrainingItem('Bike 75 min', 'Long RPE 6'),
-                   TrainingItem('Run 40 min', 'Long RPE 6')),
-              # week 12
-              Week(REST,
-                   TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7'),
-                                TrainingItem('Run 20 min', 'Tempo RPE 7')]),
-                   TrainingItem('Bike 30 min', 'Tempo RPE 7'),
-                   REST, REST,
-                   TrainingDay([TrainingItem('Bike 20 min', 'Easy RPE 6-7'),
-                                TrainingItem('Run 15 min', 'Easy with pick-ups RPE 6')]),
-                   RACE)],
+triathlon: TrainingCollection = {'olympic':
+                                 # week 1
+                                 [Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 20 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 60 min', 'Long RPE 6'),
+                                       TrainingItem('Run 30 min', 'Long RPE 6')),
+                                  # week 2
+                                  Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 20 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 70 min', 'Long RPE 6'),
+                                       TrainingItem('Run 40 min', 'Long RPE 6')),
+                                  # week 3
+                                  Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 75 min', 'Long RPE 6'),
+                                       TrainingItem('Run 40 min', 'Long RPE 6')),
+                                  # week 4
+                                  Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 500 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 25 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 20 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 40 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 60 min', 'Long RPE 6'),
+                                       TrainingItem('Run 30 min', 'Long RPE 6')),
+                                  # week 5
+                                  Week(REST, TrainingItem('Run 30 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 20 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1000 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 70 min', 'Long RPE 6'),
+                                       TrainingItem('Run 35 min', 'Long RPE 6')),
+                                  # week 6
+                                  Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 80 min', 'Long RPE 6'),
+                                       TrainingItem('Run 45 min', 'Long RPE 6')),
+                                  # week 7
+                                  Week(REST, TrainingItem('Run 40 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 40 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 55 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 90 min', 'Long RPE 6'),
+                                       TrainingItem('Run 50 min', 'Long RPE 6')),
+                                  # week 8
+                                  Week(REST, TrainingItem('Run 25 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 25 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 20 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 40 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 60 min', 'Long RPE 6'),
+                                       TrainingItem('Run 35 min', 'Long RPE 6')),
+                                  # week 9
+                                  Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 30 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1250 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 50 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 85 min', 'Long RPE 6'),
+                                       TrainingItem('Run 45 min', 'Long RPE 6')),
+                                  # week 10
+                                  Week(REST, TrainingItem('Run 40 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 35 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 60 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 100 min', 'Long RPE 6'),
+                                       TrainingItem('Run 50 min', 'Long RPE 6')),
+                                  # week 11
+                                  Week(REST, TrainingItem('Run 35 min', 'Moderate RPE 6-7'),
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7 + strength'),
+                                                    TrainingItem('Bike 40 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Run 25 min', 'Tempo RPE 7'),
+                                       TrainingDay([TrainingItem('Swim 1500 m', 'Long RPE 6 + strength'),
+                                                    TrainingItem('Bike 45 min', 'Tempo RPE 6-7')]),
+                                       TrainingItem('Bike 75 min', 'Long RPE 6'),
+                                       TrainingItem('Run 40 min', 'Long RPE 6')),
+                                  # week 12
+                                  Week(REST,
+                                       TrainingDay([TrainingItem('Swim 750 m', 'Tempo RPE 7'),
+                                                    TrainingItem('Run 20 min', 'Tempo RPE 7')]),
+                                       TrainingItem('Bike 30 min', 'Tempo RPE 7'),
+                                       REST, REST,
+                                       TrainingDay([TrainingItem('Bike 20 min', 'Easy RPE 6-7'),
+                                                    TrainingItem('Run 15 min', 'Easy with pick-ups RPE 6')]),
+                                       RACE)],
 
-             # https://www.californiatriathlon.org/coaching/training-plans/12-week-olympic-training-plan/
-             'olympic2':
-             # week 1
-             [Week(REST, TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
-                   TrainingItem('Run 45 min', 'WU 10 minutes (brisk walk), easy 30 minute run, 5 minute CD'),
-                   TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 75 min',
-                                'WU 10 minutes (easy spinning), 60 minute medium effort, 5 minute cool down'),
-                   TrainingItem('Run 50 min', 'WU 10 minutes (brisk walk), 40 minute easy run')),
-              # week 2
-              Week(REST, TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
-                   TrainingItem('Run 55 min', 'WU 10 minutes (easy jog), easy 40 minute run, 5 minute CD'),
-                   TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 75 min',
-                                'WU 10 minutes (easy spinning), 60 minute medium effort, 5 minute cool down'),
-                   TrainingItem('Run 60 min', 'WU 10 minutes (brisk walk), 50 minute easy run')),
-              # week 3
-              Week(REST, TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
-                   TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), easy 45 minute run, 5 minute CD'),
-                   TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
-                   TrainingItem('Bike 75 min',
-                                'WU 10 minutes (easy spinning), 60 minute medium effort, 5 minute cool down'),
-                   TrainingItem('Run 60 min', 'WU 10 minutes (brisk walk), 50 minute easy run')),
-              # week 4
-              Week(REST, TrainingItem('Swim 60 min',
-                                      '10 minute WU, swim 4x 200 at a medium-hard effort with 1 minute recovery '
-                                      'between sets, CD 5 minutes easy'),
-                   REST, TrainingItem('Bike 75 min',
-                                      'WU 10 minutes easy spinning, 60 minutes easy effort, 5 minute CD'),
-                   REST, TrainingItem('Run 75 min',
-                                      'WU 10 minutes (brisk walk), 60 minutes easy to medium effort, 5 minute CD'),
-                   REST),
-              # week 5
-              Week(REST, TrainingItem('Swim 60 min',
-                                      'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute recovery '
-                                      'between sets, CD 5 minutes easy'),
-                   TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
-                   TrainingItem('Run 60 min',
-                                'WU 10 minutes (easy jog), 45 minute easy run with 10 min hard in the middle, '
-                                '5 minute CD'),
-                   TrainingItem('Swim 60 min', 'WU 10 minutes, 4x25 sprints, 30 minutes easy spin, CD 5 minutes'),
-                   TrainingItem('Bike 115 min',
-                                'WU 10 minutes (easy spinning), 100 minute medium effort, 5 minute cool down'),
-                   TrainingItem('Run 75 min', 'WU 10 minutes (easy jog), 60 minute easy run, 5 minute CD')),
-              # week 6
-              Week(REST, TrainingItem('Swim 60 min',
-                                      'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute recovery between '
-                                      'sets, CD 5 minutes easy'),
-                   TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
-                   TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), 45 minute easy run, 5 minute CD'),
-                   TrainingItem('Swim 60 min',
-                                'WU 10 minutes, 5x25 sprints, 35 minutes easy spin, CD 5 minutes'),
-                   TrainingItem('Bike 135 min',
-                                'WU 10 minutes (easy spinning), 120 minute medium effort, 5 minute cool down'),
-                   TrainingItem('Run 85 min',
-                                'WU 10 minutes (easy jog), 70 minute easy run, 5 minute CD')),
-              # week 7
-              Week(REST,
-                   TrainingItem('Swim 60 min',
-                                'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute recovery between sets, '
-                                'CD 5 minutes easy'),
-                   TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
-                   TrainingItem('Run 60 min',
-                                'WU 10 minutes (easy jog), 45 minute easy run with 10 min hard in the middle, '
-                                '5 minute CD'),
-                   TrainingItem('Swim 60 min', 'WU 10 minutes, 6x25 sprints, 40 minutes easy spin, CD 5 minutes'),
-                   TrainingItem('Bike 160 min',
-                                'WU 10 minutes (easy spinning), 140 minutes medium with 10 minutes in the middle at '
-                                'hard effort, 5 minutes CD'),
-                   TrainingItem('Run 95 min', 'WU 10 minutes (easy jog), 80 minute easy run, 5 minute CD')),
-              # week 8
-              Week(REST, TrainingItem('Swim 60 min',
-                                      'WU 10 minutes, 30 minutes steady race effort, 10 minute easy swim, '
-                                      'CD 5 minutes '),
-                   REST, TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), 45 minute easy run, 5 minute CD'),
-                   REST,
-                   TrainingItem('Bike 200 min',
-                                'WU 10 minutes (easy spinning), 180 minutes sustained medium effort, 10 minutes CD'),
-                   REST),
-              # week 9
-              Week(REST, TrainingItem('Swim 60 min', 'WU 10 minutes, 4x 300 medium effort with 1 minute recovery '
-                                      'between sets, CD 5 minutes'),
-                   TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
-                   TrainingItem('Run 65 min', 'WU 10 minutes (brisk jog), easy 50 minute run, 5 minute CD'),
-                   TrainingItem('Swim 60 min', 'WU 10 minutes, 4x50 sprints, 35 minutes easy spin, CD 5 minutes'),
-                   TrainingItem('Brick 175 min',
-                                'Bike 10 minutes easy spinning, 150 minutes moderated spinning, 5 minute CD. '
-                                'Immediately transition to running shoes and run 10 minutes easy'),
-                   TrainingItem('Run 40 min', 'WU 10 minutes (brisk walk), 30 minute easy run')),
-              # week 10
-              Week(REST, TrainingItem('Swim 60 min',
-                                      'WU 10 minutes, 4x 350 medium effort with 1 minute recovery between sets, '
-                                      'CD 5 minutes'),
-                   TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
-                   TrainingItem('Run 65 min',
-                                'WU 10 minutes (brisk jog), easy 50 minute run with 10 minutes hard in the middle, '
-                                '5 minute CD'),
-                   TrainingItem('Swim 60 min', 'WU 10 minutes, 4x50 sprints, Spin 35 min easy'),
-                   TrainingItem('Brick 195 min',
-                                'Bike 10 minutes easy spinning, 160 minutes moderated spinning, 10 minute CD. '
-                                'Immediately transition to running shoes and run 10 minutes easy'),
-                   TrainingItem('Run 50 min', 'WU 10 minutes (brisk walk), 40 minute easy run')),
-              # week 11
-              Week(REST, TrainingItem('Swim 60 min',
-                                      'WU 10 minutes, 4x 300 easy/medium effort with 1 minute recovery between sets, '
-                                      'CD 5 minutes'),
-                   TrainingItem('Bike 45 min', 'Medium effort 45 minute bike ride'),
-                   TrainingItem('Run 55 min', 'WU 10 minutes (easy jog), easy 40 minute run, 5 minute CD'),
-                   TrainingItem('Swim 60 min', 'WU 10 minutes, 5x25 sprints, 35 minutes easy spin, CD 5 minutes'),
-                   TrainingItem('Brick 130 min',
-                                'Bike 10 minutes easy spinning, 120 minutes moderated spinning, 5 minute CD. '
-                                'Immediately transition to running shoes and run 10 minutes easy'),
-                   TrainingItem('Run 40 min',
-                                'WU 10 minutes (brisk walk), 30 minute easy run')),
-              # week 12
-              Week(REST, TrainingItem('Run 30 min',
-                                      '10 minute WU (walk or slow jog), 15 minute easy run, 5 minute CD'),
-                   TrainingItem('Bike 45 min', '45 minute easy spinning'),
-                   TrainingItem('Swim 60 min',
-                                'WU 5 minutes, 4x 200 at easy effort with '
-                                '1 minute recovery between sets, 5 minute CD'),
-                   REST,
-                   TrainingDay([TrainingItem('Easy 10 min swim'),
-                                TrainingItem('Easy 30 min bike'),
-                                TrainingItem('Easy 15 min run')]),  # not back to back
-                   RACE)]}
+                                 # https://www.californiatriathlon.org/coaching/training-plans/12-week-olympic-training-plan/
+                                 'olympic2':
+                                 # week 1
+                                 [Week(REST, TrainingItem('Swim 40 min',
+                                                          '40 minute easy swim, taking breaks as needed'),
+                                       TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
+                                       TrainingItem('Run 45 min',
+                                                    'WU 10 minutes (brisk walk), easy 30 minute run, 5 minute CD'),
+                                       TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
+                                       TrainingItem('Bike 75 min',
+                                                    'WU 10 minutes (easy spinning), 60 minute medium effort, '
+                                                    '5 minute cool down'),
+                                       TrainingItem('Run 50 min', 'WU 10 minutes (brisk walk), 40 minute easy run')),
+                                  # week 2
+                                  Week(REST, TrainingItem('Swim 40 min',
+                                                          '40 minute easy swim, taking breaks as needed'),
+                                       TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
+                                       TrainingItem('Run 55 min', 'WU 10 minutes (easy jog), easy 40 minute run, '
+                                                    '5 minute CD'),
+                                       TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
+                                       TrainingItem('Bike 75 min',
+                                                    'WU 10 minutes (easy spinning), 60 minute medium effort, '
+                                                    '5 minute cool down'),
+                                       TrainingItem('Run 60 min', 'WU 10 minutes (brisk walk), 50 minute easy run')),
+                                  # week 3
+                                  Week(REST, TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks '
+                                                          'as needed'),
+                                       TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
+                                       TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), easy 45 minute run, '
+                                                    '5 minute CD'),
+                                       TrainingItem('Swim 40 min', '40 minute easy swim, taking breaks as needed'),
+                                       TrainingItem('Bike 75 min',
+                                                    'WU 10 minutes (easy spinning), 60 minute medium effort, '
+                                                    '5 minute cool down'),
+                                       TrainingItem('Run 60 min', 'WU 10 minutes (brisk walk), 50 minute easy run')),
+                                  # week 4
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          '10 minute WU, swim 4x 200 at a medium-hard effort with '
+                                                          '1 minute recovery between sets, CD 5 minutes easy'),
+                                       REST, TrainingItem('Bike 75 min',
+                                                          'WU 10 minutes easy spinning, 60 minutes easy effort, '
+                                                          '5 minute CD'),
+                                       REST, TrainingItem('Run 75 min',
+                                                          'WU 10 minutes (brisk walk), 60 minutes easy to medium '
+                                                          'effort, 5 minute CD'),
+                                       REST),
+                                  # week 5
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute'
+                                                          ' recovery between sets, CD 5 minutes easy'),
+                                       TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
+                                       TrainingItem('Run 60 min',
+                                                    'WU 10 minutes (easy jog), 45 minute easy run with 10 min hard in'
+                                                    ' the middle, 5 minute CD'),
+                                       TrainingItem('Swim 60 min', 'WU 10 minutes, 4x25 sprints, 30 minutes easy spin,'
+                                                    ' CD 5 minutes'),
+                                       TrainingItem('Bike 115 min',
+                                                    'WU 10 minutes (easy spinning), 100 minute medium effort, '
+                                                    '5 minute cool down'),
+                                       TrainingItem('Run 75 min', 'WU 10 minutes (easy jog), 60 minute easy run, '
+                                                    '5 minute CD')),
+                                  # week 6
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute'
+                                                          ' recovery between sets, CD 5 minutes easy'),
+                                       TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
+                                       TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), 45 minute easy run, '
+                                                    '5 minute CD'),
+                                       TrainingItem('Swim 60 min',
+                                                    'WU 10 minutes, 5x25 sprints, 35 minutes easy spin, CD 5 minutes'),
+                                       TrainingItem('Bike 135 min',
+                                                    'WU 10 minutes (easy spinning), 120 minute medium effort, '
+                                                    '5 minute cool down'),
+                                       TrainingItem('Run 85 min',
+                                                    'WU 10 minutes (easy jog), 70 minute easy run, 5 minute CD')),
+                                  # week 7
+                                  Week(REST,
+                                       TrainingItem('Swim 60 min',
+                                                    'WU 10 minutes, swim 4x 250 at a medium effort with 1 minute '
+                                                    'recovery between sets, CD 5 minutes easy'),
+                                       TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
+                                       TrainingItem('Run 60 min',
+                                                    'WU 10 minutes (easy jog), 45 minute easy run with 10 min hard in '
+                                                    'the middle, 5 minute CD'),
+                                       TrainingItem('Swim 60 min', 'WU 10 minutes, 6x25 sprints, 40 minutes easy spin,'
+                                                    ' CD 5 minutes'),
+                                       TrainingItem('Bike 160 min',
+                                                    'WU 10 minutes (easy spinning), 140 minutes medium with 10 minutes'
+                                                    ' in the middle at hard effort, 5 minutes CD'),
+                                       TrainingItem('Run 95 min', 'WU 10 minutes (easy jog), 80 minute easy run, '
+                                                    '5 minute CD')),
+                                  # week 8
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          'WU 10 minutes, 30 minutes steady race effort, 10 minute '
+                                                          'easy swim, CD 5 minutes '),
+                                       REST, TrainingItem('Run 60 min', 'WU 10 minutes (easy jog), 45 minute easy run,'
+                                                          ' 5 minute CD'),
+                                       REST,
+                                       TrainingItem('Bike 200 min',
+                                                    'WU 10 minutes (easy spinning), 180 minutes sustained medium '
+                                                    'effort, 10 minutes CD'),
+                                       REST),
+                                  # week 9
+                                  Week(REST, TrainingItem('Swim 60 min', 'WU 10 minutes, 4x 300 medium effort with 1 '
+                                                          'minute recovery between sets, CD 5 minutes'),
+                                       TrainingItem('Bike 70 min', 'Easy 70 minute bike ride'),
+                                       TrainingItem('Run 65 min', 'WU 10 minutes (brisk jog), easy 50 minute run, '
+                                                    '5 minute CD'),
+                                       TrainingItem('Swim 60 min', 'WU 10 minutes, 4x50 sprints, 35 minutes easy '
+                                                    'spin, CD 5 minutes'),
+                                       TrainingItem('Brick 175 min',
+                                                    'Bike 10 minutes easy spinning, 150 minutes moderated spinning, '
+                                                    '5 minute CD. Immediately transition to running shoes and '
+                                                    'run 10 minutes easy'),
+                                       TrainingItem('Run 40 min', 'WU 10 minutes (brisk walk), 30 minute easy run')),
+                                  # week 10
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          'WU 10 minutes, 4x 350 medium effort with 1 minute recovery '
+                                                          'between sets, CD 5 minutes'),
+                                       TrainingItem('Bike 60 min', 'Easy 60 minute bike ride'),
+                                       TrainingItem('Run 65 min',
+                                                    'WU 10 minutes (brisk jog), easy 50 minute run with 10 minutes '
+                                                    'hard in the middle, 5 minute CD'),
+                                       TrainingItem('Swim 60 min', 'WU 10 minutes, 4x50 sprints, Spin 35 min easy'),
+                                       TrainingItem('Brick 195 min',
+                                                    'Bike 10 minutes easy spinning, 160 minutes moderated spinning, '
+                                                    '10 minute CD. Immediately transition to running shoes and '
+                                                    'run 10 minutes easy'),
+                                       TrainingItem('Run 50 min', 'WU 10 minutes (brisk walk), 40 minute easy run')),
+                                  # week 11
+                                  Week(REST, TrainingItem('Swim 60 min',
+                                                          'WU 10 minutes, 4x 300 easy/medium effort with 1 minute '
+                                                          'recovery between sets, CD 5 minutes'),
+                                       TrainingItem('Bike 45 min', 'Medium effort 45 minute bike ride'),
+                                       TrainingItem('Run 55 min', 'WU 10 minutes (easy jog), easy 40 minute run, '
+                                                    '5 minute CD'),
+                                       TrainingItem('Swim 60 min', 'WU 10 minutes, 5x25 sprints, 35 minutes easy spin,'
+                                                    ' CD 5 minutes'),
+                                       TrainingItem('Brick 130 min',
+                                                    'Bike 10 minutes easy spinning, 120 minutes moderated spinning,'
+                                                    ' 5 minute CD. Immediately transition to running shoes and run '
+                                                    '10 minutes easy'),
+                                       TrainingItem('Run 40 min',
+                                                    'WU 10 minutes (brisk walk), 30 minute easy run')),
+                                  # week 12
+                                  Week(REST, TrainingItem('Run 30 min',
+                                                          '10 minute WU (walk or slow jog), 15 minute easy run, '
+                                                          '5 minute CD'),
+                                       TrainingItem('Bike 45 min', '45 minute easy spinning'),
+                                       TrainingItem('Swim 60 min',
+                                                    'WU 5 minutes, 4x 200 at easy effort with '
+                                                    '1 minute recovery between sets, 5 minute CD'),
+                                       REST,
+                                       TrainingDay([TrainingItem('Easy 10 min swim'),
+                                                    TrainingItem('Easy 30 min bike'),
+                                                    TrainingItem('Easy 15 min run')]),  # not back to back
+                                       RACE)]}
 
 
 def parseHal(raw):
@@ -297,7 +330,7 @@ def parseHal(raw):
 
 
 # all the following are tab delimited
-running = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
+runningraw = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
 1	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi pace	10 miles
 2	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi run	11 miles
@@ -350,40 +383,51 @@ running = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-t
 '''}
 
 # convert running to standard form
-for name, training in running.items():
+running: TrainingCollection = dict()
+for name, training in runningraw.items():
     mytraining = parseHal(training)
     mytraining = toFiveDays(mytraining)
     running[name] = mytraining
     del mytraining
+del runningraw
 
 # metric century training program
 # https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/
-bike = {'century':
-        [Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes at your own pace'),  # week 1
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
-              REST, TrainingItem('Bike 20 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes'),  # week 2
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
-              REST, TrainingItem('Bike 24 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 3
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'), REST,
-              TrainingItem('Bike 30 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 4
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
-              REST, TrainingItem('Bike 34 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 20 minutes'),  # week 5
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
-              REST, TrainingItem('Bike 41 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 20 minutes'),  # week 6
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
-              REST, TrainingItem('Bike 46 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 30 minutes'),  # week 7
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
-              REST, TrainingItem('Bike 54 miles'), REST),
-         Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills, pushing the last 30 minutes'),  # wkk 8
-              REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
-              REST, RACE,
-              REST)]}  # Bike metric century
+bike: TrainingCollection = {'century':
+                            # week 1
+                            [Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes at your own pace'),
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
+                                  REST, TrainingItem('Bike 20 miles'), REST),
+                             Week(REST, TrainingItem('Bike 60 min', 'Easy ride of 60 minutes'),  # week 2
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 20 easy, 20 hard, 20 easy'),
+                                  REST, TrainingItem('Bike 24 miles'), REST),
+                             Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 3
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'), REST,
+                                  TrainingItem('Bike 30 miles'), REST),
+                             Week(REST, TrainingItem('Bike 60 min', '60-minute ride with hills'),  # week 4
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
+                                  REST, TrainingItem('Bike 34 miles'), REST),
+                             # week 5
+                             Week(REST, TrainingItem('Bike 60 min',
+                                                     '60-minute ride with hills, pushing the last 20 minutes'),
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 15 easy, 30 hard, 15 easy'),
+                                  REST, TrainingItem('Bike 41 miles'), REST),
+                             # week 6
+                             Week(REST, TrainingItem('Bike 60 min',
+                                                     '60-minute ride with hills, pushing the last 20 minutes'),
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+                                  REST, TrainingItem('Bike 46 miles'), REST),
+                             # week 7
+                             Week(REST, TrainingItem('Bike 60 min',
+                                                     '60-minute ride with hills, pushing the last 30 minutes'),
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+                                  REST, TrainingItem('Bike 54 miles'), REST),
+                             # week 8
+                             Week(REST, TrainingItem('Bike 60 min',
+                                                     '60-minute ride with hills, pushing the last 30 minutes'),
+                                  REST, TrainingItem('Bike 60 min', 'Bike 60 min - 10 easy, 10 hard, 3 repetitions'),
+                                  REST, RACE,
+                                  REST)]}  # Bike metric century
 
 # #### custom plan for 2021 - raw version
 rawWacky = deepcopy(triathlon['olympic'])
@@ -432,7 +476,7 @@ wacky.append(Week(REST, finalweek.mon, finalweek.tue, REST, finalweek.fri, REST,
 
 
 # put together a single list of training
-trainingplans = {**running, **bike, **triathlon}  # type: ignore
+trainingplans: TrainingCollection = {**running, **bike, **triathlon}  # type: ignore
 trainingplans['rawwacky'] = rawWacky
 trainingplans['wacky'] = wacky
 
