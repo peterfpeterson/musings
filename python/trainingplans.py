@@ -330,7 +330,7 @@ def parseHal(raw):
 
 
 # all the following are tab delimited
-runningraw = {'marathon':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
+runningraw = {'marathon-i2':  # https://www.halhigdon.com/training-programs/marathon-training/intermediate-2-marathon/
 '''
 1	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi pace	10 miles
 2	Cross	3 mi run	5 mi run	3 mi run	Rest	5 mi run	11 miles
@@ -350,6 +350,27 @@ runningraw = {'marathon':  # https://www.halhigdon.com/training-programs/maratho
 16	Cross	5 mi run	8 mi run	5 mi run	Rest	4 mi pace	12 miles
 17	Cross	4 mi run	6 mi run	4 mi run	Rest	4 mi run	8 miles
 18	Cross	3 mi run	4 mi run	Rest	Rest	2 mi run	Marathon
+''',  # noqa: E128
+'marathon-i1': # https://www.halhigdon.com/training-programs/marathon-training/intermediate-1-marathon/
+'''
+1 	Cross 	3 mi run 	5 mi run 	3 mi run 	Rest 	5 mi pace 	8
+2 	Cross 	3 mi run 	5 mi run 	3 mi run 	Rest 	5 mi run 	9
+3 	Cross 	3 mi run 	5 mi run 	3 mi run 	Rest 	5 mi pace 	6
+4 	Cross 	3 mi run 	6 mi run 	3 mi run 	Rest 	6 mi pace 	11
+5 	Cross 	3 mi run 	6 mi run 	3 mi run 	Rest 	6 mi run 	12
+6 	Cross 	3 mi run 	5 mi run 	3 mi run 	Rest 	6 mi pace 	9
+7 	Cross 	4 mi run 	7 mi run 	4 mi run 	Rest 	7 mi pace 	14
+8 	Cross 	4 mi run 	7 mi run 	4 mi run 	Rest 	7 mi run 	15
+9 	Cross 	4 mi run 	5 mi run 	4 mi run 	Rest 	Rest 	Half Marathon
+10 	Cross 	4 mi run 	8 mi run 	4 mi run 	Rest 	8 mi pace 	17
+11 	Cross 	5 mi run 	8 mi run 	5 mi run 	Rest 	8 mi run 	18
+12 	Cross 	5 mi run 	5 mi run 	5 mi run 	Rest 	8 mi pace 	13
+13 	Cross 	5 mi run 	8 mi run 	5 mi run 	Rest 	5 mi pace 	20
+14 	Cross 	5 mi run 	5 mi run 	5 mi run 	Rest 	8 mi run 	12
+15 	Cross 	5 mi run 	8 mi run 	5 mi run 	Rest 	5 mi pace 	20
+16 	Cross 	5 mi run 	6 mi run 	5 mi run 	Rest 	4 mi pace 	12
+17 	Cross 	4 mi run 	5 mi run 	4 mi run 	Rest 	3 mi run 	8
+18 	Cross 	3 mi run 	4 mi run 	Rest 	Rest 	2 mi run 	Marathon
 ''',  # noqa: E128
 'half':  # https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
 '''
