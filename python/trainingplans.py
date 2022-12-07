@@ -441,6 +441,267 @@ for name, training in runningraw.items():
     running[name] = mytraining
     del mytraining
 del runningraw
+# copy Hal's intermediate-2 to be the default marathon training
+running['marathon'] = running['marathon-i1']
+
+# one suggestion for ultras said that your weekly volume should be 20-30% higher than expected race finish
+
+# add in bonus programs
+# https://www.jennyhadfield.com/wp-content/uploads/2016/01/Coach-Jennys-First-50K-Training-Plan.pdf
+
+# 50 minutes
+SPEED_10X1 = '''Speed Workout 10 x 1
+Warm up walking for 3 minutes, starting easy and build to a brisk pace by the end.
+Run 15 minutes in your easy yellow zone effort.
+Repeat 10 times:
+Run 1 minute at your Red Zone Effort (Zone 5)
+Follow with 2 minutes of very easy jogging or walking to catch your breath.
+Run 5 minutes in your easy yellow zone effort.
+Cool down walking for 3 minutes, starting at a brisk pace and slowing by the end.'''
+SPEED_6X2 = '''Warm up walking for 3 minutes, starting easy and build to a brisk pace by the end.
+Run 10 minutes in your easy yellow zone effort.
+Repeat 6 times:
+Run 2 minute at your Red Zone Effort (Zone 5)
+Follow with 3 minutes of very easy jogging or walking to catch your breath.
+Run 5 minutes in your easy yellow zone effort.
+Cool down walking for 3 minutes, starting at a brisk pace and slowing by the end.'''
+TEMPO_5X5 = '''Warm up walking for 3 minutes, starting easy and build to a brisk pace by the end.
+Run 10 minutes in your easy yellow zone effort (Zone 1-2).
+Repeat 5 times:
+Run 5 minutes at the top of your Orange Zone Effort (Zone 4)
+Follow with 2 minutes of very easy jogging or walking to catch your breath.
+Run 10 minutes in your easy yellow zone effort.
+Cool down walking for 3 minutes, starting at a brisk pace and slowing by the end.'''
+HILL_TEMPO = '''Warm up walking for 3 minutes, starting easy and build to a brisk pace by the end.
+Run 10 minutes in your easy yellow zone effort (Zone 1-2).
+Run 25 minutes on a rolling hilly course (outside or treadmill) and focus on adjusting your speed to stay at the top of your Orange Zone Effort (Zone 4).
+This means slowing on the uphill, and increasing speed on the downhill.
+This incredible workout teaches you how to run by the terrain, by your body and with the flow. This will be a game-changer on race day!
+Run 5 minutes in your easy yellow zone effort.
+Cool down walking for 3 minutes, starting at a brisk pace and slowing by the end'''
+running['ultra-a'] = \
+    [Week(TrainingItem('Run 45 min', 'Easy Run 45-50 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes orange zone'),
+          TrainingItem('Run 45 min', 'Easy run 45-50 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes orange zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4 miles yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone'),
+          REST),
+     # week 2
+     Week(TrainingItem('Run 45 min', 'Easy Run 45-50 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes orange zone'),
+          TrainingItem('Run 45 min', 'Easy run 45-50 minutes yellow zone'),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4 miles yellow zone')),
+     # week 3
+     Week(REST,
+          TrainingItem('Run 50 min', 'Easy Run 50-60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes orange zone'),
+          TrainingItem('Run 50 min', 'Easy Run 50-60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes orange zone'),
+          TrainingItem('Run 10 miles', 'Long run 10 miles yellow zone'),
+          REST),
+     # week 4
+     Week(TrainingItem('Run 50 min', 'Easy Run 50-60 minutes yellow zone'),
+          TrainingItem('Cross 50 min', 'Cross-training 50 minutes orange zone'),
+          TrainingItem('Run 45 min', 'Easy run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4 miles yellow zone'),
+          TrainingItem('Run 7 miles', 'Long run 8 miles yellow zone'),
+          REST),
+     # week 5
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill run 90 min', 'Hill run orange zone\nlots of details in pdf'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4 miles yellow zone'),
+          TrainingItem('Run 12 miles', 'Long run 12 miles yellow zone'),
+          REST),
+     # week 6
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill run 90 min', 'Hill run orange zone\nlots of details in pdf'),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 10 miles', 'Long run 10 miles yellow zone'),
+          TrainingItem('Run 5 miles', 'Run 5 miles yellow zone')),
+     # week 7
+     Week(REST,
+          TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill run 90 min', 'Hill run orange zone\nlots of details in pdf'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 14 miles', 'Long run 14 miles yellow zone'),
+          REST),
+     # week 8
+     Week(TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy Run 3 miles yellow zone'),
+          TrainingItem('Run 7 miles', 'Long run 7 miles yellow zone'),
+          REST),
+     # week 9
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill run 90 min', 'Hill run orange zone\nlots of details in pdf'),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy Run 4 miles yellow zone'),
+          TrainingItem('Run 16 miles', 'Long run 16 miles yellow zone'),
+          REST),
+     # week 10
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Speed 10x1 50 min', 'Speed workout 10x1 red zone\n' + SPEED_10X1),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 12 miles', 'Long run 12 miles yellow zone'),
+          TrainingItem('Run 6 miles', 'Long run 6 miles yellow zone')),
+     # week 11
+     Week(REST,
+          TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Speed 10x1 50 min', 'Speed workout 10x1 red zone\n' + SPEED_10X1),
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 18 miles', 'Long run 18 miles yellow zone'),
+          REST),
+     # week 12
+     Week(TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy Run 3 miles yellow zone'),
+          TrainingItem('Run 7 miles', 'Long run 7 miles yellow zone'),
+          REST),
+     # week 13
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Speed 6x2 60 min', 'Speed workout 6x2 red zone\n' + SPEED_6X2),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy Run 4 miles yellow zone'),
+          TrainingItem('Run 20 miles', 'Long run 20 miles yellow zone'),
+          REST),
+     # week 14
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Speed 6x2 60 min', 'Speed workout 6x2 red zone\n' + SPEED_6X2),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 14 miles', 'Long run 14 miles yellow zone'),
+          TrainingItem('Run 7 miles', 'Long run 7 miles yellow zone')),
+     # week 15
+     Week(REST,
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 7 miles', 'Long run 7 miles yellow zone'),
+          REST),
+     # week 16
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 55 min', 'Tempo Workout 5x5\n' + TEMPO_5X5),
+          TrainingItem('Cross 45 min', 'Cross-training 45 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy Run 4 miles yellow zone'),
+          TrainingItem('Run 22 miles', 'Long run 22 miles yellow zone'),
+          REST),
+     # week 17
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 55 min', 'Tempo Workout 5x5\n' + TEMPO_5X5),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 16 miles', 'Long run 16 miles yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone')),
+     # week 18
+     Week(REST,
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone'),
+          REST),
+     # week 19
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill tempo 45 min', HILL_TEMPO),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4 miles yellow zone'),
+          TrainingItem('Run 23 miles', 'Long run 23 miles yellow zone'),
+          REST),
+     # week 20
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 55 min', 'Tempo Workout 5x5\n' + TEMPO_5X5),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 18 miles', 'Long run 18 miles yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone')),
+     # week 21
+     Week(REST,
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy run 3 miles yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone'),
+          REST),
+     # week 22
+     Week(TrainingItem('Run 60 min', 'Easy Run 60 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Run 55 min', 'Tempo Workout 5x5\n' + TEMPO_5X5),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30-40 minutes yellow zone'),
+          TrainingItem('Run 12 miles', 'Long run 12 miles yellow zone'),
+          TrainingItem('Run 6 miles', 'Long run  miles yellow zone')),
+     # week 23
+     Week(REST,
+          TrainingItem('Run 50 min', 'Easy Run 50 minutes yellow zone'),
+          TrainingItem('Cross 45 min', 'Cross-training 45-60 minutes yellow zone'),
+          TrainingItem('Hill tempo 45 min', HILL_TEMPO),
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          TrainingItem('Run 8 miles', 'Long run 8 miles yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy run 3 miles yellow zone')),
+     # week 24
+     Week(REST,
+          TrainingItem('Run 40 min', 'Easy Run 40 minutes yellow zone'),
+          TrainingItem('Run 30 min', 'Easy Run 30 minutes yellow zone'),
+          REST,
+          TrainingItem('Run 20 min', 'Easy Run 20 minutes yellow zone'),
+          RACE,
+          REST),
+     # recovery weeks
+     # week 25
+     Week(REST,
+          TrainingItem('Run 20 min', 'Easy Run 20 minutes yellow zone'),
+          REST,
+          TrainingItem('Run 30 min', 'Easy Run 30 minutes yellow zone'),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy run 3 miles yellow zone')),
+     # week 26
+     Week(REST,
+          TrainingItem('Run 30 min', 'Easy Run 30 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          REST,
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          TrainingItem('Run 3 miles', 'Easy run 3-5 miles yellow zone'),
+          REST),
+     # week 27
+     Week(REST,
+          TrainingItem('Run 30 min', 'Easy Run 30 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          TrainingItem('Run 45 min', 'Easy Run 45 minutes yellow zone'),
+          TrainingItem('Cross 30 min', 'Cross-training 30 minutes yellow zone'),
+          TrainingItem('Run 4 miles', 'Easy run 4-6 miles yellow zone'),
+          REST),
+    ]
+
+# blue and white png ultra plan
+# https://relentlessforwardcommotion.com/wp-content/uploads/2019/05/Beginner-50K-training-plan-Relentless-Forward-Commotion_Hart-Strength-Endurance-1-1024x576.png
+
+#
 
 # metric century training program
 # https://www.endurancemag.com/2014/05/cycling-8-week-metric-training-plan/
