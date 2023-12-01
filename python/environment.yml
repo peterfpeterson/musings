@@ -1,0 +1,9 @@
+name: musings
+
+channels:
+  - conda-forge
+
+dependencies:
+  - ipython
+  - numpy
+  - pre-commit
