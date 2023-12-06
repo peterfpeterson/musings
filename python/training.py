@@ -54,6 +54,8 @@ if __name__ == '__main__':
         options.racetype = 'marathon'
     if options.date is None:
         parser.error('--date is required')
+    if options.start_date > options.date:
+        parser.error('Race is in the past. Look at --date')
     raceweek = getRaceWeek(options.date)
 
     # create the training program
@@ -61,15 +63,19 @@ if __name__ == '__main__':
 
     # trim down the training weeks as appropriate
     start_date = options.start_date
-    weeks_util_race = float((options.date - start_date).days) / 7.
-    weeks_util_training = float((options.date - start_date - DELTA_WEEK*len(training)).days) / 7.
-    print('{:4.1f} weeks until the race'.format(weeks_util_race))
-    if weeks_util_training > 0:
-        print('{:4.1f} weeks until training starts'.format(weeks_util_training))
+    weeks_until_race = float((options.date - start_date).days) / 7.
+    weeks_until_training = float((options.date - start_date - DELTA_WEEK*len(training)).days) / 7.
+    print('{:4.1f} weeks until the race'.format(weeks_until_race))
+    if weeks_until_training > 0:
+        print('{:4.1f} weeks until training starts'.format(weeks_until_training))
     else:
         print('training has already started, '
-              'trimming to the last {} weeks'.format(int(weeks_util_race)+1))
-        training = training[-1*int(weeks_util_race)-1:]
+              'trimming to the last {} weeks'.format(int(weeks_until_race)+1))
+        training = training[-1*int(weeks_until_race)-1:]
+
+    # error check the filtering
+    if not len(training):
+        raise RuntimeError("No training being generated")
 
     ical = None if not WITH_ICAL else Calendar()
 
