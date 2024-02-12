@@ -1,0 +1,110 @@
+#!/usr/bin/env python
+from datetime import datetime
+import ephem
+from ephem import Moon, Observer, Sun
+from zoneinfo import ZoneInfo
+
+moon = Moon()
+sun = Sun()
+now = datetime.now()
+
+def createObserver(name, lat_in_deg=None, lon_in_deg=None, elevation_in_m=0):
+    try:
+        observer = ephem.city(name)
+    except KeyError:
+        # some places that aren't already in the databases
+        if name == "Knoxville":
+            if lat_in_deg is None:
+                lat_in_deg = 35.8858177
+            if lon_in_deg is None:
+                lon_in_deg=-84.0769846
+            if elevation_in_m == 0:
+                elevation_in_m=285
+
+        # create an observer from values
+        observer = Observer()
+        observer.name=name
+        if lat_in_deg is None:
+            raise ValueError("Need to specify latitude")
+        else:
+            observer.lat = lat_in_deg * ephem.pi/180.
+        if lat_in_deg is None:
+            raise ValueError("Need to specify longitude")
+        else:
+            observer.lon = lon_in_deg * ephem.pi/180.
+        observer.elevation = elevation_in_m
+
+    # to reproduce naval observatory values
+    observer.pressure = 0
+    observer.horizon='-0:34'
+
+    return observer
+
+def to_datetime(timestamp, timezone=None):
+    if timezone:
+        return ephem.to_timezone(timestamp, timezone)
+    else:
+        return ephem.localtime(timestamp)
+
+def time_to_str(timestamp):
+    return timestamp.strftime("%m/%d %H:%M")
+
+
+knoxville=createObserver('Knoxville')
+timezone = ZoneInfo('US/Eastern')
+
+print('-'*30)
+print(knoxville.name)
+print(knoxville)
+print('-'*30)
+print('LAT:', ephem.degrees(knoxville.lat), 'deg')
+print('LON:', ephem.degrees(knoxville.lon), 'deg')
+print('ELE:', knoxville.elevation, 'm')
+print('-'*30)
+sunrise = knoxville.previous_rising(sun)
+sunnoon = knoxville.next_transit(sun)
+sunset = knoxville.next_setting(sun)
+print('sunrise', to_datetime(sunrise, timezone), time_to_str(to_datetime(sunrise))) # , timezone)))
+print('noon   ', to_datetime(sunnoon, timezone))
+print('sunset ', to_datetime(sunset, timezone))
+print('-'*30)
+moonrise = knoxville.next_rising(moon)
+moonset = knoxville.next_setting(moon)
+print('moonrise', to_datetime(moonrise, timezone))
+print('moonrset', to_datetime(moonset, timezone))
+
+print('-'*30)
+print('civil twilight')
+knoxville.horizon='-6' # by definition
+sunrise = knoxville.previous_rising(sun, use_center=True)
+sunset = knoxville.next_setting(sun, use_center=True)
+print('sunrise', to_datetime(sunrise, timezone))
+print('sunset ', to_datetime(sunset, timezone))
+
+print('-'*30)
+print('nautical twilight')
+knoxville.horizon='-12' # by definition
+sunrise = knoxville.previous_rising(sun, use_center=True)
+sunset = knoxville.next_setting(sun, use_center=True)
+print('sunrise', to_datetime(sunrise, timezone))
+print('sunset ', to_datetime(sunset, timezone))
+
+print('-'*30)
+print('astronomical twilight')
+knoxville.horizon='-18' # by definition
+sunrise = knoxville.previous_rising(sun, use_center=True)
+sunset = knoxville.next_setting(sun, use_center=True)
+print('sunrise', to_datetime(sunrise, timezone))
+print('sunset ', to_datetime(sunset, timezone))
+
+
+print('-'*30)
+print('moon phases')
+print('full     ', to_datetime(ephem.next_full_moon(now), timezone))
+print('first 1/4', to_datetime(ephem.next_first_quarter_moon(now), timezone))
+print('new      ', to_datetime(ephem.next_new_moon(now), timezone))
+print('last 1/4 ', to_datetime(ephem.next_last_quarter_moon(now), timezone))
+
+print('-'*30)
+print('equinox ', to_datetime(ephem.next_equinox(now), timezone))
+print('solstice', to_datetime(ephem.next_solstice(now), timezone))
