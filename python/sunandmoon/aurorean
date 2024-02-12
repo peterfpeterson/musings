@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 from datetime import datetime, timedelta
 import ephem
-from ephem import Moon, Observer, Sun
+from ephem import Observer
+import os
 from typing import Optional, Union
 from zoneinfo import ZoneInfo
+
+
+def get_term_size() -> tuple[int, int]:
+    ts = os.get_terminal_size()
+    return (ts.columns, ts.lines)
 
 
 def createObserver(name, lat_in_deg=None, lon_in_deg=None, elevation_in_m=0):
@@ -15,32 +21,37 @@ def createObserver(name, lat_in_deg=None, lon_in_deg=None, elevation_in_m=0):
             if lat_in_deg is None:
                 lat_in_deg = 35.8858177
             if lon_in_deg is None:
-                lon_in_deg=-84.0769846
+                lon_in_deg = -84.0769846
             if elevation_in_m == 0:
-                elevation_in_m=285
+                elevation_in_m = 285
 
         # create an observer from values
         observer = Observer()
-        observer.name=name
+        observer.name = name
         if lat_in_deg is None:
             raise ValueError("Need to specify latitude")
         else:
-            observer.lat = lat_in_deg * ephem.pi/180.
+            observer.lat = lat_in_deg * ephem.pi / 180.0
         if lat_in_deg is None:
             raise ValueError("Need to specify longitude")
         else:
-            observer.lon = lon_in_deg * ephem.pi/180.
+            observer.lon = lon_in_deg * ephem.pi / 180.0
         observer.elevation = elevation_in_m
 
     # to reproduce naval observatory values
     observer.pressure = 0
-    observer.horizon='-0:34'
+    observer.horizon = "-0:34"
 
     return observer
 
 
-class Event():
-    def __init__(self, name: str, timestamp: Union[ephem.Date, datetime], timezone: Optional[ZoneInfo]=None):
+class Event:
+    def __init__(
+        self,
+        name: str,
+        timestamp: Union[ephem.Date, datetime],
+        timezone: Optional[ZoneInfo] = None,
+    ):
         self.name = name
         # convert timestamp if needed
         if isinstance(timestamp, ephem.Date):
@@ -48,10 +59,10 @@ class Event():
                 self.timestamp = ephem.to_timezone(timestamp, timezone)
             else:
                 self.timestamp = ephem.localtime(timestamp)
-        else: # assume already a datetime
+        else:  # assume already a datetime
             self.timestamp = timestamp
 
-    def __lt__(self, other: 'Event') -> bool:
+    def __lt__(self, other: "Event") -> bool:
         return self.timestamp < other.timestamp
 
     def time_as_str(self) -> str:
@@ -60,34 +71,40 @@ class Event():
     def __str__(self) -> str:
         return self.time_as_str() + " " + event.name
 
-def createEvents(observer: ephem.Observer, body: ephem.Body, include_transit: bool=False, use_center: bool=False, label: str='') -> list[Event]:
+
+def createEvents(
+    observer: ephem.Observer,
+    body: ephem.Body,
+    include_transit: bool = False,
+    use_center: bool = False,
+    label: str = "",
+) -> list[Event]:
     if not label:
-        label = body.name.lower()+' rise'
+        label = body.name.lower() + " rise"
 
     events = []
     events.append(Event(label, observer.previous_rising(body, use_center=use_center)))
     events.append(Event(label, observer.next_rising(body, use_center=use_center)))
 
-    label=label.replace('rise', 'set')
+    label = label.replace("rise", "set")
     events.append(Event(label, observer.previous_setting(body, use_center=use_center)))
     events.append(Event(label, observer.next_setting(body, use_center=use_center)))
 
     if include_transit:
-        label=label.replace('set', 'noon')
+        label = label.replace("set", "noon")
         events.append(Event(label, observer.previous_transit(body)))
         events.append(Event(label, observer.next_transit(body)))
 
     return events
 
 
-
-observer = createObserver('Knoxville')
-timezone = ZoneInfo('US/Eastern')
+observer = createObserver("Knoxville")
+timezone = ZoneInfo("US/Eastern")
 
 print(observer.name)
-print('LAT:', ephem.degrees(observer.lat), 'deg')
-print('LON:', ephem.degrees(observer.lon), 'deg')
-print('ELE:', observer.elevation, 'm')
+print("LAT:", ephem.degrees(observer.lat), "deg")
+print("LON:", ephem.degrees(observer.lon), "deg")
+print("ELE:", observer.elevation, "m")
 
 events = []
 # add events for the sun
@@ -97,20 +114,31 @@ events.extend(createEvents(observer, ephem.Moon(), include_transit=True))
 events.extend(createEvents(observer, ephem.Venus(), include_transit=True))
 
 # add various twilights by hacking the horizon
-observer.horizon='-6' # by definition for civil twilight
-events.extend(createEvents(observer, ephem.Sun(), use_center=True, label='civil twilight '))
-observer.horizon='-12' # by definition for nautical twilight
-events.extend(createEvents(observer, ephem.Sun(), use_center=True, label='nautical twilight '))
+observer.horizon = "-6"  # by definition for civil twilight
+events.extend(
+    createEvents(observer, ephem.Sun(), use_center=True, label="civil twilight ")
+)
+observer.horizon = "-12"  # by definition for nautical twilight
+events.extend(
+    createEvents(observer, ephem.Sun(), use_center=True, label="nautical twilight ")
+)
 if False:
-    observer.horizon='-18' # by definition for astronomical twilight
-    events.extend(createEvents(observer, ephem.Sun(), use_center=True, label='astronomical twilight '))
+    observer.horizon = "-18"  # by definition for astronomical twilight
+    events.extend(
+        createEvents(
+            observer, ephem.Sun(), use_center=True, label="astronomical twilight "
+        )
+    )
 
-print('='*30, 'daily')
+print("=" * 30, "daily")
 now = datetime.now()
 recent_past = now - timedelta(hours=1)
 near_future = now + timedelta(hours=24)
-events = [ item for item in events
-           if item.timestamp > recent_past and item.timestamp < near_future] # only keep things in the near timeline
+events = [
+    item
+    for item in events
+    if item.timestamp > recent_past and item.timestamp < near_future
+]  # only keep things in the near timeline
 events.sort()
 
 for event in events:
@@ -119,32 +147,54 @@ for event in events:
 
 events_moonphase = []
 # phases of the moon, equinox, and solstice
-for func in (ephem.previous_first_quarter_moon, ephem.next_first_quarter_moon, ephem.previous_full_moon, ephem.next_full_moon, ephem.previous_last_quarter_moon, ephem.next_last_quarter_moon, ephem.previous_new_moon, ephem.next_new_moon):
+for func in (
+    ephem.previous_first_quarter_moon,
+    ephem.next_first_quarter_moon,
+    ephem.previous_full_moon,
+    ephem.next_full_moon,
+    ephem.previous_last_quarter_moon,
+    ephem.next_last_quarter_moon,
+    ephem.previous_new_moon,
+    ephem.next_new_moon,
+):
     # create the event name from the name of the function
-    name = func.__name__.replace('previous_', '').replace('next_', '').replace('_', ' ')
+    name = func.__name__.replace("previous_", "").replace("next_", "").replace("_", " ")
     events_moonphase.append(Event(name, func(now)))
 
-week_ago = now-timedelta(weeks=1)
-week_ahead = now+timedelta(weeks=1)
-events_moonphase = [item for item in events_moonphase
-                    if item.timestamp > week_ago and item.timestamp < week_ahead]
+week_ago = now - timedelta(weeks=1)
+week_ahead = now + timedelta(weeks=1)
+events_moonphase = [
+    item
+    for item in events_moonphase
+    if item.timestamp > week_ago and item.timestamp < week_ahead
+]
 events_moonphase.sort()
-print('='*30, "moon phase")
+print("=" * 30, "moon phase")
 for event in events_moonphase:
     print(event)
 
 events_seasons = []
 # phases of the moon, equinox, and solstice
-for func in (ephem.previous_equinox, ephem.next_equinox, ephem.previous_solstice, ephem.next_solstice):
+for func in (
+    ephem.previous_equinox,
+    ephem.next_equinox,
+    ephem.previous_solstice,
+    ephem.next_solstice,
+):
     # create the event name from the name of the function
-    name = func.__name__.replace('previous_', '').replace('next_', '').replace('_', ' ')
+    name = func.__name__.replace("previous_", "").replace("next_", "").replace("_", " ")
     events_seasons.append(Event(name, func(now)))
 
-months_ago=now - timedelta(weeks=3*4)
-months_ahead=now + timedelta(weeks=3*4)
-events_seasons = [item for item in events_seasons
-                  if item.timestamp > months_ago and item.timestamp < months_ahead]
+months_ago = now - timedelta(weeks=3 * 4)
+months_ahead = now + timedelta(weeks=3 * 4)
+events_seasons = [
+    item
+    for item in events_seasons
+    if item.timestamp > months_ago and item.timestamp < months_ahead
+]
 events_seasons.sort()
-print('='*30, "seasons")
+print("=" * 30, "seasons")
 for event in events_seasons:
     print(event)
+
+print(get_term_size())

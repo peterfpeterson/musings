@@ -5,6 +5,7 @@ dependencies:
 - python
 - ipython
 - mypy
+- pre-commit
 - pip
 - pip:
   - pyephem
