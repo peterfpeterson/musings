@@ -1,0 +1,9 @@
+name: aurorean
+channels:
+- conda-forge
+dependencies:
+- python
+- ipython
+- pip
+- pip:
+  - pyephem
