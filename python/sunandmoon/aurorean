@@ -186,7 +186,7 @@ for func in (
     events_seasons.append(Event(name, func(now)))
 
 months_ago = now - timedelta(weeks=3 * 4)
-months_ahead = now + timedelta(weeks=4 * 4)
+months_ahead = now + timedelta(weeks=6 * 4)
 events_seasons = [
     item
     for item in events_seasons
