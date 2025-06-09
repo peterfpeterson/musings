@@ -17,6 +17,9 @@ docs/_site
 # Gemfile created by `bundle` related to ruby
 docs/Gemfile.lock
 
+# pixi environments
+.pixi
+
 # Distribution / packaging
 .Python
 env/
