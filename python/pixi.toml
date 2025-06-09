@@ -1,0 +1,16 @@
+[workspace]
+authors = ["Pete Peterson <peterfpeterson@gmail.com>"]
+channels = ["conda-forge"]
+name = "python"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+test = "python trainingobjs.py"
+
+[dependencies]
+icalendar = ">=6.3.1,<7"
+numpy = ">=2.3.0,<3"
+pytest = "*"
+pre-commit = "*"
+ipython = "*"
