@@ -648,26 +648,47 @@ runningraw = {
 17 	Cross 	4 mi run 	5 mi run 	4 mi run 	Rest 	3 mi run 	8
 18 	Cross 	3 mi run 	4 mi run 	Rest 	Rest 	2 mi run 	Marathon
 """,  # noqa: E128
+    "marathon-n1":  # https://www.halhigdon.com/training-programs/marathon-training/novice-1-marathon/
+    """
+1 	Rest	Rest 	3 mi run 	3 mi run 	3 mi run 	Rest 	6 mi run
+2 	Rest	Rest 	3 mi run 	3 mi run 	3 mi run 	Rest 	7 mi run
+3 	Rest	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	5 mi run
+4 	Rest	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	9 mi run
+5 	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	10 mi run
+6 	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	7 mi run
+7 	Rest	Rest 	3 mi run 	6 mi run 	3 mi run 	Rest 	12 mi run
+8 	Rest	Rest 	3 mi run 	6 mi run 	3 mi run 	Rest 	Half Marathon
+9 	Rest	Rest 	3 mi run 	7 mi run 	4 mi run 	Rest 	10 mi run
+10 	Rest	Rest 	3 mi run 	7 mi run 	4 mi run 	Rest 	15 mi run
+11 	Rest	Rest 	4 mi run 	8 mi run 	4 mi run 	Rest 	16 mi run
+12 	Rest	Rest 	4 mi run 	8 mi run 	5 mi run 	Rest 	12 mi run
+13 	Rest	Rest 	4 mi run 	9 mi run 	5 mi run 	Rest 	18 mi run
+14 	Rest	Rest 	5 mi run 	9 mi run 	5 mi run 	Rest 	14 mi run
+15 	Rest	Rest 	5 mi run 	10 mi run 	5 mi run 	Rest 	20 mi run
+16 	Rest	Rest 	5 mi run 	8 mi run 	4 mi run 	Rest 	12 mi run
+17 	Rest	Rest 	4 mi run 	6 mi run 	3 mi run 	Rest 	8 mi run
+18 	Rest	Rest 	3 mi run 	4 mi run 	2 mi run 	Rest 	Marathon
+""",  # noqa: E128
     "marathon-n2":  # https://www.halhigdon.com/training-programs/marathon-training/novice-2-marathon/
     """
-1 	Rest 	3 mi run 	5 m pace 	3 mi run 	Rest 	8 	Rest
-2 	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	9 	Rest
-3 	Rest 	3 mi run 	5 m pace 	3 mi run 	Rest 	6 	Rest
-4 	Rest 	3 mi run 	6 m pace 	3 mi run 	Rest 	11 	Rest
-5 	Rest 	3 mi run 	6 mi run 	3 mi run 	Rest 	12 	Rest
-6 	Rest 	3 mi run 	6 m pace 	3 mi run 	Rest 	9 	Rest
-7 	Rest 	4 mi run 	7 m pace 	4 mi run 	Rest 	14 	Rest
-8 	Rest 	4 mi run 	7 mi run 	4 mi run 	Rest 	15 	Rest
-9 	Rest 	4 mi run 	7 m pace 	4 mi run 	Rest 	Half Marathon	Rest
-10 	Rest 	4 mi run 	8 m pace 	4 mi run 	Rest 	17 	Rest
-11 	Rest 	5 mi run 	8 mi run 	5 mi run 	Rest 	18 	Rest
-12 	Rest 	5 mi run 	8 m pace 	5 mi run 	Rest 	13 	Rest
-13 	Rest 	5 mi run 	5 m pace 	5 mi run 	Rest 	19 	Rest
-14 	Rest 	5 mi run 	8 mi run 	5 mi run 	Rest 	12 	Rest
-15 	Rest 	5 mi run 	5 m pace 	5 mi run 	Rest 	20 	Rest
-16 	Rest 	5 mi run 	4 m pace 	5 mi run 	Rest 	12 	Rest
-17 	Rest 	4 mi run 	3 mi run 	4 mi run 	Rest 	8 	Rest
-18 	Rest 	3 mi run 	2 mi run 	Rest 	Rest 	2 mi run 	Marathon
+1 	Rest	Rest 	3 mi run 	5 m pace 	3 mi run 	Rest 	8
+2 	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	9
+3 	Rest	Rest 	3 mi run 	5 m pace 	3 mi run 	Rest 	6
+4 	Rest	Rest 	3 mi run 	6 m pace 	3 mi run 	Rest 	11
+5 	Rest	Rest 	3 mi run 	6 mi run 	3 mi run 	Rest 	12
+6 	Rest	Rest 	3 mi run 	6 m pace 	3 mi run 	Rest 	9
+7 	Rest	Rest 	4 mi run 	7 m pace 	4 mi run 	Rest 	14
+8 	Rest	Rest 	4 mi run 	7 mi run 	4 mi run 	Rest 	15
+9 	Rest	Rest 	4 mi run 	7 m pace 	4 mi run 	Rest 	Half Marathon
+10 	Rest	Rest 	4 mi run 	8 m pace 	4 mi run 	Rest 	17
+11 	Rest	Rest 	5 mi run 	8 mi run 	5 mi run 	Rest 	18
+12 	Rest	Rest 	5 mi run 	8 m pace 	5 mi run 	Rest 	13
+13 	Rest	Rest 	5 mi run 	5 m pace 	5 mi run 	Rest 	19
+14 	Rest	Rest 	5 mi run 	8 mi run 	5 mi run 	Rest 	12
+15 	Rest	Rest 	5 mi run 	5 m pace 	5 mi run 	Rest 	20
+16 	Rest	Rest 	5 mi run 	4 m pace 	5 mi run 	Rest 	12
+17 	Rest	Rest 	4 mi run 	3 mi run 	4 mi run 	Rest 	8
+18 	Rest	Rest 	3 mi run 	2 mi run 	Rest 	2 mi run 	Marathon
 """,  # noqa: E128
     "half":  # https://www.halhigdon.com/training-programs/half-marathon-training/intermediate-1-half-marathon/
     """
@@ -686,17 +707,17 @@ runningraw = {
 """,
     "half-n2":  # https://www.halhigdon.com/training-programs/half-marathon-training/novice-2-half-marathon/
     """
-1 	60 min cross	Rest 	3 mi run 	3 mi run 	3 mi run 	Rest 	4 mi run
-2 	60 min cross	Rest 	3 mi run 	3 mi pace 	3 mi run 	Rest 	5 mi run
-3 	60 min cross	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	6 mi run
-4 	60 min cross	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	7 mi run
-5 	60 min cross	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	8 mi run
-6 	60 min cross	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	5-K Race
-7 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	9 mi run
-8 	60 min cross	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	10 mi run
-9 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	10-K Race
-10 	60 min cross	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	11 mi run
-11 	60 min cross	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	12 mi run
+1 	Rest	Rest 	3 mi run 	3 mi run 	3 mi run 	Rest 	4 mi run
+2 	Rest	Rest 	3 mi run 	3 mi pace 	3 mi run 	Rest 	5 mi run
+3 	Rest	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	6 mi run
+4 	Rest	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	7 mi run
+5 	Rest	Rest 	3 mi run 	4 mi run 	3 mi run 	Rest 	8 mi run
+6 	Rest	Rest 	3 mi run 	4 mi pace 	3 mi run 	Rest 	5-K Race
+7 	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	9 mi run
+8 	Rest	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	10 mi run
+9 	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	10-K Race
+10	Rest	Rest 	3 mi run 	5 mi pace 	3 mi run 	Rest 	11 mi run
+11	Rest	Rest 	3 mi run 	5 mi run 	3 mi run 	Rest 	12 mi run
 12  	Rest	Rest 	3 mi run 	2 mi pace 	2 mi run 	Rest  	Half Marathon
 """,
     "ultra-hal":  # https://www.halhigdon.com/training-programs/more-training/ultramarathon-50k/
