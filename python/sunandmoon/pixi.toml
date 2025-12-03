@@ -8,9 +8,9 @@ version = "0.1.0"
 [tasks]
 
 [dependencies]
-numpy = ">=2.3.0,<3"
 pre-commit = "*"
+python = ">3.9"
 ipython = "*"
 
 [pypi-dependencies]
-pyephem = ">=9.99, <10"
+ephem = ">=4.2, <5"
